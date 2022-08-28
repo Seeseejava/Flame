@@ -1,0 +1,6 @@
+[submodule "Flame/vendor/spdlog"]
+	path = Flame/vendor/spdlog
+	url = https://github.com/gabime/spdlog
+[submodule "Flame/vendor/GLFW"]
+	path = Flame/vendor/GLFW
+	url = https://github.com/Seeseejava/glfw
