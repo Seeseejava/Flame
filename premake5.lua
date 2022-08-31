@@ -1,5 +1,6 @@
 workspace "Flame"
     architecture "x64"
+    startproject "Sandbox"
 
     configurations
     {
@@ -13,24 +14,33 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 IncludeDir = {}
 IncludeDir["GLFW"] = "Flame/vendor/GLFW/include"
 IncludeDir["Glad"] = "Flame/vendor/Glad/include"
+IncludeDir["ImGui"] = "Flame/vendor/imgui"
+IncludeDir["glm"] = "Flame/vendor/glm"
+
 
 include "Flame/vendor/GLFW"
 include "Flame/vendor/Glad"
+include "Flame/vendor/imgui"
+
 
 project "Flame"
     location "Flame"
     kind "SharedLib" --这样可以include a static library
     language "C++"
+    staticruntime "off"
 
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
     objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
     pchheader "flamepch.h"
     pchsource "Flame/src/flamepch.cpp"
+    
     files
     {
         "%{prj.name}/src/**.h",
-        "%{prj.name}/src/**.cpp"
+        "%{prj.name}/src/**.cpp",
+        "%{prj.name}/vendor/glm/glm/**.hpp",
+        "%{prj.name}/vendor/glm/glm/**.inl"
     }
 
     
@@ -39,20 +49,23 @@ project "Flame"
         "%{prj.name}/src",
         "%{prj.name}/vendor/spdlog/include",
         "%{IncludeDir.GLFW}",
-        "%{IncludeDir.Glad}"
+        "%{IncludeDir.Glad}",
+        "%{IncludeDir.ImGui}",
+        "%{IncludeDir.glm}",
     }
 
     links
     {
         "GLFW", 
         "Glad",
+        "ImGui",
         "opengl32.lib"
     }
 
     filter "system:windows"
         cppdialect "C++17"
-        staticruntime "On"
         systemversion "latest"
+
         defines 
         {
             "FLAME_PLATFORM_WINDOWS",
@@ -62,28 +75,32 @@ project "Flame"
 
         postbuildcommands
         {
-            ("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/Sandbox")
+            --("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/Sandbox")
+            --优化第一次build失败问题(但是语法不懂)
+            ("{COPY} %{cfg.buildtarget.relpath} \"../bin/" .. outputdir .. "/Sandbox/\"")
+
         }
 
     filter "configurations:Debug"
         defines "FLAME_DEBUG"
-        buildoptions "/MDd"
+        runtime "Debug"
         symbols "On"
 
     filter "configurations:Release"
         defines "FLAME_RELEASE"
-        buildoptions "/MD"
+        runtime "Release"
         optimize "On"
 
     filter "configurations:Dist"
         defines "FLAME_DIST"
-        buildoptions "/MD"
+        runtime "Release"
         optimize "On"
 
 project "Sandbox"
         location "Sandbox"
         kind "ConsoleApp"
         language "C++"
+        staticruntime "Off"--这里为什么还是设置未off
 
         targetdir ("bin/" .. outputdir .. "/%{prj.name}")
         objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -91,13 +108,14 @@ project "Sandbox"
         files
         {
             "%{prj.name}/src/**.h",
-            "%{prj.name}/src/**.cpp"
+            "%{prj.name}/src/**.cpp",
         }
 
         includedirs
         {
             "Flame/vendor/spdlog/include",
-            "Flame/src"
+            "Flame/src",
+            "%{IncludeDir.glm}",
         }
 
         links
@@ -107,8 +125,9 @@ project "Sandbox"
 
     filter "system:windows"
         cppdialect "C++17"
-        staticruntime "On"
+        --staticruntime "On"
         systemversion "latest"
+
         defines 
         {
             "FLAME_PLATFORM_WINDOWS";         
@@ -117,15 +136,15 @@ project "Sandbox"
 
     filter "configurations:Debug"
         defines "FLAME_DEBUG"
-        buildoptions "/MDd"
+        runtime "Debug"
         symbols "On"
 
     filter "configurations:Release"
         defines "FLAME_RELEASE"
-        buildoptions "/MD"
+        runtime "Release"
         optimize "On"
 
     filter "configurations:Dist"
         defines "FLAME_DIST"
-        buildoptions "/MD"
+        runtime "Release"
         optimize "On"

@@ -4,3 +4,9 @@
 [submodule "Flame/vendor/GLFW"]
 	path = Flame/vendor/GLFW
 	url = https://github.com/Seeseejava/glfw
+[submodule "Flame/vendor/glm"]
+	path = Flame/vendor/glm
+	url = https://github.com/g-truc/glm
+[submodule "Flame/vendor/imgui"]
+	path = Flame/vendor/imgui
+	url = https://github.com/Seeseejava/imgui

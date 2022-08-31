@@ -1,0 +1,15 @@
+#pragma once
+
+// From glfw3.h
+#define FLAME_MOUSE_BUTTON_1         0
+#define FLAME_MOUSE_BUTTON_2         1
+#define FLAME_MOUSE_BUTTON_3         2
+#define FLAME_MOUSE_BUTTON_4         3
+#define FLAME_MOUSE_BUTTON_5         4
+#define FLAME_MOUSE_BUTTON_6         5
+#define FLAME_MOUSE_BUTTON_7         6
+#define FLAME_MOUSE_BUTTON_8         7
+#define FLAME_MOUSE_BUTTON_LAST      FLAME_MOUSE_BUTTON_8
+#define FLAME_MOUSE_BUTTON_LEFT      FLAME_MOUSE_BUTTON_1
+#define FLAME_MOUSE_BUTTON_RIGHT     FLAME_MOUSE_BUTTON_2
+#define FLAME_MOUSE_BUTTON_MIDDLE    FLAME_MOUSE_BUTTON_3

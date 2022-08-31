@@ -38,6 +38,8 @@ namespace Flame {
 		virtual void SetVSync(bool enabled) = 0;
 		virtual bool IsVSync() const = 0;
 
+		virtual void* GetNativeWindow() const = 0;//此处定义未void是为了以后得到不同的window
+
 		static Window* Create(const WindowProps& props = WindowProps());
 	};
 }

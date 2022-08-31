@@ -10,9 +10,13 @@
 	#error Flame only support windows!
 #endif
 
+#ifdef FLAME_DEBUG
+	#define FLAME_ENABLE_ASSERTS
+#endif
+
 #ifdef FLAME_ENABLE_ASSERTS
-	#define FLAME_ASSERT(x,...) {if(!(X)) { FLAME_ERROR("Assertion Failed: {0},__VA_ARGS__); __debugbreak; }}
-	#define FLAME_CORE_ASSERT(x,...) {if(!(X)) { FLAME_CORE_ERROR("Assertion Failed: {0},__VA_ARGS__); __debugbreak; }}
+	#define FLAME_ASSERT(x,...) {if(!(x)) { FLAME_ERROR("Assertion Failed: {0}",__VA_ARGS__); __debugbreak; }}
+	#define FLAME_CORE_ASSERT(x,...) {if(!(x)) { FLAME_CORE_ERROR("Assertion Failed: {0}",__VA_ARGS__); __debugbreak; }}
 #else
 	#define FLAME_ASSERT(x, ...)
 	#define FLAME_CORE_ASSERT(x, ...)
@@ -21,3 +25,5 @@
 
 
 #define BIT(x)  (1 << x)
+
+#define FLAME_BIND_EVENT_FN(fn) std::bind(&fn , this, std::placeholders::_1)

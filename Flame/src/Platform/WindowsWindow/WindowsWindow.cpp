@@ -42,7 +42,7 @@ namespace Flame {
 
 		if (!s_GLFWInitialized)
 		{
-			int succes = glfwInit();
+			int success = glfwInit();
 			FLAME_CORE_ASSERT(success, "Could not intialize GLFW!");//现在还是替换成了空字符串的状态
 			glfwSetErrorCallback(GLFWErrorCallback);
 			s_GLFWInitialized = true;
@@ -105,6 +105,15 @@ namespace Flame {
 					}
 				}
 			});
+
+		glfwSetCharCallback(m_Window, [](GLFWwindow* window, unsigned int keycode)
+			{
+				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+				KeyTypedEvent event(keycode);
+				data.EventCallback(event);
+
+			});
+
 		glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods)
 			{
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
