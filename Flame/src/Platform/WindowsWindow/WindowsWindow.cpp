@@ -5,7 +5,8 @@
 #include "Flame/Events/MouseEvent.h"
 #include "Flame/Events/KeyEvent.h"
 
-#include "glad/glad.h"
+#include "Platform/OpenGL/OpenGLContext.h"
+
 
 
 namespace Flame {
@@ -48,11 +49,10 @@ namespace Flame {
 			s_GLFWInitialized = true;
 		}
 		m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
-		glfwMakeContextCurrent(m_Window);
 
-		// glad: load all OpenGL function pointers
-		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-		FLAME_CORE_ASSERT(status, "Failed to initialize Glad!");
+		m_Context = new OpenGLContext(m_Window);
+		m_Context->Init();
+
 		glfwSetWindowUserPointer(m_Window, &m_Data);
 		/*每个窗口具有可与设置用户指针glfwSetWindowUserPointer并用查询glfwGetWindowUserPointer。
 		这可以用于您需要的任何目的, 并且在窗口的整个生命周期内不会被GLFW修改。
@@ -157,8 +157,9 @@ namespace Flame {
 	void WindowsWindow::OnUpdate()
 	{
 		glfwPollEvents(); 
-		glfwSwapBuffers(m_Window);
+		m_Context->SwapBuffers();
 	}
+
 	void WindowsWindow::SetVSync(bool enabled)
 	{
 		if (enabled)
