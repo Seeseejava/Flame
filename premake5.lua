@@ -25,9 +25,12 @@ include "Flame/vendor/imgui"
 
 project "Flame"
     location "Flame"
-    kind "SharedLib" --这样可以include a static library
+    --kind "SharedLib" --这样可以include a static library
+    kind "StaticLib"
     language "C++"
-    staticruntime "off"
+    cppdialect "C++17"
+    --staticruntime "off"
+    staticruntime "on"
 
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
     objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -43,6 +46,10 @@ project "Flame"
         "%{prj.name}/vendor/glm/glm/**.inl"
     }
 
+    defines
+    {
+        "_CRT_SECURE_NO_WARNINGS"
+    }
     
     includedirs
     {
@@ -63,7 +70,7 @@ project "Flame"
     }
 
     filter "system:windows"
-        cppdialect "C++17"
+        --cppdialect "C++17"
         systemversion "latest"
 
         defines 
@@ -73,34 +80,36 @@ project "Flame"
             "GLFW_INCLUDE_NONE"
         }
 
-        postbuildcommands
-        {
-            --("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/Sandbox")
-            --优化第一次build失败问题(但是语法不懂)
-            ("{COPY} %{cfg.buildtarget.relpath} \"../bin/" .. outputdir .. "/Sandbox/\"")
+        -- postbuildcommands
+        -- {
+        --     --("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/Sandbox")
+        --     --优化第一次build失败问题(但是语法不懂)
+        --     ("{COPY} %{cfg.buildtarget.relpath} \"../bin/" .. outputdir .. "/Sandbox/\"")
 
-        }
+        -- }
 
     filter "configurations:Debug"
         defines "FLAME_DEBUG"
         runtime "Debug"
-        symbols "On"
+        symbols "on"
 
     filter "configurations:Release"
         defines "FLAME_RELEASE"
         runtime "Release"
-        optimize "On"
+        optimize "on"
 
     filter "configurations:Dist"
         defines "FLAME_DIST"
         runtime "Release"
-        optimize "On"
+        optimize "on"
 
 project "Sandbox"
         location "Sandbox"
         kind "ConsoleApp"
         language "C++"
-        staticruntime "Off"--这里为什么还是设置未off
+        cppdialect "C++17"
+        --staticruntime "Off"--这里为什么还是设置未off
+        staticruntime "on"
 
         targetdir ("bin/" .. outputdir .. "/%{prj.name}")
         objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -125,7 +134,7 @@ project "Sandbox"
         }
 
     filter "system:windows"
-        cppdialect "C++17"
+        --cppdialect "C++17"
         --staticruntime "On"
         systemversion "latest"
 
@@ -138,14 +147,14 @@ project "Sandbox"
     filter "configurations:Debug"
         defines "FLAME_DEBUG"
         runtime "Debug"
-        symbols "On"
+        symbols "on"
 
     filter "configurations:Release"
         defines "FLAME_RELEASE"
         runtime "Release"
-        optimize "On"
+        optimize "on"
 
     filter "configurations:Dist"
         defines "FLAME_DIST"
         runtime "Release"
-        optimize "On"
+        optimize "on"
