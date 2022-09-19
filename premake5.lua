@@ -115,6 +115,7 @@ project "Sandbox"
         {
             "Flame/vendor/spdlog/include",
             "Flame/src",
+            "Flame/vendor",
             "%{IncludeDir.glm}",
         }
 
