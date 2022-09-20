@@ -19,6 +19,12 @@ namespace Flame {
 		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 		FLAME_CORE_ASSERT(status, "Failed to initialize Glad!");
 
+		FLAME_CORE_INFO("OpenGL Info:");
+		FLAME_CORE_INFO("Vendeor: {0}", glGetString(GL_VENDOR));
+		FLAME_CORE_INFO("Renderer: {0}", glGetString(GL_RENDERER));
+		FLAME_CORE_INFO("Version: {0}", glGetString(GL_VERSION));
+
+
 	}
 	void OpenGLContext::SwapBuffers()
 	{
