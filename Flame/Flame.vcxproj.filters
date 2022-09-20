@@ -1352,6 +1352,7 @@
     </ClInclude>
     <ClInclude Include="src\Flame\Renderer\GraphicsContext.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h" />
+    <ClInclude Include="src\Flame\Renderer\Shader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Flame\Application.cpp">
@@ -1382,5 +1383,6 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp" />
+    <ClCompile Include="src\Flame\Renderer\Shader.cpp" />
   </ItemGroup>
 </Project>
