@@ -155,9 +155,12 @@
     <ClInclude Include="src\Flame\LayerStack.h" />
     <ClInclude Include="src\Flame\Log.h" />
     <ClInclude Include="src\Flame\MouseButtonCodes.h" />
+    <ClInclude Include="src\Flame\Renderer\Buffer.h" />
     <ClInclude Include="src\Flame\Renderer\GraphicsContext.h" />
+    <ClInclude Include="src\Flame\Renderer\Renderer.h" />
     <ClInclude Include="src\Flame\Renderer\Shader.h" />
     <ClInclude Include="src\Flame\Window.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h" />
     <ClInclude Include="src\Platform\OpenGL\imgui_impl_opengl3_loader.h" />
     <ClInclude Include="src\Platform\WindowsWindow\WindowsInput.h" />
@@ -586,7 +589,10 @@
     <ClCompile Include="src\Flame\Layer.cpp" />
     <ClCompile Include="src\Flame\LayerStack.cpp" />
     <ClCompile Include="src\Flame\Log.cpp" />
+    <ClCompile Include="src\Flame\Renderer\Renderer.cpp" />
     <ClCompile Include="src\Flame\Renderer\Shader.cpp" />
+    <ClCompile Include="src\Flame\Renderer\BUffer.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp" />
     <ClCompile Include="src\Platform\WindowsWindow\WindowsInput.cpp" />
     <ClCompile Include="src\Platform\WindowsWindow\WindowsWindow.cpp" />
