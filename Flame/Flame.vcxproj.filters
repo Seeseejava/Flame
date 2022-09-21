@@ -1356,6 +1356,8 @@
     <ClInclude Include="src\Flame\Renderer\Buffer.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
     <ClInclude Include="src\Flame\Renderer\Renderer.h" />
+    <ClInclude Include="src\Flame\Renderer\VertexArray.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLVertexArray.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Flame\Application.cpp">
@@ -1387,8 +1389,10 @@
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp" />
     <ClCompile Include="src\Flame\Renderer\Shader.cpp" />
-    <ClCompile Include="src\Flame\Renderer\BUffer.cpp" />
+    <ClCompile Include="src\Flame\Renderer\Buffer.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp" />
     <ClCompile Include="src\Flame\Renderer\Renderer.cpp" />
+    <ClCompile Include="src\Flame\Renderer\VertexArray.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLVertexArray.cpp" />
   </ItemGroup>
 </Project>
