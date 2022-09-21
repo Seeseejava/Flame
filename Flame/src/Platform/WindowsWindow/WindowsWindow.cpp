@@ -44,7 +44,7 @@ namespace Flame {
 		if (!s_GLFWInitialized)
 		{
 			int success = glfwInit();
-			FLAME_CORE_ASSERT(success, "Could not intialize GLFW!");//现在还是替换成了空字符串的状态
+			FLAME_CORE_ASSERT(success, "Could not intialize GLFW!");
 			glfwSetErrorCallback(GLFWErrorCallback);
 			s_GLFWInitialized = true;
 		}
