@@ -16,6 +16,7 @@ namespace Flame {
 	private:
 		static std::shared_ptr<spdlog::logger> s_CoreLogger;
 		static std::shared_ptr<spdlog::logger> s_ClientLogger;
+		//记得C++Class内的static对象，需要在类外进行定义，不能只进行声明
 	};
 
 }

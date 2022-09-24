@@ -2,7 +2,7 @@
 
 #ifdef FLAME_PLATFORM_WINDOWS
 
-extern Flame::Application* Flame::CreateApplication();
+extern Flame::Application* Flame::CreateApplication();//指针传过来以便引擎进行内存处理
 
 int main(int argc, char** argv)
 {

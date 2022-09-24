@@ -83,7 +83,8 @@ project "Flame"
         -- postbuildcommands
         -- {
         --     --("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/Sandbox")
-        --     --优化第一次build失败问题(但是语法不懂)
+        --     --优化第一次build失败问题
+        --     -- %{cfg.buildtarget.relpath}是生成文件，相较于当前premake5.lua文件的相对路径
         --     ("{COPY} %{cfg.buildtarget.relpath} \"../bin/" .. outputdir .. "/Sandbox/\"")
 
         -- }
@@ -109,7 +110,7 @@ project "Sandbox"
         language "C++"
         cppdialect "C++17"
         --staticruntime "Off"--这里为什么还是设置未off
-        staticruntime "on"
+        staticruntime "on" --表示会link对应的dll？
 
         targetdir ("bin/" .. outputdir .. "/%{prj.name}")
         objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
