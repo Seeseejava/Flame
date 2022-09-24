@@ -1,0 +1,30 @@
+#pragma once
+
+#pragma once
+
+#include <glm/glm.hpp>
+
+#include "VertexArray.h"
+
+namespace Flame {
+
+	class RendererAPI
+	{
+	public:
+		// 渲染API的类型, 这一块应该由RendererAPI负责, 而不是Renderer负责
+		enum class API
+		{
+			None = 0, OpenGL = 1
+		};
+	public:
+		//与平台无关的渲染的API
+		virtual void SetClearColor(const glm::vec4& color) = 0;
+		virtual void Clear() = 0;
+		virtual void DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray) = 0;
+
+		inline static API GetAPI() { return s_API; }
+	private:
+		static API s_API;
+	};
+
+}
