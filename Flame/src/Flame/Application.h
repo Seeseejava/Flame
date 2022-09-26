@@ -9,9 +9,6 @@
 
 #include "Flame/ImGui/ImGuiLayer.h"
 
-#include "Flame/Renderer/Shader.h"
-#include "Flame/Renderer/Buffer.h"
-#include "Flame/Renderer/VertexArray.h"
 
 #include "Flame/Renderer/OrthographicCamera.h"
 
@@ -40,14 +37,7 @@ namespace Flame {
 		bool m_Running = true;
 		LayerStack m_LayerStack;
 
-		std::shared_ptr<Shader> m_Shader;//这里要把unique变成shared，为了更安全？
-		std::shared_ptr<VertexArray> m_VertexArray;
-
-
-		std::shared_ptr<VertexArray> m_SquareVA;
-		std::shared_ptr<Shader> m_Shader2;
-
-		OrthographicCamera m_Camera;
+		
 	private:
 		static Application* s_Instance;
 	};
