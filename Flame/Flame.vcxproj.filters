@@ -1361,6 +1361,7 @@
     <ClInclude Include="src\Flame\Renderer\RendererAPI.h" />
     <ClInclude Include="src\Flame\Renderer\RenderCommand.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLRendererAPI.h" />
+    <ClInclude Include="src\Flame\Renderer\OrthographicCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Flame\Application.cpp">
@@ -1400,5 +1401,6 @@
     <ClCompile Include="src\Flame\Renderer\RendererAPI.cpp" />
     <ClCompile Include="src\Flame\Renderer\RenderCommand.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLRendererAPI.cpp" />
+    <ClCompile Include="src\Flame\Renderer\OrthographicCamera.cpp" />
   </ItemGroup>
 </Project>

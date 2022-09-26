@@ -6,10 +6,11 @@
 
 
 #include <GLFW/glfw3.h>
-#include "Renderer/Renderer.h"
-#include "Renderer/RenderCommand.h"
+#include "Flame/Renderer/Renderer.h"
+#include "Flame/Renderer/RenderCommand.h"
 
 #include "Input.h"
+
 
 
 namespace Flame {
@@ -21,6 +22,7 @@ namespace Flame {
 	
 
 	Application::Application()
+		: m_Camera(-1.6f, 1.6f, -0.9f, 0.9f)
 	{
 		FLAME_CORE_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
@@ -93,6 +95,8 @@ namespace Flame {
 			layout(location = 0) in vec3 a_Position;
 			layout(location = 1) in vec4 a_Color;
 
+			uniform mat4 u_ViewProjection;
+
 			out vec3 v_Position;
 			out vec4 v_Color;
 
@@ -100,7 +104,7 @@ namespace Flame {
 			{
 				v_Position  = a_Position;
 				v_Color = a_Color;
-				gl_Position = vec4(a_Position, 1.0);
+				gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
 			}
 		)";
 
@@ -125,12 +129,14 @@ namespace Flame {
 
 			layout(location = 0) in vec3 a_Position;
 
+			uniform mat4 u_ViewProjection;
+
 			out vec3 v_Position;
 
 			void main()
 			{
 				v_Position  = a_Position;
-				gl_Position = vec4(a_Position, 1.0);
+				gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
 			}
 		)";
 
@@ -190,13 +196,16 @@ namespace Flame {
 			RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 			RenderCommand::Clear();
 
-			Renderer::BeginScene();
+
+			m_Camera.SetPosition({ 0.5f, 0.5f, 0.0f });
+			m_Camera.SetRotation(45.0f);
+			Renderer::BeginScene(m_Camera);
 
 			m_Shader2->Bind();
-			Renderer::Submit(m_SquareVA);
+			Renderer::Submit(m_Shader2, m_SquareVA);
 
 			m_Shader->Bind();
-			Renderer::Submit(m_VertexArray);
+			Renderer::Submit(m_Shader, m_VertexArray);
 
 			Renderer::EndScene();
 

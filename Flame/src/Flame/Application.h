@@ -12,6 +12,9 @@
 #include "Flame/Renderer/Shader.h"
 #include "Flame/Renderer/Buffer.h"
 #include "Flame/Renderer/VertexArray.h"
+
+#include "Flame/Renderer/OrthographicCamera.h"
+
 namespace Flame {
 
 	class FLAME_API Application
@@ -43,6 +46,8 @@ namespace Flame {
 
 		std::shared_ptr<VertexArray> m_SquareVA;
 		std::shared_ptr<Shader> m_Shader2;
+
+		OrthographicCamera m_Camera;
 	private:
 		static Application* s_Instance;
 	};
