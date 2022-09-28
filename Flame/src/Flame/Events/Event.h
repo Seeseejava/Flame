@@ -25,7 +25,15 @@ namespace Flame {
 		EventCategoryMouse        = BIT(3),
 		EventCategoryMouseButton  = BIT(4),
 	};
+	//C++原本的enum值会被隐式转换(implicitly convert)为int类型
+	//C++里的enum好像是一个全局的范围，类似于全局变量，而且没有前缀，
+	//这很容易造成命名冲突和理解错误
+	//C++的enum，无法规定用多少位的数据结构去存储它，存储的类型可能是
+	//char、short、int等类型，选择一个够用的数据结构就行
 
+	//由于该类的所有Event类型都是一样的，所以我们可以用一个static变量去存储该类型就够了
+	//#：是为其加上双引号，当作字符串处理
+	//##：是直接进行字符的拼接
 #define EVENT_CLASS_TYPE(type) static EventType GetStaticType() { return EventType::##type; }\
 								virtual EventType GetEventType() const override { return GetStaticType(); }\
 								virtual const char* GetName() const override { return #type; }
@@ -40,7 +48,7 @@ namespace Flame {
 		virtual EventType GetEventType() const = 0;
 		virtual const char* GetName() const = 0;
 		virtual int GetCategoryFlags() const = 0;
-		virtual std::string ToString() const { return GetName(); }
+		virtual std::string ToString() const { return GetName(); }//仿照C#，方便打印一些消息
 
 		inline bool IsInCategory(EventCategory category)
 		{

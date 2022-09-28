@@ -143,6 +143,7 @@
     <ClInclude Include="src\Flame.h" />
     <ClInclude Include="src\Flame\Application.h" />
     <ClInclude Include="src\Flame\Core.h" />
+    <ClInclude Include="src\Flame\Core\Timestep.h" />
     <ClInclude Include="src\Flame\EntryPoint.h" />
     <ClInclude Include="src\Flame\Events\ApplicationEvent.h" />
     <ClInclude Include="src\Flame\Events\Event.h" />

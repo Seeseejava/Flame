@@ -21,6 +21,7 @@
 #ifdef FLAME_ENABLE_ASSERTS
 	#define FLAME_ASSERT(x, ...) { if(!(x)) { FLAME_ERROR("Assertion Failed: {0}",__VA_ARGS__); __debugbreak(); } }
 	#define FLAME_CORE_ASSERT(x, ...) { if(!(x)) { FLAME_CORE_ERROR("Assertion Failed: {0}",__VA_ARGS__); __debugbreak(); }}
+//__debugbreak() 相当于C#里调试的Debug.break()，调试的时候如果执行到这里会自动打断点
 #else
 	#define FLAME_ASSERT(x, ...)
 	#define FLAME_CORE_ASSERT(x, ...)

@@ -1,7 +1,8 @@
 #pragma once
 
-#include"Flame/Core.h"
+#include "Flame/Core.h"
 #include "Flame/Events/Event.h"
+#include "Flame/Core/Timestep.h"
 
 namespace Flame {
 	class FLAME_API Layer
@@ -12,7 +13,7 @@ namespace Flame {
 
 		virtual void OnAttach() {}
 		virtual void OnDetach() {}
-		virtual void OnUpdate() {}
+		virtual void OnUpdate(Timestep ts) {}
 		virtual void OnImGuiRender() {}
 		virtual void OnEvent(Event& event) {}
 

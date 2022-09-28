@@ -11,6 +11,8 @@
 
 #include "Input.h"
 
+#include <glfw/glfw3.h>
+
 
 
 namespace Flame {
@@ -27,6 +29,7 @@ namespace Flame {
 		s_Instance = this;
 		m_Window = std::unique_ptr<Window>(Window::Create());
 		m_Window->SetEventCallback(BIND_EVENT_FN(OnEvent));//用于类内非静态函数
+		m_Window->SetVSync(false);//若要启动false，需在nvida将监视器设置改为固定刷新，而不是G-Vsync compatible
 
 		m_ImGuiLayer = new ImGuiLayer;
 		PushOverlay(m_ImGuiLayer);
@@ -70,9 +73,13 @@ namespace Flame {
 	{
 		while (m_Running)
 		{
+			float time = float(glfwGetTime());// Platform::GetTime
+			// 注意, 这里time - m_LastFrameTIme, 正好算的应该是当前帧所经历的时间, 而不是上一帧经历的时间
+			Timestep timestep = time - m_LastFrameTime;
+			m_LastFrameTime = time;
 			for (Layer* layer : m_LayerStack)
 			{
-				layer->OnUpdate();
+				layer->OnUpdate(timestep);
 			}
 
 			m_ImGuiLayer->Begin();
