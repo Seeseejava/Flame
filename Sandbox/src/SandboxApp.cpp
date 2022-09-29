@@ -7,7 +7,9 @@
 #include <glm/ext/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale
 #include <glm/ext/matrix_clip_space.hpp> // glm::perspective
 #include <glm/ext/scalar_constants.hpp> // glm::pi
+#include <glm/gtc/type_ptr.hpp> //glm::value_ptr
 
+#include "Platform/OpenGL/OpenGLShader.h"
 #include "imgui/imgui.h"
 
 class ExampleLayer : public Flame::Layer
@@ -104,7 +106,8 @@ public:
 			}
 		)";
 
-		m_Shader.reset(new Flame::Shader(vertexSrc, fragmentSrc));
+		//m_Shader.reset(new Flame::Shader(vertexSrc, fragmentSrc)); 这里不能再用new了，因为此时shader已经是一个抽象类
+		m_Shader.reset(Flame::Shader::Create(vertexSrc, fragmentSrc));
 
 		std::string vertexSrc2 = R"(
 			#version 330 core
@@ -130,12 +133,14 @@ public:
 
 			in vec3 v_Position;
 
+			uniform vec3 u_Color;
+
 			void main()
 			{
-				color = vec4(0.2, 0.3, 0.8, 1);
+				color = vec4(u_Color, 1.0f);
 			}
 		)";
-		m_Shader2.reset(new Flame::Shader(vertexSrc2, fragmentSrc2));
+		m_Shader2.reset(Flame::Shader::Create(vertexSrc2, fragmentSrc2));
 	}
 
 	void OnUpdate(Flame::Timestep ts) override
@@ -180,8 +185,11 @@ public:
 
 		Flame::Renderer::BeginScene(m_Camera);
 
-		 static glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));//不用每次都算
+		static glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));//使用static不用每次都算
 
+
+		std::dynamic_pointer_cast<Flame::OpenGLShader>(m_Shader2)->Bind();//下行可检测，安全
+		std::dynamic_pointer_cast<Flame::OpenGLShader>(m_Shader2)->UploadUniformFloat3("u_Color", m_SquareColor);
 		for (int j = 0; j < 5; j++)
 		{
 			for (int i = 0; i < 5; i++)
@@ -215,10 +223,13 @@ public:
 
 		glm::vec3 m_SquarePosition;
 		float m_SquareMoveSpeed = 5.0f;
+		glm::vec3 m_SquareColor = { 0.2f, 0.3f, 0.7 };
 
 	virtual void OnImGuiRender() override
 	{
-
+		ImGui::Begin("Settings");
+		ImGui::ColorEdit3("Square Color", glm::value_ptr(m_SquareColor));
+		ImGui::End();
 	}
 	void OnEvent(Flame::Event& event) override
 	{
