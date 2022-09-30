@@ -11,6 +11,8 @@ namespace Flame {
 	class Renderer
 	{
 	public:
+		static void Init();
+
 		// TODO: 未来会接受Scene场景的相关参数，比如Camera、lighting, 保证shaders能够得到正确的环境相关的uniforms
 		static void BeginScene(OrthographicCamera& camera);//这里传引用时因为不想把camera全部矩阵都传进来，暂时不考虑传引用的坏处
 		// TODO:

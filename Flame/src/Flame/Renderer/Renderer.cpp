@@ -8,6 +8,11 @@ namespace Flame {
 
 	Renderer::SceneData* Renderer::m_SceneData = new Renderer::SceneData;
 
+	void Renderer::Init()
+	{
+		RenderCommand::Init();
+	}
+
 	void Renderer::BeginScene(OrthographicCamera& camera)
 	{
 		//设置环境相关的信息（摄像机参数、环境光照
