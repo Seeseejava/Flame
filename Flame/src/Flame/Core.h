@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #ifdef FLAME_PLATFORM_WINDOWS
 #if FLAME_DYNAMIC_LINK
 	#ifdef FLAME_BUILD_DLL
@@ -32,3 +34,15 @@
 #define BIT(x)  (1 << x)
 
 #define FLAME_BIND_EVENT_FN(fn) std::bind(&fn , this, std::placeholders::_1)
+
+namespace Flame
+{
+
+	template<typename T>
+	using Scope = std::unique_ptr<T>;
+
+	template<typename T>
+	using Ref = std::shared_ptr<T>;
+	//为什么用 shared_ptr 而不是 unique_ptr:
+	//因为我们的循环中要有这些东西的强引用，不能被销毁，否则直接crash；而 shared_ptr 通过它的引用计数做到了这一点。
+}

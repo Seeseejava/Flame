@@ -17,7 +17,7 @@ namespace Flame {
 		static void EndScene();
 		// TODO: 会把VAO通过RenderCommand下的指令，传递给RenderCommandQueue
 		// 目前偷个懒，直接调用RenderCommand::DrawIndexed()函数
-		static void Submit(const std::shared_ptr<Shader>& shader, const std::shared_ptr<VertexArray>& vertexArray, const glm::mat4& transform = glm::mat4(1.0f));
+		static void Submit(const Ref<Shader>& shader, const Ref<VertexArray>& vertexArray, const glm::mat4& transform = glm::mat4(1.0f));
 
 		inline static RendererAPI::API GetAPI()
 		{

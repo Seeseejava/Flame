@@ -16,6 +16,7 @@ IncludeDir["GLFW"] = "Flame/vendor/GLFW/include"
 IncludeDir["Glad"] = "Flame/vendor/Glad/include"
 IncludeDir["ImGui"] = "Flame/vendor/imgui"
 IncludeDir["glm"] = "Flame/vendor/glm"
+IncludeDir["stb_image"] = "Flame/vendor/stb_image"
 
 
 include "Flame/vendor/GLFW"
@@ -42,6 +43,8 @@ project "Flame"
     {
         "%{prj.name}/src/**.h",
         "%{prj.name}/src/**.cpp",
+        "%{prj.name}/vendor/stb_image/**.h",
+        "%{prj.name}/vendor/stb_image/**.cpp",        
         "%{prj.name}/vendor/glm/glm/**.hpp",
         "%{prj.name}/vendor/glm/glm/**.inl"
     }
@@ -59,6 +62,7 @@ project "Flame"
         "%{IncludeDir.Glad}",
         "%{IncludeDir.ImGui}",
         "%{IncludeDir.glm}",
+        "%{IncludeDir.stb_image}",
     }
 
     links

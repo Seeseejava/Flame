@@ -25,7 +25,7 @@ public:
 			 0.5f, -0.5f,  0.0f, 1.0f, 0.0f, 1.0f, 1.0f,
 			 0.0f,  0.5f,  0.0f, 1.0f, 0.0f, 1.0f, 1.0f,
 		};
-		std::shared_ptr<Flame::VertexBuffer> vertexbuffer;
+		Flame::Ref<Flame::VertexBuffer> vertexbuffer;
 		vertexbuffer.reset(Flame::VertexBuffer::Create(vertices, sizeof(vertices)));
 
 		Flame::BufferLayout layout = {
@@ -40,26 +40,26 @@ public:
 
 
 		unsigned int indices[3] = { 0, 1, 2 };
-		std::shared_ptr<Flame::IndexBuffer> indexbuffer;
+		Flame::Ref<Flame::IndexBuffer> indexbuffer;
 		indexbuffer.reset(Flame::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
 		m_VertexArray->SetIndexBuffer(indexbuffer);
 
 		m_SquareVA.reset(Flame::VertexArray::Create());
 
-		float squreVertices[3 * 4] = {
-			-0.5f, -0.5f,  0.0f,
-			 0.5f, -0.5f,  0.0f,
-			 0.5f,  0.5f,  0.0f,
-			-0.5f,  0.5f,  0.0f,
+		float squreVertices[5 * 4] = {
+			-0.5f, -0.5f,  0.0f, 0.0f, 0.0f,
+			 0.5f, -0.5f,  0.0f, 1.0f, 0.0f,
+			 0.5f,  0.5f,  0.0f, 1.0f, 1.0f,
+			-0.5f,  0.5f,  0.0f, 0.0f, 1.0f
 		};
 
-		std::shared_ptr<Flame::VertexBuffer> squareVB;
+		Flame::Ref<Flame::VertexBuffer> squareVB;
 		squareVB.reset(Flame::VertexBuffer::Create(squreVertices, sizeof(squreVertices)));
 
 
 		Flame::BufferLayout Squarelayout = {
 					{Flame::ShaderDataType::Float3, "a_Position"},
-					//{ShaderDataType::Float4, "a_Color"},
+					{Flame::ShaderDataType::Float2, "a_TexCoord"},
 					//{ShaderDataType::Float3, "a_Normal"},
 		};
 
@@ -68,7 +68,7 @@ public:
 		m_SquareVA->AddVertexBuffer(squareVB);
 
 		unsigned int Squareindices[6] = { 0, 1, 2, 2, 3, 0 };
-		std::shared_ptr<Flame::IndexBuffer> squareIB;
+		Flame::Ref<Flame::IndexBuffer> squareIB;
 		squareIB.reset(Flame::IndexBuffer::Create(Squareindices, sizeof(Squareindices) / sizeof(uint32_t)));
 		m_SquareVA->SetIndexBuffer(squareIB);
 
@@ -141,6 +141,45 @@ public:
 			}
 		)";
 		m_Shader2.reset(Flame::Shader::Create(vertexSrc2, fragmentSrc2));
+
+		std::string textureShaderVertexSrc = R"(
+			#version 330 core
+
+			layout(location = 0) in vec3 a_Position;
+			layout(location = 1) in vec2 a_TexCoord;
+
+			uniform mat4 u_ViewProjection;
+			uniform mat4 u_Transform;
+
+			out vec2 v_TexCoord;
+
+			void main()
+			{
+				v_TexCoord  = a_TexCoord;
+				gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
+			}
+		)";
+
+		std::string textureShaderFragmentSrc = R"(
+			#version 330 core
+
+			layout(location = 0) out vec4 color;
+
+			in vec2 v_TexCoord;
+
+			uniform sampler2D u_Texture;
+
+			void main()
+			{
+				color = texture(u_Texture, v_TexCoord);
+			}
+		)";
+		m_TextureShader.reset(Flame::Shader::Create(textureShaderVertexSrc, textureShaderFragmentSrc));
+
+		m_Texture = Flame::Texture2D::Create("assets/texture/Checkerboard.png");//此时返回的是智能指针，不再需要使用reset
+
+		std::dynamic_pointer_cast<Flame::OpenGLShader>(m_TextureShader)->Bind();//下行可检测，安全
+		std::dynamic_pointer_cast<Flame::OpenGLShader>(m_TextureShader)->UploadUniformInt("u_Texture", 0);//因为绑定到了slot 0
 	}
 
 	void OnUpdate(Flame::Timestep ts) override
@@ -190,9 +229,9 @@ public:
 
 		std::dynamic_pointer_cast<Flame::OpenGLShader>(m_Shader2)->Bind();//下行可检测，安全
 		std::dynamic_pointer_cast<Flame::OpenGLShader>(m_Shader2)->UploadUniformFloat3("u_Color", m_SquareColor);
-		for (int j = 0; j < 5; j++)
+		for (int j = 0; j < 20; j++)
 		{
-			for (int i = 0; i < 5; i++)
+			for (int i = 0; i < 20; i++)
 			{
 				glm::vec3 pos(i * 0.11f, j * 0.11f, 0.0f);
 				glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
@@ -201,18 +240,22 @@ public:
 
 		}
 
-		
-		Flame::Renderer::Submit(m_Shader, m_VertexArray);
+		m_Texture->Bind();
+		Flame::Renderer::Submit(m_TextureShader, m_SquareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+		// Triangle
+		//Flame::Renderer::Submit(m_Shader, m_VertexArray);
 
 		Flame::Renderer::EndScene();
 	}
 
 	private:
-		std::shared_ptr<Flame::Shader> m_Shader;//这里要把unique变成shared，为了更安全？
-		std::shared_ptr<Flame::VertexArray> m_VertexArray;
+		Flame::Ref<Flame::Shader> m_Shader;//这里要把unique变成shared，为了更安全？
+		Flame::Ref<Flame::VertexArray> m_VertexArray;
 
-		std::shared_ptr<Flame::Shader> m_Shader2;
-		std::shared_ptr<Flame::VertexArray> m_SquareVA;
+		Flame::Ref<Flame::Shader> m_Shader2, m_TextureShader;
+		Flame::Ref<Flame::VertexArray> m_SquareVA;
+
+		Flame::Ref<Flame::Texture2D> m_Texture;
 
 		Flame::OrthographicCamera m_Camera;
 		glm::vec3 m_CameraPosition;
