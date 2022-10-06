@@ -43,7 +43,7 @@ namespace Flame {
 	{
 		std::string result;
 		//一般来说，游戏引擎里的Shader，都是在Editor下预先编译好的二进制文件，然后再在Runtime对其进行组合和应用
-		std::ifstream in(filepath, std::ios::in, std::ios::binary);
+		std::ifstream in(filepath, std::ios::in | std::ios::binary);
 		//ios::binary：　以二进制方式打开文件，缺省的方式是文本方式
 		//ios::in：　　　文件以输入方式打开（文件数据输入到内存）
 		if (in)
@@ -88,7 +88,10 @@ namespace Flame {
 	void OpenGLShader::Compile(std::unordered_map<GLenum, std::string>& shaderSources)
 	{
 		GLuint program = glCreateProgram();
-		std::vector<GLenum> glShaderIDs(shaderSources.size());
+		FLAME_CORE_ASSERT(shaderSources.size() <= 2, "We only support two shaders for now!");
+		std::array<GLenum, 2> glShaderIDs;          //这里使用array比使用vector好，因为我们在编译的时候已经知道了有多少个shader类型
+		//现在存储在stack上，而不是heap上
+		int glShaderIDIndex = 0;
 		for (auto& kv : shaderSources)
 		{
 			GLenum type = kv.first;
@@ -126,7 +129,7 @@ namespace Flame {
 			}
 			// Attach our shaders to our program
 			glAttachShader(program, shader);
-			glShaderIDs.push_back(shader);//为之后的delete等操作做准备
+			glShaderIDs[glShaderIDIndex++] = shader;//为之后的delete等操作做准备
 		}
 		// Vertex and fragment shaders are successfully compiled.
 		// Now time to link them together into a program.
