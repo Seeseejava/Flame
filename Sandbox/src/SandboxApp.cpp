@@ -142,39 +142,8 @@ public:
 		)";
 		m_Shader2.reset(Flame::Shader::Create(vertexSrc2, fragmentSrc2));
 
-		std::string textureShaderVertexSrc = R"(
-			#version 330 core
-
-			layout(location = 0) in vec3 a_Position;
-			layout(location = 1) in vec2 a_TexCoord;
-
-			uniform mat4 u_ViewProjection;
-			uniform mat4 u_Transform;
-
-			out vec2 v_TexCoord;
-
-			void main()
-			{
-				v_TexCoord  = a_TexCoord;
-				gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
-			}
-		)";
-
-		std::string textureShaderFragmentSrc = R"(
-			#version 330 core
-
-			layout(location = 0) out vec4 color;
-
-			in vec2 v_TexCoord;
-
-			uniform sampler2D u_Texture;
-
-			void main()
-			{
-				color = texture(u_Texture, v_TexCoord);
-			}
-		)";
-		m_TextureShader.reset(Flame::Shader::Create(textureShaderVertexSrc, textureShaderFragmentSrc));
+		
+		m_TextureShader.reset(Flame::Shader::Create("assets/shader/Texture.glsl"));
 
 		m_Texture = Flame::Texture2D::Create("assets/texture/Checkerboard.png");//此时返回的是智能指针，不再需要使用reset
 		m_ChernoLogoTexture = Flame::Texture2D::Create("assets/texture/ChernoLogo.png");

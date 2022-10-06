@@ -16,4 +16,7 @@
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="assets\shader\Texture.glsl" />
+  </ItemGroup>
 </Project>
