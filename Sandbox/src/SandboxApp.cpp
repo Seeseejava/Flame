@@ -107,7 +107,7 @@ public:
 		)";
 
 		//m_Shader.reset(new Flame::Shader(vertexSrc, fragmentSrc)); 这里不能再用new了，因为此时shader已经是一个抽象类
-		m_Shader.reset(Flame::Shader::Create(vertexSrc, fragmentSrc));
+		m_Shader = Flame::Shader::Create("VertexPosColor", vertexSrc, fragmentSrc);
 
 		std::string vertexSrc2 = R"(
 			#version 330 core
@@ -140,16 +140,15 @@ public:
 				color = vec4(u_Color, 1.0f);
 			}
 		)";
-		m_Shader2.reset(Flame::Shader::Create(vertexSrc2, fragmentSrc2));
+		m_FlatColorShader = Flame::Shader::Create("FlatColor", vertexSrc2, fragmentSrc2);
 
-		
-		m_TextureShader.reset(Flame::Shader::Create("assets/shader/Texture.glsl"));
+		auto textureShader = m_ShaderLibrary.Load("assets/shader/Texture.glsl");
 
 		m_Texture = Flame::Texture2D::Create("assets/texture/Checkerboard.png");//此时返回的是智能指针，不再需要使用reset
 		m_ChernoLogoTexture = Flame::Texture2D::Create("assets/texture/ChernoLogo.png");
 
-		std::dynamic_pointer_cast<Flame::OpenGLShader>(m_TextureShader)->Bind();//下行可检测，安全
-		std::dynamic_pointer_cast<Flame::OpenGLShader>(m_TextureShader)->UploadUniformInt("u_Texture", 0);//因为绑定到了slot 0
+		std::dynamic_pointer_cast<Flame::OpenGLShader>(textureShader)->Bind();//下行可检测，安全
+		std::dynamic_pointer_cast<Flame::OpenGLShader>(textureShader)->UploadUniformInt("u_Texture", 0);//因为绑定到了slot 0
 	}
 
 	void OnUpdate(Flame::Timestep ts) override
@@ -197,23 +196,25 @@ public:
 		static glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));//使用static不用每次都算
 
 
-		std::dynamic_pointer_cast<Flame::OpenGLShader>(m_Shader2)->Bind();//下行可检测，安全
-		std::dynamic_pointer_cast<Flame::OpenGLShader>(m_Shader2)->UploadUniformFloat3("u_Color", m_SquareColor);
+		std::dynamic_pointer_cast<Flame::OpenGLShader>(m_FlatColorShader)->Bind();//下行可检测，安全
+		std::dynamic_pointer_cast<Flame::OpenGLShader>(m_FlatColorShader)->UploadUniformFloat3("u_Color", m_SquareColor);
 		for (int j = 0; j < 20; j++)
 		{
 			for (int i = 0; i < 20; i++)
 			{
 				glm::vec3 pos(i * 0.11f, j * 0.11f, 0.0f);
 				glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
-				Flame::Renderer::Submit(m_Shader2, m_SquareVA, transform);
+				Flame::Renderer::Submit(m_FlatColorShader, m_SquareVA, transform);
 			}
 
 		}
 
+		auto textureShader = m_ShaderLibrary.Get("Texture");
+
 		m_Texture->Bind();
-		Flame::Renderer::Submit(m_TextureShader, m_SquareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+		Flame::Renderer::Submit(textureShader, m_SquareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 		m_ChernoLogoTexture->Bind();
-		Flame::Renderer::Submit(m_TextureShader, m_SquareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+		Flame::Renderer::Submit(textureShader, m_SquareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 		// Triangle
 		//Flame::Renderer::Submit(m_Shader, m_VertexArray);
 
@@ -221,10 +222,11 @@ public:
 	}
 
 	private:
+		Flame::ShaderLibrary m_ShaderLibrary;
 		Flame::Ref<Flame::Shader> m_Shader;//这里要把unique变成shared，为了更安全？
 		Flame::Ref<Flame::VertexArray> m_VertexArray;
 
-		Flame::Ref<Flame::Shader> m_Shader2, m_TextureShader;
+		Flame::Ref<Flame::Shader> m_FlatColorShader;
 		Flame::Ref<Flame::VertexArray> m_SquareVA;
 
 		Flame::Ref<Flame::Texture2D> m_Texture, m_ChernoLogoTexture;
