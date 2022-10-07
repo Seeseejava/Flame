@@ -16,7 +16,7 @@ class ExampleLayer : public Flame::Layer
 {
 public:
 	ExampleLayer()
-		:Layer("Example"), m_Camera(-1.6f, 1.6f, -0.9f, 0.9f), m_CameraPosition(0.0f), m_SquarePosition(0.0f)
+		:Layer("Example"), m_CameraController(1280.f / 720.f, true)
 	{
 		m_VertexArray.reset(Flame::VertexArray::Create());
 
@@ -154,44 +154,13 @@ public:
 	void OnUpdate(Flame::Timestep ts) override
 	{
 		//FLAME_TRACE("Delta time: {0}s ({1}ms)", ts.GetSeconds(), ts.GetMilliseconds());
-
-		if (Flame::Input::IsKeyPressed(FLAME_KEY_TAB))
-			FLAME_TRACE("Tab key is pressed (poll)!");
-		if (Flame::Input::IsKeyPressed(FLAME_KEY_LEFT))
-			m_CameraPosition.x -= m_CameraMoveSpeed * ts;
-		else if (Flame::Input::IsKeyPressed(FLAME_KEY_RIGHT))
-			m_CameraPosition.x += m_CameraMoveSpeed * ts;
-
-		if (Flame::Input::IsKeyPressed(FLAME_KEY_UP))
-			m_CameraPosition.y += m_CameraMoveSpeed * ts;
-		else if (Flame::Input::IsKeyPressed(FLAME_KEY_DOWN))
-			m_CameraPosition.y -= m_CameraMoveSpeed * ts;
-
-		if (Flame::Input::IsKeyPressed(FLAME_KEY_A))
-			m_CameraRotation += m_CameraRotationSpeed * ts;
-		if (Flame::Input::IsKeyPressed(FLAME_KEY_D))
-			m_CameraRotation -= m_CameraRotationSpeed * ts;
-
-
-
-		/*if (Flame::Input::IsKeyPressed(FLAME_KEY_J))
-			m_SquarePosition.x -= m_SquareMoveSpeed * ts;
-		else if (Flame::Input::IsKeyPressed(FLAME_KEY_L))
-			m_SquarePosition.x += m_SquareMoveSpeed * ts;
-
-		if (Flame::Input::IsKeyPressed(FLAME_KEY_I))
-			m_SquarePosition.y += m_SquareMoveSpeed * ts;
-		else if (Flame::Input::IsKeyPressed(FLAME_KEY_K))
-			m_SquarePosition.y -= m_SquareMoveSpeed * ts;*/
-
-
+		// Update
+		m_CameraController.OnUpdate(ts);
+		// Render
 		Flame::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 		Flame::RenderCommand::Clear();
 
-		m_Camera.SetPosition(m_CameraPosition);
-		m_Camera.SetRotation(m_CameraRotation);
-
-		Flame::Renderer::BeginScene(m_Camera);
+		Flame::Renderer::BeginScene(m_CameraController.GetCamera());
 
 		static glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));//使用static不用每次都算
 
@@ -221,6 +190,16 @@ public:
 		Flame::Renderer::EndScene();
 	}
 
+	virtual void OnImGuiRender() override
+	{
+		ImGui::Begin("Settings");
+		ImGui::ColorEdit3("Square Color", glm::value_ptr(m_SquareColor));
+		ImGui::End();
+	}
+	void OnEvent(Flame::Event& e) override
+	{
+		m_CameraController.OnEvent(e);
+	}
 	private:
 		Flame::ShaderLibrary m_ShaderLibrary;
 		Flame::Ref<Flame::Shader> m_Shader;//这里要把unique变成shared，为了更安全？
@@ -231,27 +210,12 @@ public:
 
 		Flame::Ref<Flame::Texture2D> m_Texture, m_ChernoLogoTexture;
 
-		Flame::OrthographicCamera m_Camera;
-		glm::vec3 m_CameraPosition;
-		float m_CameraMoveSpeed = 5.0f;
-
-		float m_CameraRotation = 0.0f;
-		float m_CameraRotationSpeed = 180.0f;
+		Flame::OrthographicCameraController m_CameraController;
 
 		glm::vec3 m_SquarePosition;
 		float m_SquareMoveSpeed = 5.0f;
 		glm::vec3 m_SquareColor = { 0.2f, 0.3f, 0.7 };
 
-	virtual void OnImGuiRender() override
-	{
-		ImGui::Begin("Settings");
-		ImGui::ColorEdit3("Square Color", glm::value_ptr(m_SquareColor));
-		ImGui::End();
-	}
-	void OnEvent(Flame::Event& event) override
-	{
-
-	}
 };
 
 class Sandbox : public Flame::Application

@@ -12,6 +12,7 @@
 #include "Flame/KeyCodes.h"
 #include "Flame/MouseButtonCodes.h"
 #include "Flame/Layer.h"
+#include "Flame/OrthographicCameraController.h"
 
 #include "Flame//ImGui/ImGuiLayer.h"
 

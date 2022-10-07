@@ -140,6 +140,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Flame\OrthographicCameraController.h" />
     <ClInclude Include="src\Flame.h" />
     <ClInclude Include="src\Flame\Application.h" />
     <ClInclude Include="src\Flame\Core.h" />
@@ -594,6 +595,7 @@
     <ClInclude Include="vendor\stb_image\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Flame\OrthographicCameraController.cpp" />
     <ClCompile Include="src\Flame\Application.cpp" />
     <ClCompile Include="src\Flame\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\Flame\ImGui\ImGuiLayer.cpp" />
