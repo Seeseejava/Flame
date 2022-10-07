@@ -1,8 +1,8 @@
 #include "flamepch.h"
 #include "OrthographicCameraController.h"
 
-#include "Flame/Input.h"
-#include "Flame/KeyCodes.h"
+#include "Flame/Core/Input.h"
+#include "Flame/Core/KeyCodes.h"
 
 namespace Flame {
 

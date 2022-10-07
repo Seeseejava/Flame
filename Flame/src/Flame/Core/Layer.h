@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Flame/Core.h"
+#include "Flame/Core/Core.h"
 #include "Flame/Events/Event.h"
 #include "Flame/Core/Timestep.h"
 

@@ -57,17 +57,38 @@
     <ClInclude Include="src\Flame.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\Flame\Application.h">
-      <Filter>src\Flame</Filter>
+    <ClInclude Include="src\Flame\Core\Application.h">
+      <Filter>src\Flame\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Flame\Core.h">
-      <Filter>src\Flame</Filter>
+    <ClInclude Include="src\Flame\Core\Core.h">
+      <Filter>src\Flame\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Flame\Core\EntryPoint.h">
+      <Filter>src\Flame\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Flame\Core\Input.h">
+      <Filter>src\Flame\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Flame\Core\KeyCodes.h">
+      <Filter>src\Flame\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Flame\Core\Layer.h">
+      <Filter>src\Flame\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Flame\Core\LayerStack.h">
+      <Filter>src\Flame\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Flame\Core\Log.h">
+      <Filter>src\Flame\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Flame\Core\MouseButtonCodes.h">
+      <Filter>src\Flame\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Flame\Core\Timestep.h">
       <Filter>src\Flame\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Flame\EntryPoint.h">
-      <Filter>src\Flame</Filter>
+    <ClInclude Include="src\Flame\Core\Window.h">
+      <Filter>src\Flame\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Flame\Events\ApplicationEvent.h">
       <Filter>src\Flame\Events</Filter>
@@ -84,24 +105,6 @@
     <ClInclude Include="src\Flame\ImGui\ImGuiLayer.h">
       <Filter>src\Flame\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="src\Flame\Input.h">
-      <Filter>src\Flame</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Flame\KeyCodes.h">
-      <Filter>src\Flame</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Flame\Layer.h">
-      <Filter>src\Flame</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Flame\LayerStack.h">
-      <Filter>src\Flame</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Flame\Log.h">
-      <Filter>src\Flame</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Flame\MouseButtonCodes.h">
-      <Filter>src\Flame</Filter>
-    </ClInclude>
     <ClInclude Include="src\Flame\Renderer\Buffer.h">
       <Filter>src\Flame\Renderer</Filter>
     </ClInclude>
@@ -109,6 +112,9 @@
       <Filter>src\Flame\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Flame\Renderer\OrthographicCamera.h">
+      <Filter>src\Flame\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Flame\Renderer\OrthographicCameraController.h">
       <Filter>src\Flame\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Flame\Renderer\RenderCommand.h">
@@ -128,9 +134,6 @@
     </ClInclude>
     <ClInclude Include="src\Flame\Renderer\VertexArray.h">
       <Filter>src\Flame\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Flame\Window.h">
-      <Filter>src\Flame</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h">
       <Filter>src\Platform\OpenGL</Filter>
@@ -1410,13 +1413,19 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
-    <ClInclude Include="src\Flame\OrthographicCameraController.h">
-      <Filter>src\Flame</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Flame\Application.cpp">
-      <Filter>src\Flame</Filter>
+    <ClCompile Include="src\Flame\Core\Application.cpp">
+      <Filter>src\Flame\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Flame\Core\Layer.cpp">
+      <Filter>src\Flame\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Flame\Core\LayerStack.cpp">
+      <Filter>src\Flame\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Flame\Core\Log.cpp">
+      <Filter>src\Flame\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Flame\ImGui\ImGuiBuild.cpp">
       <Filter>src\Flame\ImGui</Filter>
@@ -1424,19 +1433,13 @@
     <ClCompile Include="src\Flame\ImGui\ImGuiLayer.cpp">
       <Filter>src\Flame\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="src\Flame\Layer.cpp">
-      <Filter>src\Flame</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Flame\LayerStack.cpp">
-      <Filter>src\Flame</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Flame\Log.cpp">
-      <Filter>src\Flame</Filter>
-    </ClCompile>
     <ClCompile Include="src\Flame\Renderer\Buffer.cpp">
       <Filter>src\Flame\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Flame\Renderer\OrthographicCamera.cpp">
+      <Filter>src\Flame\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Flame\Renderer\OrthographicCameraController.cpp">
       <Filter>src\Flame\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Flame\Renderer\RenderCommand.cpp">
@@ -1486,9 +1489,6 @@
     </ClCompile>
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Flame\OrthographicCameraController.cpp">
-      <Filter>src\Flame</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

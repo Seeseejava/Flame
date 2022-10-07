@@ -3,18 +3,18 @@
 //For use by Flame applications
 
 
-#include "Flame/Application.h"
-#include "Flame/Input.h"
-#include "Flame/Log.h"
+#include "Flame/Core/Application.h"
+#include "Flame/Core/Input.h"
+#include "Flame/Core/Log.h"
 
 #include "Flame/Core/Timestep.h"
 
-#include "Flame/KeyCodes.h"
-#include "Flame/MouseButtonCodes.h"
-#include "Flame/Layer.h"
-#include "Flame/OrthographicCameraController.h"
+#include "Flame/Core/KeyCodes.h"
+#include "Flame/Core/MouseButtonCodes.h"
+#include "Flame/Core/Layer.h"
+#include "Flame/Renderer/OrthographicCameraController.h"
 
-#include "Flame//ImGui/ImGuiLayer.h"
+#include "Flame/ImGui/ImGuiLayer.h"
 
 
 
@@ -35,5 +35,5 @@
 
 
 //----Entry Point--------------
-#include "Flame/EntryPoint.h"
+#include "Flame/Core/EntryPoint.h"
 //-----------------------------

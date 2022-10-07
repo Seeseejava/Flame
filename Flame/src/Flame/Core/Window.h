@@ -2,7 +2,7 @@
 
 #include "flamepch.h"
 
-#include "Flame/Core.h"
+#include "Flame/Core/Core.h"
 #include "Flame/Events/Event.h"
 
 namespace Flame {

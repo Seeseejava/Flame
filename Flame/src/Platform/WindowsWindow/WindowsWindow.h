@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Flame/Window.h"
+#include "Flame/Core/Window.h"
 #include "Flame/Renderer/GraphicsContext.h"
 
 #include <GLFW/glfw3.h>

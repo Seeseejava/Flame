@@ -14,7 +14,7 @@
 #include <unordered_set>
 
 
-#include "Flame/Log.h"
+#include "Flame/Core/Log.h"
 #ifdef FLAME_PLATFORM_WINDOWS
 	#include <Windows.h>
 #endif

@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Core.h"
-#include "Events/Event.h"
-#include "Window.h"
-#include "LayerStack.h"
+#include "Flame/Core/Core.h"
+#include "Flame/Events/Event.h"
+#include "Flame/Core/Window.h"
+#include "Flame/Core/LayerStack.h"
 
-#include "Events/ApplicationEvent.h"
+#include "Flame/Events/ApplicationEvent.h"
 
 #include "Flame/ImGui/ImGuiLayer.h"
 

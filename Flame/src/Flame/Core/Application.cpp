@@ -2,14 +2,14 @@
 #include "Application.h"
 
 
-#include "Flame/Log.h"
+#include "Flame/Core/Log.h"
 
 
 #include <GLFW/glfw3.h>
 #include "Flame/Renderer/Renderer.h"
 #include "Flame/Renderer/RenderCommand.h"
 
-#include "Input.h"
+#include "Flame/Core/Input.h"
 
 #include <glfw/glfw3.h>
 

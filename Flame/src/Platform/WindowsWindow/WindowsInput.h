@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Flame/Input.h"
+#include "Flame/Core/Input.h"
 
 namespace Flame {
 

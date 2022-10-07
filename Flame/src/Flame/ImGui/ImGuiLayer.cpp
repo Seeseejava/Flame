@@ -6,7 +6,7 @@
 #include "backends/imgui_impl_glfw.h"
 
 //#include "Platform/OpenGL/imgui_impl_opengl3_loader.h"
-#include "Flame/Application.h"
+#include "Flame/Core/Application.h"
 
 // Temp
 #include "GLFW/glfw3.h"

@@ -1,7 +1,7 @@
 #include "flamepch.h"
 #include "WindowsInput.h"
 
-#include "Flame/Application.h"
+#include "Flame/Core/Application.h"
 #include <GLFW/glfw3.h>
 
 namespace Flame {

@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "Flame/Core.h"
+#include "Flame/Core/Core.h"
 
 namespace Flame
 {
