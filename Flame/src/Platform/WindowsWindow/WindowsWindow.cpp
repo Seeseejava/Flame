@@ -68,6 +68,7 @@ namespace Flame {
 				data.Height = height;//放在前面以防未更新
 
 				WindowResizeEvent event(width, height);
+				//FLAME_CORE_WARN("{0}, {1}", width, height);
 				data.EventCallback(event);
 			});
 
