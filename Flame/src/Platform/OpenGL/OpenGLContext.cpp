@@ -24,6 +24,15 @@ namespace Flame {
 		FLAME_CORE_INFO("Renderer: {0}", glGetString(GL_RENDERER));
 		FLAME_CORE_INFO("Version: {0}", glGetString(GL_VERSION));
 
+		// ¼ì²éOpenGL°æ±¾
+		#ifdef FLAME_ENABLE_ASSERTS
+				int versionMajor;
+				int versionMinor;
+				glGetIntegerv(GL_MAJOR_VERSION, &versionMajor);
+				glGetIntegerv(GL_MINOR_VERSION, &versionMinor);
+
+				FLAME_CORE_ASSERT((versionMajor > 4 || (versionMajor == 4 && versionMinor >= 5)), "Hazel requires at least OpenGL version 4.5!");
+		#endif
 
 	}
 	void OpenGLContext::SwapBuffers()
