@@ -1,6 +1,8 @@
 #include <Flame.h>
 #include <flamepch.h>
 
+#include <Flame/Core/EntryPoint.h>
+
 #include <glm/vec3.hpp> // glm::vec3
 #include <glm/vec4.hpp> // glm::vec4
 #include <glm/mat4x4.hpp> // glm::mat4
@@ -12,13 +14,15 @@
 #include "Platform/OpenGL/OpenGLShader.h"
 #include "imgui/imgui.h"
 
+#include "Sandbox2D.h"
+
 class ExampleLayer : public Flame::Layer
 {
 public:
 	ExampleLayer()
 		:Layer("Example"), m_CameraController(1280.f / 720.f, true)
 	{
-		m_VertexArray.reset(Flame::VertexArray::Create());
+		m_VertexArray= Flame::VertexArray::Create();
 
 		float vertices[3 * 7] = {
 			-0.5f, -0.5f,  0.0f, 1.0f, 0.0f, 1.0f, 1.0f,
@@ -26,7 +30,7 @@ public:
 			 0.0f,  0.5f,  0.0f, 1.0f, 0.0f, 1.0f, 1.0f,
 		};
 		Flame::Ref<Flame::VertexBuffer> vertexbuffer;
-		vertexbuffer.reset(Flame::VertexBuffer::Create(vertices, sizeof(vertices)));
+		vertexbuffer = Flame::VertexBuffer::Create(vertices, sizeof(vertices));
 
 		Flame::BufferLayout layout = {
 					{Flame::ShaderDataType::Float3, "a_Position"},
@@ -41,10 +45,10 @@ public:
 
 		unsigned int indices[3] = { 0, 1, 2 };
 		Flame::Ref<Flame::IndexBuffer> indexbuffer;
-		indexbuffer.reset(Flame::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
+		indexbuffer = Flame::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t));
 		m_VertexArray->SetIndexBuffer(indexbuffer);
 
-		m_SquareVA.reset(Flame::VertexArray::Create());
+		m_SquareVA = Flame::VertexArray::Create();
 
 		float squreVertices[5 * 4] = {
 			-0.5f, -0.5f,  0.0f, 0.0f, 0.0f,
@@ -54,7 +58,7 @@ public:
 		};
 
 		Flame::Ref<Flame::VertexBuffer> squareVB;
-		squareVB.reset(Flame::VertexBuffer::Create(squreVertices, sizeof(squreVertices)));
+		squareVB = Flame::VertexBuffer::Create(squreVertices, sizeof(squreVertices));
 
 
 		Flame::BufferLayout Squarelayout = {
@@ -69,7 +73,7 @@ public:
 
 		unsigned int Squareindices[6] = { 0, 1, 2, 2, 3, 0 };
 		Flame::Ref<Flame::IndexBuffer> squareIB;
-		squareIB.reset(Flame::IndexBuffer::Create(Squareindices, sizeof(Squareindices) / sizeof(uint32_t)));
+		squareIB = Flame::IndexBuffer::Create(Squareindices, sizeof(Squareindices) / sizeof(uint32_t));
 		m_SquareVA->SetIndexBuffer(squareIB);
 
 		std::string vertexSrc = R"(
@@ -223,7 +227,8 @@ class Sandbox : public Flame::Application
 public:
 	Sandbox()
 	{
-		PushLayer(new ExampleLayer());
+		//PushLayer(new ExampleLayer());
+		PushLayer(new Sandbox2D());
 	}
 
 	~Sandbox()

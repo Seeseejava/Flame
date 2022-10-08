@@ -35,5 +35,4 @@
 
 
 //----Entry Point--------------
-#include "Flame/Core/EntryPoint.h"
 //-----------------------------
