@@ -18,11 +18,11 @@ IncludeDir["ImGui"] = "Flame/vendor/imgui"
 IncludeDir["glm"] = "Flame/vendor/glm"
 IncludeDir["stb_image"] = "Flame/vendor/stb_image"
 
-
+group "Dependency"
 include "Flame/vendor/GLFW"
 include "Flame/vendor/Glad"
 include "Flame/vendor/imgui"
-
+group ""
 
 project "Flame"
     location "Flame"
