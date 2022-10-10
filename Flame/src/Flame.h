@@ -20,6 +20,7 @@
 
 // ---Renderer------------------------
 #include "Flame/Renderer/Renderer.h"
+#include "Flame/Renderer/Renderer2D.h"
 #include "Flame/Renderer/RenderCommand.h"
 		
 #include "Flame/Renderer/Buffer.h"

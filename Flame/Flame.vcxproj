@@ -163,6 +163,7 @@
     <ClInclude Include="src\Flame\Renderer\OrthographicCameraController.h" />
     <ClInclude Include="src\Flame\Renderer\RenderCommand.h" />
     <ClInclude Include="src\Flame\Renderer\Renderer.h" />
+    <ClInclude Include="src\Flame\Renderer\Renderer2D.h" />
     <ClInclude Include="src\Flame\Renderer\RendererAPI.h" />
     <ClInclude Include="src\Flame\Renderer\Shader.h" />
     <ClInclude Include="src\Flame\Renderer\Texture.h" />
@@ -606,6 +607,7 @@
     <ClCompile Include="src\Flame\Renderer\OrthographicCameraController.cpp" />
     <ClCompile Include="src\Flame\Renderer\RenderCommand.cpp" />
     <ClCompile Include="src\Flame\Renderer\Renderer.cpp" />
+    <ClCompile Include="src\Flame\Renderer\Renderer2D.cpp" />
     <ClCompile Include="src\Flame\Renderer\RendererAPI.cpp" />
     <ClCompile Include="src\Flame\Renderer\Shader.cpp" />
     <ClCompile Include="src\Flame\Renderer\Texture.cpp" />
