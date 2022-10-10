@@ -32,6 +32,8 @@ namespace Flame {
 	{
 		glDrawElements(GL_TRIANGLES, vertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
 		//为什么这里nullptr不是indices(是因为index已经绑定到buffer中了吗？
+
+		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
 }
