@@ -28,14 +28,11 @@ void Sandbox2D::OnUpdate(Flame::Timestep ts)
 	Flame::RenderCommand::Clear();
 
 	Flame::Renderer2D::BeginScene(m_CameraController.GetCamera());
-	Flame::Renderer2D::DrawQuad({ 0.0f, 0.0f }, { 1.0f, 1.0f }, { 0.8f, 0.2f, 0.3f, 1.0f });//目前position和size还没用
+	Flame::Renderer2D::DrawQuad({ 0.0f, 0.0f }, { 1.0f, 1.0f }, m_SquareColor);//目前position和size还没用
+	Flame::Renderer2D::DrawQuad({ -1.0f, 0.0f }, { 0.8f, 0.8f }, { 0.8f, 0.2f, 0.3f, 1.0f });
 
 	Flame::Renderer2D::EndScene();
-	// TODO: Add these functions - Shader::SetMat4, Shader::SetFloat4
-	//std::dynamic_pointer_cast<Flame::OpenGLShader>(m_FlatColorShader)->Bind();
-	//std::dynamic_pointer_cast<Flame::OpenGLShader>(m_FlatColorShader)->UploadUniformFloat4("u_Color", m_SquareColor);
-
-	//Flame::Renderer::Submit(m_FlatColorShader, m_SquareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+	
 }
 
 void Sandbox2D::OnImGuiRender()
