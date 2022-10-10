@@ -4,7 +4,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "Platform/OpenGL/OpenGLShader.h"
 
 Sandbox2D::Sandbox2D()
 	:Layer("Sandbox2D"), m_CameraController(1280.f / 720.f, true)
@@ -13,6 +12,7 @@ Sandbox2D::Sandbox2D()
 
 void Sandbox2D::OnAttach()
 {
+	m_CheckerboardTexture = Flame::Texture2D::Create("assets/texture/Checkerboard.png");
 }
 
 void Sandbox2D::OnDetach()
@@ -28,8 +28,9 @@ void Sandbox2D::OnUpdate(Flame::Timestep ts)
 	Flame::RenderCommand::Clear();
 
 	Flame::Renderer2D::BeginScene(m_CameraController.GetCamera());
-	Flame::Renderer2D::DrawQuad({ 0.0f, 0.0f }, { 1.0f, 1.0f }, m_SquareColor);//目前position和size还没用
 	Flame::Renderer2D::DrawQuad({ -1.0f, 0.0f }, { 0.8f, 0.8f }, { 0.8f, 0.2f, 0.3f, 1.0f });
+	Flame::Renderer2D::DrawQuad({ 0.5f, -0.5f }, { 0.5f, 0.75f }, { 0.2f, 0.3f, 0.8f, 1.0f });
+	Flame::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 10.0f, 10.0f }, m_CheckerboardTexture);
 
 	Flame::Renderer2D::EndScene();
 	
