@@ -21,6 +21,7 @@ namespace Flame {
 		std::string Name;
 	};
 
+	// Instrumentor是个单例, 但是应该不是线程安全的单例
 	class Instrumentor
 	{
 	private:
@@ -84,7 +85,7 @@ namespace Flame {
 
 		static Instrumentor& Get()
 		{
-			static Instrumentor instance;
+			static Instrumentor instance; // 这一行只会执行一次
 			return instance;
 		}
 	};
