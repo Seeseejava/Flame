@@ -152,6 +152,7 @@
     <ClInclude Include="src\Flame\Core\MouseButtonCodes.h" />
     <ClInclude Include="src\Flame\Core\Timestep.h" />
     <ClInclude Include="src\Flame\Core\Window.h" />
+    <ClInclude Include="src\Flame\Debug\Instrumentor.h" />
     <ClInclude Include="src\Flame\Events\ApplicationEvent.h" />
     <ClInclude Include="src\Flame\Events\Event.h" />
     <ClInclude Include="src\Flame\Events\KeyEvent.h" />

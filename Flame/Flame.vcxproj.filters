@@ -1414,6 +1414,7 @@
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
     <ClInclude Include="src\Flame\Renderer\Renderer2D.h" />
+    <ClInclude Include="src\Flame\Debug\Instrumentor.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Flame\Core\Application.cpp">

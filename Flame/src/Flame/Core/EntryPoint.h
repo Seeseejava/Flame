@@ -8,13 +8,18 @@ int main(int argc, char** argv)
 {
 	Flame::Log::Init();
 
-	FLAME_CORE_WARN("Initialzed Log!");
-	int a = 5;
-	FLAME_INFO("Hello! Var={0}", a);
 
+	FLAME_PROFILE_BEGIN_SESSION("Startup", "FlameProfile-Startup.json");
 	auto app = Flame::CreateApplication();
+	FLAME_PROFILE_END_SESSION();
+
+	FLAME_PROFILE_BEGIN_SESSION("Runtime", "FlameProfile-Runtime.json");
 	app->Run();
+	FLAME_PROFILE_END_SESSION();
+
+	FLAME_PROFILE_BEGIN_SESSION("Shutdown", "FlameProfile-Shutdown.json");
 	delete app;
+	FLAME_PROFILE_END_SESSION();
 }
 
 #endif

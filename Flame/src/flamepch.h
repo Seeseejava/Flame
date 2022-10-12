@@ -13,8 +13,10 @@
 #include <unordered_map>
 #include <unordered_set>
 
-
 #include "Flame/Core/Log.h"
+
+#include "Flame/Debug/Instrumentor.h"
+
 #ifdef FLAME_PLATFORM_WINDOWS
 	#include <Windows.h>
 #endif

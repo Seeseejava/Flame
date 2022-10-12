@@ -26,7 +26,7 @@ namespace Flame {
 #define FLAME_CORE_INFO(...)      ::Flame::Log::GetCoreLogger()->info(__VA_ARGS__)
 #define FLAME_CORE_WARN(...)      ::Flame::Log::GetCoreLogger()->warn(__VA_ARGS__)
 #define FLAME_CORE_ERROR(...)     ::Flame::Log::GetCoreLogger()->error(__VA_ARGS__)
-#define FLAME_CORE_FATAL(...)     ::Flame::Log::GetCoreLogger()->critical(__VA_ARGS__)
+#define FLAME_CORE_FATAL(...)     ::Flame::Log::GetCoreLogger()->critical(__VA_ARGS__)//不要最前面的两个冒号也可编译通过
 
 // Client log macros
 #define FLAME_TRACE(...)          ::Flame::Log::GetClientLogger()->trace(__VA_ARGS__)
