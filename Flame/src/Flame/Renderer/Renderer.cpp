@@ -11,6 +11,8 @@ namespace Flame {
 
 	void Renderer::Init()
 	{
+		FLAME_PROFILE_FUNCTION();
+
 		RenderCommand::Init();
 		Renderer2D::Init();
 	}

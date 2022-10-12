@@ -14,6 +14,8 @@ namespace Flame {
 
 	void OpenGLContext::Init()
 	{
+		FLAME_PROFILE_FUNCTION();
+
 		glfwMakeContextCurrent(m_WindowHandle);
 		// glad: load all OpenGL function pointers
 		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
@@ -37,6 +39,8 @@ namespace Flame {
 	}
 	void OpenGLContext::SwapBuffers()
 	{
+		FLAME_PROFILE_FUNCTION();
+
 		glfwSwapBuffers(m_WindowHandle);
 	}
 }

@@ -13,6 +13,8 @@ namespace Flame {
 
 	void OrthographicCameraController::OnUpdate(Timestep ts)
 	{
+		FLAME_PROFILE_FUNCTION();
+
 		if (Input::IsKeyPressed(FLAME_KEY_A))
 			m_CameraPosition.x -= m_CameraTranslationSpeed * ts;
 		else if (Input::IsKeyPressed(FLAME_KEY_D))
@@ -40,6 +42,8 @@ namespace Flame {
 
 	void OrthographicCameraController::OnEvent(Event& e)
 	{
+		FLAME_PROFILE_FUNCTION();
+
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<MouseScrolledEvent>(FLAME_BIND_EVENT_FN(OrthographicCameraController::OnMouseScrolled));
 		dispatcher.Dispatch<WindowResizeEvent>(FLAME_BIND_EVENT_FN(OrthographicCameraController::OnWindowResized));
@@ -47,6 +51,8 @@ namespace Flame {
 
 	bool OrthographicCameraController::OnMouseScrolled(MouseScrolledEvent& e)
 	{
+		FLAME_PROFILE_FUNCTION();
+
 		m_ZoomLevel -= e.GetYOffset() * 0.25f;
 		m_ZoomLevel = std::max(m_ZoomLevel, 0.25f);
 		m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
@@ -55,6 +61,8 @@ namespace Flame {
 
 	bool OrthographicCameraController::OnWindowResized(WindowResizeEvent& e)
 	{
+		FLAME_PROFILE_FUNCTION();
+
 		m_AspectRatio = (float)e.GetWidth() / (float)e.GetHeight();
 		m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
 		return false;

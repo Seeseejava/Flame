@@ -25,6 +25,8 @@ namespace Flame {
 	}
 	void ImGuiLayer::OnAttach()
 	{
+		FLAME_PROFILE_FUNCTION();
+
 		// Copy from example_glfw_opengl3 main.c
 		// Setup Dear ImGui context
 		IMGUI_CHECKVERSION();
@@ -58,6 +60,8 @@ namespace Flame {
 
 	void ImGuiLayer::OnDetach()
 	{
+		FLAME_PROFILE_FUNCTION();
+
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplGlfw_Shutdown();
 		ImGui::DestroyContext();
@@ -65,6 +69,8 @@ namespace Flame {
 
 	void ImGuiLayer::Begin()
 	{
+		FLAME_PROFILE_FUNCTION();
+
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
@@ -73,6 +79,8 @@ namespace Flame {
 	// Copy from docking branch
 	void ImGuiLayer::End()
 	{
+		FLAME_PROFILE_FUNCTION();
+
 		ImGuiIO& io = ImGui::GetIO();
 		Application& app = Application::Get();
 		io.DisplaySize = ImVec2((float)app.GetWindow().GetWidth(), (float)app.GetWindow().GetHeight());

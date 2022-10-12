@@ -10,6 +10,8 @@ namespace Flame {
 	OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height)
 		: m_Width(width), m_Height(height)
 	{
+		FLAME_PROFILE_FUNCTION();
+
 		m_InternalFormat = GL_RGBA8;
 		m_DataFormat = GL_RGBA;
 
@@ -27,9 +29,15 @@ namespace Flame {
 	OpenGLTexture2D::OpenGLTexture2D(const std::string& path)
 		:m_Path(path)
 	{
+		FLAME_PROFILE_FUNCTION();
+
 		int width, height, channels;
 		stbi_set_flip_vertically_on_load(1);
-		stbi_uc* data = stbi_load(path.c_str(), &width, &height, &channels, 0);//stbi_uc*是unsigned char,这里为什么期待的通道数是0
+		stbi_uc* data = nullptr;
+		{
+			FLAME_PROFILE_SCOPE("stbi_load - OpenGLTexture2D::OpenGLTexture2D(const std:string&)");
+			data = stbi_load(path.c_str(), &width, &height, &channels, 0);//stbi_uc*是unsigned char,这里为什么期待的通道数是0
+		}
 		FLAME_CORE_ASSERT(data, "Failed to load image!");
 
 		m_Width = width;
@@ -70,11 +78,15 @@ namespace Flame {
 
 	OpenGLTexture2D::~OpenGLTexture2D()
 	{
+		FLAME_PROFILE_FUNCTION();
+
 		glDeleteTextures(1, &m_RendererID);
 	}
 
 	void OpenGLTexture2D::SetData(void* data, uint32_t size)
 	{
+		FLAME_PROFILE_FUNCTION();
+
 		// bpp: bytes per pixel
 		uint32_t bpp = m_DataFormat == GL_RGBA ? 4 : 3;
 		FLAME_CORE_ASSERT(size == m_Width * m_Height * bpp, "Data must be entire texture!");
@@ -84,6 +96,8 @@ namespace Flame {
 
 	void OpenGLTexture2D::Bind(uint32_t slot) const 
 	{
+		FLAME_PROFILE_FUNCTION();
+
 		glBindTextureUnit(slot, m_RendererID);//(unit, texture)
 	}
 

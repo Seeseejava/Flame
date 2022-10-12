@@ -7,6 +7,7 @@
 
 #include <thread>
 
+// 目前存在问题：不能指定记录哪些帧的数据，而只能从头到尾执行
 namespace Flame {
 
 	struct ProfileResult

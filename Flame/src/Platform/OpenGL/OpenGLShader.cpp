@@ -21,6 +21,8 @@ namespace Flame {
 
 	OpenGLShader::OpenGLShader(const std::string& filepath)
 	{
+		FLAME_PROFILE_FUNCTION();
+
 		std::string source = ReadFile(filepath);
 		auto shaderSource = PreProcess(source);
 		Compile(shaderSource);
@@ -36,6 +38,8 @@ namespace Flame {
 	OpenGLShader::OpenGLShader(const std::string& name, const std::string& vertexsrc, const std::string& fragmentsrc)
 		: m_Name(name)
 	{
+		FLAME_PROFILE_FUNCTION();
+
 		std::unordered_map<GLenum, std::string> sources;
 		sources[GL_VERTEX_SHADER] = vertexsrc;
 		sources[GL_FRAGMENT_SHADER] = fragmentsrc;
@@ -45,11 +49,15 @@ namespace Flame {
 
 	OpenGLShader::~OpenGLShader()
 	{
+		FLAME_PROFILE_FUNCTION();
+
 		glDeleteProgram(m_RendererID);
 	}
 
 	std::string OpenGLShader::ReadFile(const std::string& filepath)
 	{
+		FLAME_PROFILE_FUNCTION();
+
 		std::string result;
 		//一般来说，游戏引擎里的Shader，都是在Editor下预先编译好的二进制文件，然后再在Runtime对其进行组合和应用
 		std::ifstream in(filepath, std::ios::in | std::ios::binary);
@@ -73,6 +81,8 @@ namespace Flame {
 
 	std::unordered_map<GLenum, std::string> OpenGLShader::PreProcess(const std::string& source)
 	{
+		FLAME_PROFILE_FUNCTION();
+
 		std::unordered_map<GLenum, std::string> shaderSources;
 
 		const char* typeToken = "#type";
@@ -96,6 +106,8 @@ namespace Flame {
 
 	void OpenGLShader::Compile(std::unordered_map<GLenum, std::string>& shaderSources)
 	{
+		FLAME_PROFILE_FUNCTION();
+
 		GLuint program = glCreateProgram();
 		FLAME_CORE_ASSERT(shaderSources.size() <= 2, "We only support two shaders for now!");
 		std::array<GLenum, 2> glShaderIDs;          //这里使用array比使用vector好，因为我们在编译的时候已经知道了有多少个shader类型
@@ -188,31 +200,43 @@ namespace Flame {
 
 	void OpenGLShader::Bind() const
 	{
+		FLAME_PROFILE_FUNCTION();
+
 		glUseProgram(m_RendererID);
 	}
 
 	void OpenGLShader::Unbind() const
 	{
+		FLAME_PROFILE_FUNCTION();
+
 		glUseProgram(0);
 	}
 
 	void OpenGLShader::SetInt(const std::string& name, int value)
 	{
+		FLAME_PROFILE_FUNCTION();
+
 		UploadUniformInt(name, value);
 	}
 
 	void OpenGLShader::SetFloat3(const std::string& name, const glm::vec3& value)
 	{
+		FLAME_PROFILE_FUNCTION();
+
 		UploadUniformFloat3(name, value);
 	}
 
 	void OpenGLShader::SetFloat4(const std::string& name, const glm::vec4& value)
 	{
+		FLAME_PROFILE_FUNCTION();
+
 		UploadUniformFloat4(name, value);
 	}
 
 	void OpenGLShader::SetMat4(const std::string& name, const glm::mat4& value)
 	{
+		FLAME_PROFILE_FUNCTION();
+
 		UploadUniformMat4(name, value);
 	}
 

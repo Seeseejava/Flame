@@ -25,6 +25,8 @@ namespace Flame {
 
 	Application::Application()
 	{
+		FLAME_PROFILE_FUNCTION();
+
 		FLAME_CORE_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
 		m_Window = std::unique_ptr<Window>(Window::Create());
@@ -40,17 +42,23 @@ namespace Flame {
 
 	Application::~Application()
 	{
+		FLAME_PROFILE_FUNCTION();
 
+		//Renderer::Shutdown();
 	}
 
 	void Application::PushLayer(Layer* layer)
 	{
+		FLAME_PROFILE_FUNCTION();
+
 		m_LayerStack.PushLayer(layer);
 		layer->OnAttach();
 	}
 
 	void Application::PushOverlay(Layer* layer)
 	{
+		FLAME_PROFILE_FUNCTION();
+
 		m_LayerStack.PushOverlay(layer);
 		layer->OnAttach();
 	}
@@ -58,6 +66,8 @@ namespace Flame {
 
 	void Application::OnEvent(Event& e)
 	{
+		FLAME_PROFILE_FUNCTION();
+
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(OnWindowClose));
 		dispatcher.Dispatch<WindowResizeEvent>(BIND_EVENT_FN(OnWindowResize));
@@ -74,8 +84,12 @@ namespace Flame {
 
 	void Application::Run()
 	{
+		FLAME_PROFILE_FUNCTION();
+
 		while (m_Running)
 		{
+			FLAME_PROFILE_SCOPE("RunLoop");
+
 			float time = float(glfwGetTime());// Platform::GetTime
 			// 注意, 这里time - m_LastFrameTIme, 正好算的应该是当前帧所经历的时间, 而不是上一帧经历的时间
 			Timestep timestep = time - m_LastFrameTime;
@@ -83,16 +97,23 @@ namespace Flame {
 
 			if (!m_Minimized)
 			{
+				FLAME_PROFILE_SCOPE("LayerStack OnUpdate");
+
 				for (Layer* layer : m_LayerStack)
 					layer->OnUpdate(timestep);
 			}
 
-			m_ImGuiLayer->Begin();
-			for (Layer* layer : m_LayerStack)
 			{
-				layer->OnImGuiRender();
+				FLAME_PROFILE_SCOPE("LayerStack OnImGuiRender");
+
+				m_ImGuiLayer->Begin();
+				for (Layer* layer : m_LayerStack)
+				{
+					layer->OnImGuiRender();
+				}
+				m_ImGuiLayer->End();
 			}
-			m_ImGuiLayer->End();
+
 			m_Window->OnUpdate();
 		}
 	}
@@ -105,6 +126,8 @@ namespace Flame {
 
 	bool Application::OnWindowResize(WindowResizeEvent& e)
 	{
+		FLAME_PROFILE_FUNCTION();
+
 		if (e.GetWidth() == 0 || e.GetHeight() == 0)
 		{
 			m_Minimized = true;

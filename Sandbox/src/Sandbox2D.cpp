@@ -12,11 +12,15 @@ Sandbox2D::Sandbox2D()
 
 void Sandbox2D::OnAttach()
 {
+	FLAME_PROFILE_FUNCTION();
+
 	m_CheckerboardTexture = Flame::Texture2D::Create("assets/texture/Checkerboard.png");
 }
 
 void Sandbox2D::OnDetach()
 {
+	FLAME_PROFILE_FUNCTION();
+
 }
 
 void Sandbox2D::OnUpdate(Flame::Timestep ts)
@@ -24,10 +28,8 @@ void Sandbox2D::OnUpdate(Flame::Timestep ts)
 	FLAME_PROFILE_FUNCTION();
 
 	// Update
-	{	
-		FLAME_PROFILE_SCOPE("CameraController::OnUpdate");
-		m_CameraController.OnUpdate(ts);
-	}
+	m_CameraController.OnUpdate(ts);
+
 	// Render
 	{	
 		FLAME_PROFILE_SCOPE("Renderer Prep");

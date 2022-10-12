@@ -7,6 +7,8 @@ namespace Flame {
 
 	void OpenGLRendererAPI::Init()
 	{
+		FLAME_PROFILE_FUNCTION();
+
 		glEnable(GL_BLEND);// 这个函数用于决定, pixel绘制时, 如果已经有绘制的pixel了, 那么新pixel的权重是其alpha值, 原本的pixel的权重值是1-alpha值
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);//source权重值用其alpha值，destination权重值为1-source权重值
 
