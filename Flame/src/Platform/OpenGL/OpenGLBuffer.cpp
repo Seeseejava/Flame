@@ -6,6 +6,15 @@
 namespace Flame {
 
 	//---------------VertexBuffer--------------------------
+	OpenGLVertexBuffer::OpenGLVertexBuffer(uint32_t size)
+	{
+		FLAME_PROFILE_FUNCTION();
+
+		glCreateBuffers(1, &m_RendererID);
+		glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
+		glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_DYNAMIC_DRAW);
+	}
+
 	OpenGLVertexBuffer::OpenGLVertexBuffer(float* vertices, uint32_t size)
 	{
 		FLAME_PROFILE_FUNCTION();
@@ -37,6 +46,11 @@ namespace Flame {
 		glBindBuffer(GL_ARRAY_BUFFER,0);
 	}
 
+	void OpenGLVertexBuffer::SetData(const void* data, uint32_t size)
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
+	}
 
 	//---------------IndexBuffer--------------------------
 	OpenGLIndexBuffer::OpenGLIndexBuffer(uint32_t* indices, uint32_t count)

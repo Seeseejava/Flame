@@ -27,10 +27,10 @@ namespace Flame {
 			s_RendererAPI->Clear();
 		}
 		// 注意RenderCommand里的函数都应该是单一功能的函数，不应该有其他耦合的任何功能
-		inline static void DrawIndexed(const Ref<VertexArray>& vertexArray)
+		inline static void DrawIndexed(const Ref<VertexArray>& vertexArray, uint32_t count = 0)
 		{
 			// 比如这里不可以调用vertexArray->Bind()函数
-			s_RendererAPI->DrawIndexed(vertexArray);
+			s_RendererAPI->DrawIndexed(vertexArray, count);
 		}
 	private:
 		static RendererAPI* s_RendererAPI;

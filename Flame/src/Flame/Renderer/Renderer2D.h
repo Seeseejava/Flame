@@ -17,6 +17,7 @@ namespace Flame {
 
 		static void BeginScene(const OrthographicCamera& camera);
 		static void EndScene();
+		static void Flush();
 
 		// Primitives
 		//vec2和vec3的position是为了加入depth信息

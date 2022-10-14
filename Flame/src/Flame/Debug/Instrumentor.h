@@ -128,7 +128,7 @@ namespace Flame {
 	};
 }
 
-#define FLAME_PROFILE 1
+#define FLAME_PROFILE 0 //目前先关闭
 #if FLAME_PROFILE
 	#define FLAME_PROFILE_BEGIN_SESSION(name, filepath) ::Flame::Instrumentor::Get().BeginSession(name, filepath)
 	#define FLAME_PROFILE_END_SESSION() ::Flame::Instrumentor::Get().EndSession()
