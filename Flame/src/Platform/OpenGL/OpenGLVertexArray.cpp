@@ -67,8 +67,8 @@ namespace Flame {
 			glEnableVertexAttribArray(index);
 			glVertexAttribPointer(index,
 				element.GetComponentCount(),
-				ShaderDataTypeToOpenGLBaseType(element.Type),
-				element.Normalized ? GL_TRUE : GL_FALSE,
+				ShaderDataTypeToOpenGLBaseType(element.Type), //这里传GL_INT有问题，GL_INT可以用于glVertexAttribPointer函数和glVertexAttribIPointer函数，但是用法是不一样的															  
+				element.Normalized ? GL_TRUE : GL_FALSE,      //GL_INT用于前者时，会被转换为浮点数，只有使用VertexAttribIPointer才能保留成整型
 				layout.GetStride(),
 				(const void*)element.Offset);
 			index++;
