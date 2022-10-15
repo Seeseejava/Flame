@@ -92,7 +92,8 @@ namespace Flame {
 
 			float time = float(glfwGetTime());// Platform::GetTime
 			// 注意, 这里time - m_LastFrameTIme, 正好算的应该是当前帧所经历的时间, 而不是上一帧经历的时间
-			Timestep timestep = time - m_LastFrameTime;
+			
+			Timestep timestep = time - m_LastFrameTime; //这里最开始会溢出,将m_LastFrameTime初始化为0就可以了
 			m_LastFrameTime = time;
 
 			if (!m_Minimized)
