@@ -235,7 +235,7 @@ namespace Flame {
 		for (size_t i = 0; i < quadVertexCount; i++)
 		{
 			s_Data->QuadVertexBufferPtr->Position = transform * s_Data->QuadVertexPositions[i];
-			s_Data->QuadVertexBufferPtr->Color = color;
+			s_Data->QuadVertexBufferPtr->Color = tintColor;
 			s_Data->QuadVertexBufferPtr->TexCoord = textureCoords[i];
 			s_Data->QuadVertexBufferPtr->TexIndex = textureIndex;
 			s_Data->QuadVertexBufferPtr->TilingFactor = tilingFactor;
@@ -326,7 +326,7 @@ namespace Flame {
 		for (size_t i = 0; i < quadVertexCount; i++)
 		{
 			s_Data->QuadVertexBufferPtr->Position = transform * s_Data->QuadVertexPositions[i];
-			s_Data->QuadVertexBufferPtr->Color = color;
+			s_Data->QuadVertexBufferPtr->Color = tintColor;
 			s_Data->QuadVertexBufferPtr->TexCoord = textureCoords[i];
 			s_Data->QuadVertexBufferPtr->TexIndex = textureIndex;
 			s_Data->QuadVertexBufferPtr->TilingFactor = tilingFactor;
