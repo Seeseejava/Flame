@@ -16,6 +16,15 @@ void Sandbox2D::OnAttach()
 	FLAME_PROFILE_FUNCTION();
 
 	m_CheckerboardTexture = Flame::Texture2D::Create("assets/texture/Checkerboard.png");
+
+	// Init here
+	m_Particle.ColorBegin = { 254 / 255.0f, 212 / 255.0f, 123 / 255.0f, 1.0f };
+	m_Particle.ColorEnd = { 254 / 255.0f, 109 / 255.0f, 41 / 255.0f, 1.0f };
+	m_Particle.SizeBegin = 0.5f, m_Particle.SizeVariation = 0.3f, m_Particle.SizeEnd = 0.0f;
+	m_Particle.LifeTime = 1.0f;
+	m_Particle.Velocity = { 0.0f, 0.0f };
+	m_Particle.VelocityVariation = { 3.0f, 1.0f };
+	m_Particle.Position = { 0.0f, 0.0f };
 }
 
 void Sandbox2D::OnDetach()
@@ -65,6 +74,24 @@ void Sandbox2D::OnUpdate(Flame::Timestep ts)
 		}
 		Flame::Renderer2D::EndScene();
 	}
+
+	if (Flame::Input::IsMouseButtonPressed(FLAME_MOUSE_BUTTON_LEFT))
+	{
+		auto [x, y] = Flame::Input::GetMousePosition();
+		auto width = Flame::Application::Get().GetWindow().GetWidth();
+		auto height = Flame::Application::Get().GetWindow().GetHeight();
+
+		auto bounds = m_CameraController.GetBounds();
+		auto pos = m_CameraController.GetCamera().GetPosition();
+		x = (x / width) * bounds.GetWidth() - bounds.GetWidth() * 0.5f;
+		y = bounds.GetHeight() * 0.5f - (y / height) * bounds.GetHeight();
+		m_Particle.Position = { x + pos.x, y + pos.y };
+		for (int i = 0; i < 5; i++)
+			m_ParticleSystem.Emit(m_Particle);
+	}
+
+	m_ParticleSystem.OnUpdate(ts);
+	m_ParticleSystem.OnRender(m_CameraController.GetCamera());
 	
 }
 

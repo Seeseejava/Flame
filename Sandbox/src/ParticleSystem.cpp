@@ -5,9 +5,10 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/compatibility.hpp>
 
-ParticleSystem::ParticleSystem()
+ParticleSystem::ParticleSystem(uint32_t maxParticles)
+	:m_PoolIndex(maxParticles - 1)
 {
-	m_ParticlePool.resize(1000);
+	m_ParticlePool.resize(maxParticles);
 }
 
 void ParticleSystem::Emit(const ParticleProperties& particleProps)
@@ -40,7 +41,7 @@ void ParticleSystem::Emit(const ParticleProperties& particleProps)
 
 // Update函数里, 检查所有的粒子的状态, 如果生命期到了, 则置为inActive
 // 否则更新LifeTime、position和rotation
-void ParticleSystem::OnUpdate(Flame::Timestep ts, float playerSpeed)
+void ParticleSystem::OnUpdate(Flame::Timestep ts)
 {
 	for (auto& particle : m_ParticlePool)
 	{
@@ -54,13 +55,14 @@ void ParticleSystem::OnUpdate(Flame::Timestep ts, float playerSpeed)
 		}
 
 		particle.LifeRemaining -= ts;
-		particle.Position += particle.Velocity * (float)ts * playerSpeed;
+		particle.Position += particle.Velocity * (float)ts;
 		particle.Rotation += 0.01f * ts;
 	}
 }
 
-void ParticleSystem::OnRender()
+void ParticleSystem::OnRender(Flame::OrthographicCamera& Camera)
 {
+	Flame::Renderer2D::BeginScene(Camera);
 	for (auto& particle : m_ParticlePool)
 	{
 		if (!particle.Active)
@@ -71,6 +73,7 @@ void ParticleSystem::OnRender()
 		color.a = color.a * life;
 
 		float size = glm::lerp(particle.SizeEnd, particle.SizeBegin, life);
-		Flame::Renderer2D::DrawRotatedQuad({ particle.Position.x, particle.Position.y, 1.0f }, { size, size }, particle.Rotation, color);
+		Flame::Renderer2D::DrawRotatedQuad({ particle.Position.x, particle.Position.y, 0.2f }, { size, size }, particle.Rotation, color);
 	}
+	Flame::Renderer2D::EndScene();
 }
