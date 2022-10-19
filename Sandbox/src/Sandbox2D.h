@@ -23,7 +23,10 @@ private:
 	// Temp
 	Flame::Ref<Flame::VertexArray> m_SquareVA;
 	Flame::Ref<Flame::Shader> m_FlatColorShader;
-	Flame::Ref<Flame::Texture2D> m_CheckerboardTexture;
+
+	Flame::Ref<Flame::Texture2D> m_CheckerboardTexture, m_SpriteSheet;
+	Flame::Ref<Flame::SubTexture2D> m_TextureCharacter, m_TextureBarrel, m_TextureDoor;
+
 
 	glm::vec4 m_SquareColor = { 0.2f, 0.3f, 0.8f, 1.0f };
 

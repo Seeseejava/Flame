@@ -167,6 +167,7 @@
     <ClInclude Include="src\Flame\Renderer\Renderer2D.h" />
     <ClInclude Include="src\Flame\Renderer\RendererAPI.h" />
     <ClInclude Include="src\Flame\Renderer\Shader.h" />
+    <ClInclude Include="src\Flame\Renderer\SubTexture2D.h" />
     <ClInclude Include="src\Flame\Renderer\Texture.h" />
     <ClInclude Include="src\Flame\Renderer\VertexArray.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
@@ -611,6 +612,7 @@
     <ClCompile Include="src\Flame\Renderer\Renderer2D.cpp" />
     <ClCompile Include="src\Flame\Renderer\RendererAPI.cpp" />
     <ClCompile Include="src\Flame\Renderer\Shader.cpp" />
+    <ClCompile Include="src\Flame\Renderer\SubTexture2D.cpp" />
     <ClCompile Include="src\Flame\Renderer\Texture.cpp" />
     <ClCompile Include="src\Flame\Renderer\VertexArray.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp" />

@@ -26,6 +26,7 @@
 #include "Flame/Renderer/Buffer.h"
 #include "Flame/Renderer/Shader.h"
 #include "Flame/Renderer/Texture.h"
+#include "Flame/Renderer/SubTexture2D.h"
 
 #include "Flame/Renderer/VertexArray.h"
 
