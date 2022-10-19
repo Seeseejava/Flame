@@ -15,7 +15,8 @@ namespace Flame {
 		m_InternalFormat = GL_RGBA8;
 		m_DataFormat = GL_RGBA;
 
-		glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
+		glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);//此处会获取一个RendererID
+
 		// 注意格式是GL_RGBA8不是GL_RGBA, RGBA8是InternalFormat
 		glTextureStorage2D(m_RendererID, 1, m_InternalFormat, m_Width, m_Height);
 
