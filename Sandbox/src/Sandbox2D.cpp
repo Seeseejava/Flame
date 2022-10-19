@@ -30,6 +30,8 @@ void Sandbox2D::OnAttach()
 	m_Particle.Velocity = { 0.0f, 0.0f };
 	m_Particle.VelocityVariation = { 3.0f, 1.0f };
 	m_Particle.Position = { 0.0f, 0.0f };
+
+	m_CameraController.SetZoomLevel(5.0f);
 }
 
 void Sandbox2D::OnDetach()
@@ -86,6 +88,7 @@ void Sandbox2D::OnUpdate(Flame::Timestep ts)
 		Flame::Renderer2D::DrawQuad({ 1.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, m_TextureStair);
 		Flame::Renderer2D::DrawQuad({ 2.0f, 0.0f, 0.0f }, { 1.0f, 2.0f }, m_TextureTree);
 		Flame::Renderer2D::EndScene();
+
 
 	}
 
