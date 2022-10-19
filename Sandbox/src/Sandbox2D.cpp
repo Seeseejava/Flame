@@ -6,6 +6,23 @@
 
 
 
+
+static const uint32_t s_MapWidth = 16;
+static const char s_MapTiles[] =
+{
+	// 这种写法其实代表一个长字符串, D代表Dirt土地Tile, W代表Water Tile, S代表路标Tile
+	// 注意第一个Tile为D, 虽然在数组里坐标为(0,0), 但是在屏幕上对应的坐标应该是(0,1)
+	"DDWWWWWWWWWWWWWW"
+	"DDWWWWWWWWWWWWWW"
+	"DDDDDDDDDDDWWWWW"
+	"DDDDDSDDDDDWWWWW"
+	"DDDDDDDDDDDWWWWW"
+	"DDWWWWWWWWWWWWWW"
+	"DDWWWWWWWWWDDSDD"
+	"DDWWWWWWWWWWWWWW"
+	"DDWWWWWWWWWWWWWW"
+};
+
 Sandbox2D::Sandbox2D()
 	:Layer("Sandbox2D"), m_CameraController(1280.f / 720.f, true)
 {
@@ -18,8 +35,15 @@ void Sandbox2D::OnAttach()
 	m_CheckerboardTexture = Flame::Texture2D::Create("assets/texture/Checkerboard.png");
 	m_SpriteSheet = Flame::Texture2D::Create("assets/RPGGame/texture/RPGpack_sheet_2X.png");
 
+
+	m_MapWidth = s_MapWidth;
+	m_MapHeight = strlen(s_MapTiles) / s_MapWidth;
+	s_TextureMap['D'] = Flame::SubTexture2D::CreateFromCoords(m_SpriteSheet, {6 , 11}, {128, 128});
+	s_TextureMap['W'] = Flame::SubTexture2D::CreateFromCoords(m_SpriteSheet, {11 , 11}, {128, 128});
+	s_TextureMap['S'] = Flame::SubTexture2D::CreateFromCoords(m_SpriteSheet, {1 , 11}, {128, 128});
+
+	m_TextureStair = Flame::SubTexture2D::CreateFromCoords(m_SpriteSheet, { 7, 6 }, { 128, 128 });
 	m_TextureGrass = Flame::SubTexture2D::CreateFromCoords(m_SpriteSheet, { 2 , 3 }, { 128, 128 });
-	m_TextureStair = Flame::SubTexture2D::CreateFromCoords(m_SpriteSheet, { 7 , 6 }, { 128, 128 });
 	m_TextureTree = Flame::SubTexture2D::CreateFromCoords(m_SpriteSheet, { 2 , 1 }, { 128, 128 }, { 1, 2 });
 
 	// Init here
@@ -84,9 +108,26 @@ void Sandbox2D::OnUpdate(Flame::Timestep ts)
 #endif
 
 		Flame::Renderer2D::BeginScene(m_CameraController.GetCamera());
-		Flame::Renderer2D::DrawQuad({ 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, m_TextureGrass);
+
+		for (uint32_t y = 0; y < m_MapHeight; y++)
+		{
+			for (uint32_t x = 0; x < m_MapWidth; x++)
+			{
+				char tileType = s_MapTiles[x + y * m_MapWidth];
+				Flame::Ref<Flame::SubTexture2D> texture;
+
+				if (s_TextureMap.find(tileType) != s_TextureMap.end())
+					texture = s_TextureMap[tileType];
+				else
+					texture = m_TextureGrass;
+
+				Flame::Renderer2D::DrawQuad({ x - m_MapWidth / 2.0f, y - m_MapHeight / 2.0f, 0.5f }, { 1.0f,1.0f }, texture);
+			}
+		}
+
+		/*Flame::Renderer2D::DrawQuad({ 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, m_TextureGrass);
 		Flame::Renderer2D::DrawQuad({ 1.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, m_TextureStair);
-		Flame::Renderer2D::DrawQuad({ 2.0f, 0.0f, 0.0f }, { 1.0f, 2.0f }, m_TextureTree);
+		Flame::Renderer2D::DrawQuad({ 2.0f, 0.0f, 0.0f }, { 1.0f, 2.0f }, m_TextureTree);*/
 		Flame::Renderer2D::EndScene();
 
 

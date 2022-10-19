@@ -32,4 +32,7 @@ private:
 
 	ParticleSystem m_ParticleSystem;
 	ParticleProperties m_Particle;
+
+	uint32_t m_MapHeight, m_MapWidth;
+	std::unordered_map<char, Flame::Ref<Flame::SubTexture2D>> s_TextureMap;
 };
