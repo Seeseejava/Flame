@@ -135,13 +135,13 @@ void Sandbox2D::OnUpdate(Flame::Timestep ts)
 
 	if (Flame::Input::IsMouseButtonPressed(FLAME_MOUSE_BUTTON_LEFT))
 	{
-		auto [x, y] = Flame::Input::GetMousePosition();
+		auto [x, y] = Flame::Input::GetMousePosition();						//这个位置是相对于窗口左上角，且向右向下为正，单位为像素
 		auto width = Flame::Application::Get().GetWindow().GetWidth();
-		auto height = Flame::Application::Get().GetWindow().GetHeight();
+		auto height = Flame::Application::Get().GetWindow().GetHeight();	//串口大小：1280x720
 
-		auto bounds = m_CameraController.GetBounds();
-		auto pos = m_CameraController.GetCamera().GetPosition();
-		x = (x / width) * bounds.GetWidth() - bounds.GetWidth() * 0.5f;
+		auto bounds = m_CameraController.GetBounds();						//当zoomlevel时，left = -5 * 1280 / 720, bottom = -5;
+		auto pos = m_CameraController.GetCamera().GetPosition();			//当摄像机未移动时为0
+		x = (x / width) * bounds.GetWidth() - bounds.GetWidth() * 0.5f;		//前一部分求得相较于摄像机左下角的位置，减摄像机半宽后得到相对于摄像机的位置（变换成摄像机的坐标了）
 		y = bounds.GetHeight() * 0.5f - (y / height) * bounds.GetHeight();
 		m_Particle.Position = { x + pos.x, y + pos.y };
 		for (int i = 0; i < 5; i++)

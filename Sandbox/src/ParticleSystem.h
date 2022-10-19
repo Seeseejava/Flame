@@ -37,7 +37,7 @@ class ParticleSystem
 public:
 	ParticleSystem(uint32_t maxParticles = 10000);
 
-	// 释放粒子, 当按住空格键时, 每帧都会调用此函数, 它们的参数由particleProps统一指定
+	// 释放粒子, 当按住左时, 每帧都会调用此函数, 它们的参数由particleProps统一指定
 	// 但是绝大部分参数会基于Random系统, 在原本particleProps给的基础上微变
 	void Emit(const ParticleProperties& particleProps);
 
