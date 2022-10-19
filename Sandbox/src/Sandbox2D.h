@@ -25,7 +25,7 @@ private:
 	Flame::Ref<Flame::Shader> m_FlatColorShader;
 
 	Flame::Ref<Flame::Texture2D> m_CheckerboardTexture, m_SpriteSheet;
-	Flame::Ref<Flame::SubTexture2D> m_TextureCharacter, m_TextureBarrel, m_TextureDoor;
+	Flame::Ref<Flame::SubTexture2D> m_TextureStair, m_TextureGrass, m_TextureTree;
 
 
 	glm::vec4 m_SquareColor = { 0.2f, 0.3f, 0.8f, 1.0f };

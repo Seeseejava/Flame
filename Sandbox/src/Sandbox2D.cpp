@@ -16,11 +16,11 @@ void Sandbox2D::OnAttach()
 	FLAME_PROFILE_FUNCTION();
 
 	m_CheckerboardTexture = Flame::Texture2D::Create("assets/texture/Checkerboard.png");
-	m_SpriteSheet = Flame::Texture2D::Create("assets/game/texture/tilemap_packed.png");
+	m_SpriteSheet = Flame::Texture2D::Create("assets/RPGGame/texture/RPGpack_sheet_2X.png");
 
-	m_TextureCharacter = Flame::SubTexture2D::CreateFromCoords(m_SpriteSheet, { 0 , 3 }, { 16, 16 });
-	m_TextureBarrel = Flame::SubTexture2D::CreateFromCoords(m_SpriteSheet, { 10 , 4 }, { 16, 16 });
-	m_TextureDoor = Flame::SubTexture2D::CreateFromCoords(m_SpriteSheet, { 0 , 0 }, { 16, 16 }, { 2, 1 });
+	m_TextureGrass = Flame::SubTexture2D::CreateFromCoords(m_SpriteSheet, { 2 , 3 }, { 128, 128 });
+	m_TextureStair = Flame::SubTexture2D::CreateFromCoords(m_SpriteSheet, { 7 , 6 }, { 128, 128 });
+	m_TextureTree = Flame::SubTexture2D::CreateFromCoords(m_SpriteSheet, { 2 , 1 }, { 128, 128 }, { 1, 2 });
 
 	// Init here
 	m_Particle.ColorBegin = { 254 / 255.0f, 212 / 255.0f, 123 / 255.0f, 1.0f };
@@ -82,9 +82,9 @@ void Sandbox2D::OnUpdate(Flame::Timestep ts)
 #endif
 
 		Flame::Renderer2D::BeginScene(m_CameraController.GetCamera());
-		Flame::Renderer2D::DrawQuad({ 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, m_TextureCharacter);
-		Flame::Renderer2D::DrawQuad({ 1.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, m_TextureBarrel);
-		Flame::Renderer2D::DrawQuad({ 3.0f, 0.0f, 0.0f }, { 2.0f, 1.0f }, m_TextureDoor);
+		Flame::Renderer2D::DrawQuad({ 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, m_TextureGrass);
+		Flame::Renderer2D::DrawQuad({ 1.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, m_TextureStair);
+		Flame::Renderer2D::DrawQuad({ 2.0f, 0.0f, 0.0f }, { 1.0f, 2.0f }, m_TextureTree);
 		Flame::Renderer2D::EndScene();
 
 	}
