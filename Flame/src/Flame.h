@@ -24,6 +24,7 @@
 #include "Flame/Renderer/RenderCommand.h"
 		
 #include "Flame/Renderer/Buffer.h"
+#include "Flame/Renderer/FrameBuffer.h"
 #include "Flame/Renderer/Shader.h"
 #include "Flame/Renderer/Texture.h"
 #include "Flame/Renderer/SubTexture2D.h"
