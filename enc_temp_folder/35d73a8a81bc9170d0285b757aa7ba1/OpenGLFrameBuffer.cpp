@@ -54,7 +54,8 @@ namespace Flame {
 	void OpenGLFramebuffer::Bind()
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, m_RendererID);
-		glViewport(0, 0, m_Specification.Width, m_Specification.Height); //glViewport会显示在imgui的窗口上，从左下角开始算起
+		//glViewport(0, 0, m_Specification.Width, m_Specification.Height); //没搞懂这句什么用
+		glViewport(0, 0, 500, 500);
 	}
 
 	void OpenGLFramebuffer::Unbind()
