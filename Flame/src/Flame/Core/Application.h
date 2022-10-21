@@ -14,12 +14,13 @@
 
 #include "Flame/Core/Timestep.h"
 
+
 namespace Flame {
 
 	class FLAME_API Application
 	{
 	public:
-		Application();
+		Application(const std::string& name = "Flame App");
 		virtual ~Application();
 
 		void Run();

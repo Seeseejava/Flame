@@ -23,7 +23,6 @@ private:
 	// Temp
 	Flame::Ref<Flame::VertexArray> m_SquareVA;
 	Flame::Ref<Flame::Shader> m_FlatColorShader;
-	Flame::Ref<Flame::Framebuffer> m_Framebuffer;
 
 	Flame::Ref<Flame::Texture2D> m_CheckerboardTexture, m_SpriteSheet;
 	Flame::Ref<Flame::SubTexture2D> m_TextureStair, m_TextureGrass, m_TextureTree;

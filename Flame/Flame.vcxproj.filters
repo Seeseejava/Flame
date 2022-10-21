@@ -10,6 +10,9 @@
     <Filter Include="src\Flame\Core">
       <UniqueIdentifier>{B98AA7E6-A558-9BEC-8EEC-0B137A597751}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Flame\Debug">
+      <UniqueIdentifier>{F73CA5BB-63C8-1280-6CD9-9574D8E36E80}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Flame\Events">
       <UniqueIdentifier>{852ED733-7127-F685-9A59-DB0A86B1D591}</UniqueIdentifier>
     </Filter>
@@ -90,6 +93,9 @@
     <ClInclude Include="src\Flame\Core\Window.h">
       <Filter>src\Flame\Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\Flame\Debug\Instrumentor.h">
+      <Filter>src\Flame\Debug</Filter>
+    </ClInclude>
     <ClInclude Include="src\Flame\Events\ApplicationEvent.h">
       <Filter>src\Flame\Events</Filter>
     </ClInclude>
@@ -108,6 +114,9 @@
     <ClInclude Include="src\Flame\Renderer\Buffer.h">
       <Filter>src\Flame\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Flame\Renderer\FrameBuffer.h">
+      <Filter>src\Flame\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Flame\Renderer\GraphicsContext.h">
       <Filter>src\Flame\Renderer</Filter>
     </ClInclude>
@@ -123,10 +132,16 @@
     <ClInclude Include="src\Flame\Renderer\Renderer.h">
       <Filter>src\Flame\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Flame\Renderer\Renderer2D.h">
+      <Filter>src\Flame\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Flame\Renderer\RendererAPI.h">
       <Filter>src\Flame\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Flame\Renderer\Shader.h">
+      <Filter>src\Flame\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Flame\Renderer\SubTexture2D.h">
       <Filter>src\Flame\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Flame\Renderer\Texture.h">
@@ -139,6 +154,9 @@
       <Filter>src\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLFrameBuffer.h">
       <Filter>src\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLRendererAPI.h">
@@ -1413,11 +1431,6 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
-    <ClInclude Include="src\Flame\Renderer\Renderer2D.h" />
-    <ClInclude Include="src\Flame\Debug\Instrumentor.h" />
-    <ClInclude Include="src\Flame\Renderer\SubTexture2D.h" />
-    <ClInclude Include="src\Flame\Renderer\FrameBuffer.h" />
-    <ClInclude Include="src\Platform\OpenGL\OpenGLFrameBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Flame\Core\Application.cpp">
@@ -1441,6 +1454,9 @@
     <ClCompile Include="src\Flame\Renderer\Buffer.cpp">
       <Filter>src\Flame\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\Flame\Renderer\FrameBuffer.cpp">
+      <Filter>src\Flame\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="src\Flame\Renderer\OrthographicCamera.cpp">
       <Filter>src\Flame\Renderer</Filter>
     </ClCompile>
@@ -1453,10 +1469,16 @@
     <ClCompile Include="src\Flame\Renderer\Renderer.cpp">
       <Filter>src\Flame\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\Flame\Renderer\Renderer2D.cpp">
+      <Filter>src\Flame\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="src\Flame\Renderer\RendererAPI.cpp">
       <Filter>src\Flame\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Flame\Renderer\Shader.cpp">
+      <Filter>src\Flame\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Flame\Renderer\SubTexture2D.cpp">
       <Filter>src\Flame\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Flame\Renderer\Texture.cpp">
@@ -1469,6 +1491,9 @@
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLFrameBuffer.cpp">
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLRendererAPI.cpp">
@@ -1495,9 +1520,5 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
-    <ClCompile Include="src\Flame\Renderer\Renderer2D.cpp" />
-    <ClCompile Include="src\Flame\Renderer\SubTexture2D.cpp" />
-    <ClCompile Include="src\Flame\Renderer\FrameBuffer.cpp" />
-    <ClCompile Include="src\Platform\OpenGL\OpenGLFrameBuffer.cpp" />
   </ItemGroup>
 </Project>
