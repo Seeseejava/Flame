@@ -235,14 +235,23 @@ namespace Flame {
 			ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
 
 			ImGui::ColorEdit4("Square Color", glm::value_ptr(m_SquareColor));
-
-			//这里为了支持跨平台，需要把textureID从原本的GLuint改成void*类型，注意它是直接取整型数作为一个指针，这个指针当然是无效的，而不是取GLuint的地址改成void*
-			uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
-
-
-			// 应该是ImGui对于贴图的Y坐标的认知跟目前的Texture是相反的
-			ImGui::Image((void*)textureID, ImVec2{ 1080.0f,720.0f }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
 			ImGui::End();
+
+			//设置窗口的padding为0是图片控件充满窗口
+			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
+			ImGui::Begin("Viewport");
+			ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();//窗口尺寸
+			if (m_ViewportSize != *((glm::vec2*)&viewportPanelSize)) //难以读懂
+			{
+				m_Framebuffer->Resize((uint32_t)viewportPanelSize.x, (uint32_t)viewportPanelSize.y);
+				m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y };
+
+				m_CameraController.OnResize(viewportPanelSize.x, viewportPanelSize.y);
+			}
+			uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
+			ImGui::Image((void*)textureID, ImVec2{ m_ViewportSize.x, m_ViewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+			ImGui::End();
+			ImGui::PopStyleVar();
 
 			ImGui::End();
 		}

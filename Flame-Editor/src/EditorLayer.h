@@ -37,5 +37,8 @@ namespace Flame {
 
 		uint32_t m_MapHeight, m_MapWidth;
 		std::unordered_map<char, Ref<SubTexture2D>> s_TextureMap;
+
+		glm::vec2 m_LastViewportSize = { 0 , 0 };
+		glm::vec2 m_ViewportSize = { 0.0f, 0.0f };
 	};
 }
