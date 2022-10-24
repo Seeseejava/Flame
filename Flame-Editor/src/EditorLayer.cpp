@@ -80,7 +80,11 @@ namespace Flame {
 		Renderer2D::ResetStats();
 		{
 			FLAME_PROFILE_SCOPE("Renderer Prep");
+			//清除默认frambuffer
+			Flame::RenderCommand::SetClearColor(glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));// 默认窗口颜色仍为magenta
+			Flame::RenderCommand::Clear();
 			m_Framebuffer->Bind();
+			// clear我的Framebuffer
 			RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 			RenderCommand::Clear();
 		}
