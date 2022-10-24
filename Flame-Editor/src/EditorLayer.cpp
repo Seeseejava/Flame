@@ -127,7 +127,7 @@ namespace Flame {
 					else
 						texture = m_TextureGrass;
 
-					Renderer2D::DrawQuad({ x - m_MapWidth / 2.0f, m_MapHeight / 2.0f - y, 0.5f }, { 1.0f,1.0f }, texture);// 这里需要翻转一下y轴
+					Renderer2D::DrawQuad({ x - m_MapWidth / 2.0f, m_MapHeight / 2.0f - y, 0.1f }, { 1.0f,1.0f }, texture);// 这里需要翻转一下y轴
 				}
 			}
 
@@ -136,7 +136,6 @@ namespace Flame {
 			Renderer2D::DrawQuad({ 2.0f, 0.0f, 0.0f }, { 1.0f, 2.0f }, m_TextureTree);*/
 			Renderer2D::EndScene();
 
-			m_Framebuffer->Unbind();
 		}
 
 		if (Input::IsMouseButtonPressed(FLAME_MOUSE_BUTTON_LEFT))
@@ -156,6 +155,7 @@ namespace Flame {
 
 		m_ParticleSystem.OnUpdate(ts);
 		m_ParticleSystem.OnRender(m_CameraController.GetCamera());
+		m_Framebuffer->Unbind(); //目前粒子系统的鼠标位置有问题
 
 	}
 
@@ -241,6 +241,9 @@ namespace Flame {
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
 			ImGui::Begin("Viewport");
 			ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();//窗口尺寸
+
+			//改变Viewport窗口大小，竖直方向的区域会随着缩放，但竖直方向的视野不变；水平方向的区域也会缩放，但水平方向的区域视野也会变化
+
 			if (m_ViewportSize != *((glm::vec2*)&viewportPanelSize)) //难以读懂
 			{
 				m_Framebuffer->Resize((uint32_t)viewportPanelSize.x, (uint32_t)viewportPanelSize.y);

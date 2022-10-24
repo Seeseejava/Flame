@@ -73,7 +73,7 @@ void ParticleSystem::OnRender(Flame::OrthographicCamera& Camera)
 		color.a = color.a * life;
 
 		float size = glm::lerp(particle.SizeEnd, particle.SizeBegin, life);
-		Flame::Renderer2D::DrawRotatedQuad({ particle.Position.x, particle.Position.y, 0.2f }, { size, size }, particle.Rotation, color);
+		Flame::Renderer2D::DrawRotatedQuad({ particle.Position.x, particle.Position.y, 0.3f }, { size, size }, particle.Rotation, color);
 	}
 	Flame::Renderer2D::EndScene();
 }
