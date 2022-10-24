@@ -174,9 +174,6 @@
     <ClInclude Include="src\Platform\OpenGL\imgui_impl_opengl3_loader.h">
       <Filter>src\Platform\OpenGL</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\WindowsWindow\WindowsInput.h">
-      <Filter>src\Platform\WindowsWindow</Filter>
-    </ClInclude>
     <ClInclude Include="src\Platform\WindowsWindow\WindowsWindow.h">
       <Filter>src\Platform\WindowsWindow</Filter>
     </ClInclude>
