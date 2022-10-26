@@ -171,6 +171,7 @@
     <ClInclude Include="src\Flame\Renderer\SubTexture2D.h" />
     <ClInclude Include="src\Flame\Renderer\Texture.h" />
     <ClInclude Include="src\Flame\Renderer\VertexArray.h" />
+    <ClInclude Include="src\Flame\Scene\Components.h" />
     <ClInclude Include="src\Flame\Scene\Scene.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h" />

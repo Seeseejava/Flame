@@ -1,6 +1,7 @@
 #include "flamepch.h"
 #include "Scene.h"
 
+#include "Components.h"
 #include "Flame/Renderer/Renderer2D.h"
 
 #include <glm/glm.hpp>
@@ -12,7 +13,7 @@ namespace Flame {
 
 	Scene::Scene()
 	{
-
+#if ENTT_EXAMPLE_CODE
 		// 创建一个TransformComponent类
 		struct TransformComponent
 		{
@@ -65,6 +66,7 @@ namespace Flame {
 			// transform和mesh都是记录的引用
 			auto&[transform, mesh] = group.get<TransformComponent, MeshComponent>(entity); // 之前报错时因为MeshComponent是空的
 		}
+#endif
 	}
 
 	Scene::~Scene()
@@ -79,7 +81,13 @@ namespace Flame {
 
 	void Scene::OnUpdate(Timestep ts)
 	{
+		auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
+		for (auto entity : group)
+		{
+			auto& [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
 
+			Renderer2D::DrawQuad(transform, sprite.Color);
+		}
 	}
 
 }
