@@ -17,6 +17,7 @@ IncludeDir["Glad"] = "Flame/vendor/Glad/include"
 IncludeDir["ImGui"] = "Flame/vendor/imgui"
 IncludeDir["glm"] = "Flame/vendor/glm"
 IncludeDir["stb_image"] = "Flame/vendor/stb_image"
+IncludeDir["entt"] = "Flame/vendor/entt/include"
 
 group "Dependency"
 include "Flame/vendor/GLFW"
@@ -63,6 +64,7 @@ project "Flame"
         "%{IncludeDir.ImGui}",
         "%{IncludeDir.glm}",
         "%{IncludeDir.stb_image}",
+        "%{IncludeDir.entt}",
     }
 
     links
@@ -131,6 +133,7 @@ project "Sandbox"
             "Flame/src",
             "Flame/vendor",
             "%{IncludeDir.glm}",
+            "%{IncludeDir.entt}",
         }
 
         links
@@ -186,6 +189,7 @@ project "Flame-Editor"
         "Flame/src",
         "Flame/vendor",
         "%{IncludeDir.glm}",
+        "%{IncludeDir.entt}",
     }
 
     links
