@@ -6,6 +6,8 @@
 
 #include <glm/glm.hpp>
 
+#include "Entity.h"
+
 namespace Flame {
 
 	// 用于后面的Callback例子, 当Transform组件被创建时调用, 会加到entity上
@@ -74,9 +76,13 @@ namespace Flame {
 
 	}
 
-	entt::entity Scene::CreateEntity()
+	Entity Scene::CreateEntity(const std::string& name)
 	{
-		return m_Registry.create();
+		Entity entity = { m_Registry.create(), this };  //这里m_EntityHandle = 0了（因为create（）返回了0）
+		entity.AddComponent<TransformComponent>();
+		auto& tag = entity.AddComponent<TagComponent>();
+		tag.Tag = name.empty() ? "Entity" : name;
+		return entity;
 	}
 
 	void Scene::OnUpdate(Timestep ts)

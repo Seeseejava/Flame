@@ -27,7 +27,7 @@ namespace Flame {
 		Ref<Framebuffer> m_Framebuffer;
 
 		Ref<Scene> m_ActiveScene;
-		entt::entity m_SquareEntity;
+		Entity m_SquareEntity;
 
 		Ref<Texture2D> m_CheckerboardTexture, m_SpriteSheet;
 		Ref<SubTexture2D> m_TextureStair, m_TextureGrass, m_TextureTree;
