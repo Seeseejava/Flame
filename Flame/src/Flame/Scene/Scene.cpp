@@ -28,6 +28,8 @@ namespace Flame {
 		};
 		struct MeshComponent
 		{
+			MeshComponent() = default;
+			float value;
 		};
 
 		// 创建一个registry, 可以把它理解为vector<entity>, 也就是包含所有entity的容器
@@ -61,7 +63,7 @@ namespace Flame {
 		for (auto entity : group)
 		{
 			// transform和mesh都是记录的引用
-			auto&[transform1, mesh] = group.get<TransformComponent, MeshComponent>(entity); // ?为啥报错
+			auto&[transform, mesh] = group.get<TransformComponent, MeshComponent>(entity); // 之前报错时因为MeshComponent是空的
 		}
 	}
 
@@ -72,7 +74,7 @@ namespace Flame {
 
 	entt::entity Scene::CreateEntity()
 	{
-
+		return m_Registry.create();
 	}
 
 	void Scene::OnUpdate(Timestep ts)
