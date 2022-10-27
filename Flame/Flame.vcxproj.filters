@@ -1431,6 +1431,8 @@
     <ClInclude Include="src\Flame\Scene\Scene.h" />
     <ClInclude Include="src\Flame\Scene\Components.h" />
     <ClInclude Include="src\Flame\Scene\Entity.h" />
+    <ClInclude Include="src\Flame\Renderer\Camera.h" />
+    <ClInclude Include="src\Flame\Scene\SceneCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Flame\Core\Application.cpp">
@@ -1522,5 +1524,6 @@
     </ClCompile>
     <ClCompile Include="src\Flame\Scene\Scene.cpp" />
     <ClCompile Include="src\Flame\Scene\Entity.cpp" />
+    <ClCompile Include="src\Flame\Scene\SceneCamera.cpp" />
   </ItemGroup>
 </Project>

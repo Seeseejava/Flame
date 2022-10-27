@@ -159,6 +159,7 @@
     <ClInclude Include="src\Flame\Events\MouseEvent.h" />
     <ClInclude Include="src\Flame\ImGui\ImGuiLayer.h" />
     <ClInclude Include="src\Flame\Renderer\Buffer.h" />
+    <ClInclude Include="src\Flame\Renderer\Camera.h" />
     <ClInclude Include="src\Flame\Renderer\FrameBuffer.h" />
     <ClInclude Include="src\Flame\Renderer\GraphicsContext.h" />
     <ClInclude Include="src\Flame\Renderer\OrthographicCamera.h" />
@@ -174,6 +175,7 @@
     <ClInclude Include="src\Flame\Scene\Components.h" />
     <ClInclude Include="src\Flame\Scene\Entity.h" />
     <ClInclude Include="src\Flame\Scene\Scene.h" />
+    <ClInclude Include="src\Flame\Scene\SceneCamera.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLFrameBuffer.h" />
@@ -622,6 +624,7 @@
     <ClCompile Include="src\Flame\Renderer\VertexArray.cpp" />
     <ClCompile Include="src\Flame\Scene\Entity.cpp" />
     <ClCompile Include="src\Flame\Scene\Scene.cpp" />
+    <ClCompile Include="src\Flame\Scene\SceneCamera.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLFrameBuffer.cpp" />

@@ -43,9 +43,15 @@ namespace Flame {
 		m_ActiveScene = std::make_shared<Scene>();
 
 		// Entity
-		auto square = m_ActiveScene->CreateEntity("Green Square");
-		square.AddComponent<SpriteRendererComponent>(glm::vec4{ 0.0f, 1.0f, 0.0f, 1.0f });
-		m_SquareEntity = square;
+		m_SquareEntity = m_ActiveScene->CreateEntity("Green Square");
+		m_SquareEntity.AddComponent<SpriteRendererComponent>(glm::vec4{ 0.0f, 1.0f, 0.0f, 1.0f });
+
+		m_CameraEntity = m_ActiveScene->CreateEntity("Camera Entity");
+		m_CameraEntity.AddComponent<CameraComponent>();
+
+		m_SecondCamera = m_ActiveScene->CreateEntity("Clip-Space Entity");
+		auto& cc = m_SecondCamera.AddComponent<CameraComponent>();
+		cc.Primary = false;
 
 		m_MapWidth = s_MapWidth;
 		m_MapHeight = strlen(s_MapTiles) / s_MapWidth;
@@ -99,8 +105,6 @@ namespace Flame {
 		{
 			FLAME_PROFILE_SCOPE("Renderer Draw");
 
-			Renderer2D::BeginScene(m_CameraController.GetCamera());
-
 			// 地图
 			//for (uint32_t y = 0; y < m_MapHeight; y++)
 			//{
@@ -125,7 +129,6 @@ namespace Flame {
 
 			m_ActiveScene->OnUpdate(ts);
 
-			Renderer2D::EndScene();
 
 		}
 
@@ -234,6 +237,20 @@ namespace Flame {
 			ImGui::Separator();
 		}
 
+		ImGui::DragFloat3("Camera Transform",
+			glm::value_ptr(m_CameraEntity.GetComponent<TransformComponent>().Transform[3])); // mat4中4行4列的元素是按照列的方式排列的:主要是因为opengl在显存中是按列存储的
+
+		if (ImGui::Checkbox("Camera A", &m_PrimaryCamera))
+		{
+			m_CameraEntity.GetComponent<CameraComponent>().Primary = m_PrimaryCamera;
+			m_SecondCamera.GetComponent<CameraComponent>().Primary = !m_PrimaryCamera;
+		}
+		{
+			auto& camera = m_SecondCamera.GetComponent<CameraComponent>().Camera;
+			float orthoSize = camera.GetOrthographicSize();
+			if (ImGui::DragFloat("Second Camera Ortho Size", &orthoSize))
+				camera.SetOrthographicSize(orthoSize);
+		}
 		ImGui::End();
 
 		//设置窗口的padding为0是图片控件充满窗口
@@ -247,12 +264,14 @@ namespace Flame {
 
 		//改变Viewport窗口大小，竖直方向的区域会随着缩放，但竖直方向的视野不变；水平方向的区域也会缩放，但水平方向的区域视野也会变化
 
-		if (m_ViewportSize != *((glm::vec2*)&viewportPanelSize)) //难以读懂
+		if (m_ViewportSize != *((glm::vec2*)&viewportPanelSize)) // 结构体强制类型转换 a=*((struct str1*)&b);
 		{
 			m_Framebuffer->Resize((uint32_t)viewportPanelSize.x, (uint32_t)viewportPanelSize.y);
 			m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y };
 
 			m_CameraController.OnResize(viewportPanelSize.x, viewportPanelSize.y);
+
+			m_ActiveScene->OnViewportResize((uint32_t)viewportPanelSize.x, (uint32_t)viewportPanelSize.y);
 		}
 		uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
 		ImGui::Image((void*)textureID, ImVec2{ m_ViewportSize.x, m_ViewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
