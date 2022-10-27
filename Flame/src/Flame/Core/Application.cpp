@@ -73,10 +73,14 @@ namespace Flame {
 	{
 		FLAME_PROFILE_FUNCTION();
 
+		// EventDispatcher里面存了处理Event的函数, 在Event类型跟模板T匹配时, 才响应事件
 		EventDispatcher dispatcher(e);
+
+		// 1. Application处理Event, 当e类型为WindowCloseEvent时, 调用OnWindowClose函数
 		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(OnWindowClose));
 		dispatcher.Dispatch<WindowResizeEvent>(BIND_EVENT_FN(OnWindowResize));
 
+		// 2. Layer来处理事件, 逆序遍历是为了让ImGuiLayer最先收到Event
 		for (auto it = m_LayerStack.end(); it != m_LayerStack.begin();)
 		{
 			(*--it)->OnEvent(e);

@@ -63,23 +63,26 @@ namespace Flame {
 	class EventDispatcher  //有点难看懂
 	{
 		template<typename T>
-		using EventFn = std::function<bool(T&)>;//返回值是bool，参数是T&
+		using EventFn = std::function<bool(T&)>;// EventFn存储了一个输入为任意类型的引用，返回值为bool的函数指针
 	public:
 		EventDispatcher(Event& event)
 			: m_Event(event) {}
 
+		// Dispatch会直接执行响应事件对应的函数指针对应的函数
+		// T指的是事件类型, 如果输入的类型没有GetStaticType会报错
 		template<typename T>
 		bool Dispatch(EventFn<T> func)
 		{
+			// 只有Event类型跟模板T匹配时, 才响应事件
 			if (m_Event.GetEventType() == T::GetStaticType())
 			{
-				m_Event.m_Handled = func(*(T*)&m_Event);//没看懂
-				return true;
+				m_Event.m_Handled = func(*(T*)&m_Event);// 使用(T*)把m_Event转换成输入事件的指针类型 ？？？？
+				return true; // Temporary: 现在不会直接对应的Handler里都返回true
 			}
 			return false;
 		}
 	private:
-		Event& m_Event;
+		Event& m_Event; // 必须是引用，不可以是Event的实例，因为Event带有纯虚函数
 	};
 
 	inline std::ostream& operator<<(std::ostream& os, const Event& e)

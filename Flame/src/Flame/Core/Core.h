@@ -33,8 +33,9 @@
 
 #define BIT(x)  (1 << x)
 
-#define FLAME_BIND_EVENT_FN(fn) std::bind(&fn , this, std::placeholders::_1)
-
+// #define FLAME_BIND_EVENT_FN(fn) std::bind(&fn , this, std::placeholders::_1)  两者等价且用lambda更佳
+// Generic Lambda：当Lambda的参数列表里出现至少一个auto类型的参数，那么此Lambda就是一个Generic Lambda表达式
+#define FLAME_BIND_EVENT_FN(fn) [this](auto&&... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...); }
 namespace Flame
 {
 
