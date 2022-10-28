@@ -17,7 +17,7 @@ namespace Flame {
 		void DrawEntityNode(Entity entity);
 	private:
 		Ref<Scene> m_Context;
-		Entity m_SelectionContext;
+		Entity m_SelectionContext;// ´ú±íSelected Entity
 	};
 
 }
