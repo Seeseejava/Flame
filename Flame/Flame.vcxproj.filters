@@ -22,6 +22,9 @@
     <Filter Include="src\Flame\Renderer">
       <UniqueIdentifier>{87F2577D-73D6-18D3-DC36-1326C8390355}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Flame\Scene">
+      <UniqueIdentifier>{9E9FB3BC-0A2B-2181-133C-A4757F467D81}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Platform">
       <UniqueIdentifier>{21CA02E5-0D2D-9289-B6B2-CA3FA2F45D0C}</UniqueIdentifier>
     </Filter>
@@ -114,6 +117,9 @@
     <ClInclude Include="src\Flame\Renderer\Buffer.h">
       <Filter>src\Flame\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Flame\Renderer\Camera.h">
+      <Filter>src\Flame\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Flame\Renderer\FrameBuffer.h">
       <Filter>src\Flame\Renderer</Filter>
     </ClInclude>
@@ -149,6 +155,18 @@
     </ClInclude>
     <ClInclude Include="src\Flame\Renderer\VertexArray.h">
       <Filter>src\Flame\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Flame\Scene\Components.h">
+      <Filter>src\Flame\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Flame\Scene\Entity.h">
+      <Filter>src\Flame\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Flame\Scene\Scene.h">
+      <Filter>src\Flame\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Flame\Scene\SceneCamera.h">
+      <Filter>src\Flame\Scene</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h">
       <Filter>src\Platform\OpenGL</Filter>
@@ -1428,11 +1446,6 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
-    <ClInclude Include="src\Flame\Scene\Scene.h" />
-    <ClInclude Include="src\Flame\Scene\Components.h" />
-    <ClInclude Include="src\Flame\Scene\Entity.h" />
-    <ClInclude Include="src\Flame\Renderer\Camera.h" />
-    <ClInclude Include="src\Flame\Scene\SceneCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Flame\Core\Application.cpp">
@@ -1489,6 +1502,15 @@
     <ClCompile Include="src\Flame\Renderer\VertexArray.cpp">
       <Filter>src\Flame\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\Flame\Scene\Entity.cpp">
+      <Filter>src\Flame\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Flame\Scene\Scene.cpp">
+      <Filter>src\Flame\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Flame\Scene\SceneCamera.cpp">
+      <Filter>src\Flame\Scene</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp">
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
@@ -1522,8 +1544,5 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
-    <ClCompile Include="src\Flame\Scene\Scene.cpp" />
-    <ClCompile Include="src\Flame\Scene\Entity.cpp" />
-    <ClCompile Include="src\Flame\Scene\SceneCamera.cpp" />
   </ItemGroup>
 </Project>

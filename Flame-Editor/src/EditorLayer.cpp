@@ -73,6 +73,9 @@ namespace Flame {
 		m_Particle.Position = { 0.0f, 0.0f };
 
 		m_CameraController.SetZoomLevel(5.0f);
+
+		// Panels
+		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
 	}
 
 	void EditorLayer::OnDetach()
@@ -228,6 +231,7 @@ namespace Flame {
 			ImGui::EndMenuBar();
 		}
 
+		m_SceneHierarchyPanel.OnImGuiRender();
 
 		ImGui::Begin("Settings");
 
@@ -269,7 +273,7 @@ namespace Flame {
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
 		ImGui::Begin("Viewport");
 		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();//窗口尺寸
-		m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y };
+		m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y }; // 没有这句viewport会是黑的 -> 说明图片大小必须和viewport大小相同才不会是黑的
 
 		m_ViewportFocused = ImGui::IsWindowFocused();
 		m_ViewportHovered = ImGui::IsWindowHovered();

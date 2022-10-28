@@ -1,9 +1,9 @@
 #pragma once
-#pragma once
-
 #include "Flame.h"
 
 #include "ParticleSystem.h"
+
+#include "Panels/SceneHierarchyPanel.h"
 
 namespace Flame {
 	class EditorLayer : public Layer
@@ -49,5 +49,8 @@ namespace Flame {
 
 		glm::vec2 m_LastViewportSize = { 0 , 0 };
 		glm::vec2 m_ViewportSize = { 0.0f, 0.0f };
+
+		// Panels
+		SceneHierarchyPanel m_SceneHierarchyPanel;
 	};
 }
