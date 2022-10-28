@@ -76,7 +76,7 @@ namespace Flame {
 			// 只有Event类型跟模板T匹配时, 才响应事件
 			if (m_Event.GetEventType() == T::GetStaticType())
 			{
-				m_Event.m_Handled = func(*(T*)&m_Event);// 使用(T*)把m_Event转换成输入事件的指针类型 结构体赋值（要考虑空间分布）
+				m_Event.m_Handled = func(*(T*)&m_Event);// 使用(T*)把m_Event转换成输入事件的指针类型 结构体赋值（要考虑空间分布）  结构体强制类型转换 a=*((struct str1*)&b);
 				return true; // Temporary: 现在不会直接对应的Handler里都返回true
 			}
 			return false;
