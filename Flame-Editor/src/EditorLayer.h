@@ -33,7 +33,7 @@ namespace Flame {
 
 		bool m_PrimaryCamera = true;
 
-		Ref<Texture2D> m_CheckerboardTexture, m_SpriteSheet;
+		Ref<Texture2D> m_CheckerboardTexture, m_SpriteSheet, m_FaceTexture;
 		Ref<SubTexture2D> m_TextureStair, m_TextureGrass, m_TextureTree;
 
 

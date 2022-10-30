@@ -134,7 +134,7 @@
 
 		auto textureShader = m_ShaderLibrary.Load("assets/shader/Texture.glsl");
 
-		m_Texture = Flame::Texture2D::Create("assets/texture/Checkerboard.png");//此时返回的是智能指针，不再需要使用reset
+		m_Texture = Flame::Texture2D::Create("assets/VirtualCube/face.png");//此时返回的是智能指针，不再需要使用reset
 		m_ChernoLogoTexture = Flame::Texture2D::Create("assets/texture/ChernoLogo.png");
 
 		textureShader->Bind();

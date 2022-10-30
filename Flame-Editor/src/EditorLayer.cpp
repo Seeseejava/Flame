@@ -34,6 +34,7 @@ namespace Flame {
 
 		m_CheckerboardTexture = Texture2D::Create("assets/texture/Checkerboard.png");
 		m_SpriteSheet = Texture2D::Create("assets/RPGGame/texture/RPGpack_sheet_2X.png");
+		m_FaceTexture = Texture2D::Create("assets/VirtualCube/test5.png");
 
 		FramebufferSpecification fbSpec;
 		fbSpec.Width = 1280;
@@ -141,6 +142,9 @@ namespace Flame {
 			Renderer2D::DrawQuad({ 1.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, m_TextureStair);
 			Renderer2D::DrawQuad({ 2.0f, 0.0f, 0.0f }, { 1.0f, 2.0f }, m_TextureTree);*/
 
+			Renderer2D::BeginScene(m_CameraController.GetCamera());
+			Renderer2D::DrawQuad({ 0.5f, 0.5f, 0.0f }, { 7.0f, 7.0f * 640.0f / 427.0f }, m_FaceTexture);
+			Renderer2D::EndScene();
 
 			m_ActiveScene->OnUpdate(ts);
 
