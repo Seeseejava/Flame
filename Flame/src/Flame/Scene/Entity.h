@@ -55,7 +55,7 @@ namespace Flame {
 			return !(*this == other);
 		}
 	private:
-		entt::entity m_EntityHandle{ 0 };
+		entt::entity m_EntityHandle{ entt::null };
 		// TODO:¸ü¸ÄÎªweak_ptr
 		Scene* m_Scene = nullptr;
 	};
