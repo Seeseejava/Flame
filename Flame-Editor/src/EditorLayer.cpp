@@ -47,12 +47,16 @@ namespace Flame {
 		m_SquareEntity = m_ActiveScene->CreateEntity("Green Square");
 		m_SquareEntity.AddComponent<SpriteRendererComponent>(glm::vec4{ 0.0f, 1.0f, 0.0f, 1.0f });
 
-		m_CameraEntity = m_ActiveScene->CreateEntity("Camera Entity");
-		m_CameraEntity.AddComponent<CameraComponent>();
+		auto redSquare = m_ActiveScene->CreateEntity("Red Square");
+		redSquare.AddComponent<SpriteRendererComponent>(glm::vec4{ 1.0f, 0.0f, 0.0f, 1.0f });
 
 		m_SecondCamera = m_ActiveScene->CreateEntity("Clip-Space Entity");
 		auto& cc = m_SecondCamera.AddComponent<CameraComponent>();
 		cc.Primary = false;
+
+		m_CameraEntity = m_ActiveScene->CreateEntity("Camera Entity");
+		m_CameraEntity.AddComponent<CameraComponent>();
+
 
 		m_MapWidth = s_MapWidth;
 		m_MapHeight = strlen(s_MapTiles) / s_MapWidth;
@@ -142,9 +146,9 @@ namespace Flame {
 			Renderer2D::DrawQuad({ 1.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, m_TextureStair);
 			Renderer2D::DrawQuad({ 2.0f, 0.0f, 0.0f }, { 1.0f, 2.0f }, m_TextureTree);*/
 
-			Renderer2D::BeginScene(m_CameraController.GetCamera());
+			/*Renderer2D::BeginScene(m_CameraController.GetCamera());
 			Renderer2D::DrawQuad({ 0.5f, 0.5f, 0.0f }, { 7.0f, 7.0f * 640.0f / 427.0f }, m_FaceTexture);
-			Renderer2D::EndScene();
+			Renderer2D::EndScene();*/
 
 			m_ActiveScene->OnUpdate(ts);
 
