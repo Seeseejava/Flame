@@ -43,18 +43,18 @@ namespace Flame {
 
 		m_ActiveScene = std::make_shared<Scene>();
 
-		// Entity
+		// Entity （逆序绘制）
 		m_SquareEntity = m_ActiveScene->CreateEntity("Green Square");
 		m_SquareEntity.AddComponent<SpriteRendererComponent>(glm::vec4{ 0.0f, 1.0f, 0.0f, 1.0f });
 
 		auto redSquare = m_ActiveScene->CreateEntity("Red Square");
 		redSquare.AddComponent<SpriteRendererComponent>(glm::vec4{ 1.0f, 0.0f, 0.0f, 1.0f });
 
-		m_SecondCamera = m_ActiveScene->CreateEntity("Clip-Space Entity");
+		m_SecondCamera = m_ActiveScene->CreateEntity("Camera B");
 		auto& cc = m_SecondCamera.AddComponent<CameraComponent>();
 		cc.Primary = false;
 
-		m_CameraEntity = m_ActiveScene->CreateEntity("Camera Entity");
+		m_CameraEntity = m_ActiveScene->CreateEntity("Camera A");
 		m_CameraEntity.AddComponent<CameraComponent>();
 
 
@@ -125,7 +125,7 @@ namespace Flame {
 		{
 			FLAME_PROFILE_SCOPE("Renderer Draw");
 
-			// 地图
+			//-------------地图--------------------
 			//for (uint32_t y = 0; y < m_MapHeight; y++)
 			//{
 			//	for (uint32_t x = 0; x < m_MapWidth; x++)
@@ -142,10 +142,14 @@ namespace Flame {
 			//	}
 			//}
 
-			/*Renderer2D::DrawQuad({ 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, m_TextureGrass);
+			//---------------Draw SubTexture--------------------
+			/*Renderer2D::BeginScene(m_CameraController.GetCamera());
+			Renderer2D::DrawQuad({ 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, m_TextureGrass);
 			Renderer2D::DrawQuad({ 1.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, m_TextureStair);
-			Renderer2D::DrawQuad({ 2.0f, 0.0f, 0.0f }, { 1.0f, 2.0f }, m_TextureTree);*/
+			Renderer2D::DrawQuad({ 2.0f, 0.0f, 0.0f }, { 1.0f, 2.0f }, m_TextureTree);
+			Renderer2D::EndScene();*/
 
+			//--------------加载人脸图片--------------------------
 			/*Renderer2D::BeginScene(m_CameraController.GetCamera());
 			Renderer2D::DrawQuad({ 0.5f, 0.5f, 0.0f }, { 7.0f, 7.0f * 640.0f / 427.0f }, m_FaceTexture);
 			Renderer2D::EndScene();*/
@@ -155,24 +159,25 @@ namespace Flame {
 
 		}
 
-		if (Input::IsMouseButtonPressed(FLAME_MOUSE_BUTTON_LEFT))
-		{
-			auto [x, y] = Input::GetMousePosition();						//这个位置是相对于窗口左上角，且向右向下为正，单位为像素
-			auto width = Application::Get().GetWindow().GetWidth();
-			auto height = Application::Get().GetWindow().GetHeight();	//串口大小：1280x720
+		//-------------粒子系统-----------------------
+		//if (Input::IsMouseButtonPressed(FLAME_MOUSE_BUTTON_LEFT))
+		//{
+		//	auto [x, y] = Input::GetMousePosition();						//这个位置是相对于窗口左上角，且向右向下为正，单位为像素
+		//	auto width = Application::Get().GetWindow().GetWidth();
+		//	auto height = Application::Get().GetWindow().GetHeight();	//串口大小：1280x720
 
-			auto bounds = m_CameraController.GetBounds();						//当zoomlevel时，left = -5 * 1280 / 720, bottom = -5;
-			auto pos = m_CameraController.GetCamera().GetPosition();			//当摄像机未移动时为0
-			x = (x / width) * bounds.GetWidth() - bounds.GetWidth() * 0.5f;		//前一部分求得相较于摄像机左下角的位置，减摄像机半宽后得到相对于摄像机的位置（变换成摄像机的坐标了）
-			y = bounds.GetHeight() * 0.5f - (y / height) * bounds.GetHeight();
-			m_Particle.Position = { x + pos.x, y + pos.y };
-			for (int i = 0; i < 5; i++)
-				m_ParticleSystem.Emit(m_Particle);
-		}
+		//	auto bounds = m_CameraController.GetBounds();						//当zoomlevel时，left = -5 * 1280 / 720, bottom = -5;
+		//	auto pos = m_CameraController.GetCamera().GetPosition();			//当摄像机未移动时为0
+		//	x = (x / width) * bounds.GetWidth() - bounds.GetWidth() * 0.5f;		//前一部分求得相较于摄像机左下角的位置，减摄像机半宽后得到相对于摄像机的位置（变换成摄像机的坐标了）
+		//	y = bounds.GetHeight() * 0.5f - (y / height) * bounds.GetHeight();
+		//	m_Particle.Position = { x + pos.x, y + pos.y };
+		//	for (int i = 0; i < 5; i++)
+		//		m_ParticleSystem.Emit(m_Particle);
+		//}
 
-		m_ParticleSystem.OnUpdate(ts);
-		m_ParticleSystem.OnRender(m_CameraController.GetCamera());
-		m_Framebuffer->Unbind(); //目前粒子系统的鼠标位置有问题
+		//m_ParticleSystem.OnUpdate(ts);
+		//m_ParticleSystem.OnRender(m_CameraController.GetCamera()); //目前粒子系统的鼠标位置有问题
+		m_Framebuffer->Unbind(); 
 
 	}
 
@@ -241,7 +246,7 @@ namespace Flame {
 
 		m_SceneHierarchyPanel.OnImGuiRender();
 
-		ImGui::Begin("Settings");
+		ImGui::Begin("Stats");
 
 		auto stats = Renderer2D::GetStats();
 		ImGui::Text("Renderer2D Stats:");
@@ -250,31 +255,6 @@ namespace Flame {
 		ImGui::Text("Vertices: %d", stats.GetTotalVertexCount());
 		ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
 
-		if (m_SquareEntity)
-		{
-			ImGui::Separator();
-			auto& tag = m_SquareEntity.GetComponent<TagComponent>().Tag;
-			ImGui::Text("%s", tag.c_str());
-
-			auto& squareColor = m_SquareEntity.GetComponent<SpriteRendererComponent>().Color;
-			ImGui::ColorEdit4("Square Color", glm::value_ptr(squareColor));
-			ImGui::Separator();
-		}
-
-		ImGui::DragFloat3("Camera Transform",
-			glm::value_ptr(m_CameraEntity.GetComponent<TransformComponent>().Transform[3])); // mat4中4行4列的元素是按照列的方式排列的:主要是因为opengl在显存中是按列存储的
-
-		if (ImGui::Checkbox("Camera A", &m_PrimaryCamera))
-		{
-			m_CameraEntity.GetComponent<CameraComponent>().Primary = m_PrimaryCamera;
-			m_SecondCamera.GetComponent<CameraComponent>().Primary = !m_PrimaryCamera;
-		}
-		{
-			auto& camera = m_SecondCamera.GetComponent<CameraComponent>().Camera;
-			float orthoSize = camera.GetOrthographicSize();
-			if (ImGui::DragFloat("Second Camera Ortho Size", &orthoSize))
-				camera.SetOrthographicSize(orthoSize);
-		}
 		ImGui::End();
 
 		//设置窗口的padding为0是图片控件充满窗口

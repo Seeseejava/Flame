@@ -108,6 +108,7 @@ namespace Flame {
 
 				const char* projectionTypeStrings[] = { "Perspective", "Orthographic" };
 				const char* currentProjectionTypeString = projectionTypeStrings[(int)camera.GetProjectionType()];
+				// BeginCombo是ImGui绘制EnumPopup的方法
 				if (ImGui::BeginCombo("Projection", currentProjectionTypeString))
 				{
 					for (int i = 0; i < 2; i++)
@@ -119,6 +120,7 @@ namespace Flame {
 							camera.SetProjectionType((SceneCamera::ProjectionType)i);
 						}
 
+						// 高亮当前已经选择的Item
 						if (isSelected)
 							ImGui::SetItemDefaultFocus();
 					}
@@ -160,6 +162,19 @@ namespace Flame {
 				ImGui::TreePop();
 			}
 
+		}
+
+		if (entity.HasComponent<SpriteRendererComponent>())
+		{
+			if (ImGui::TreeNodeEx((void*)typeid(SpriteRendererComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Sprite Renderer"))
+			{
+				auto& src = entity.GetComponent<SpriteRendererComponent>();
+				/*这里是支持Blend的，修改一个Quad的alpha，再修改其Z值，会产生Blend效果，类似于带颜色的透镜来看的视角。
+				但是由于这里还没有对绘制顺序进行要求，而Blend需要先绘制离相机远的，再绘制近的，
+				所以这里只有绿色的正方形在红色上方才会出现Blend效果，后续需要根据Z值大小改变物体先后绘制顺序。*/
+				ImGui::ColorEdit4("Color", glm::value_ptr(src.Color));
+				ImGui::TreePop();
+			}
 		}
 	}
 
