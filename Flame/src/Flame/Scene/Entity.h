@@ -18,7 +18,9 @@ namespace Flame {
 		T& AddComponent(Args&&... args)
 		{
 			FLAME_CORE_ASSERT(!HasComponent<T>(), "Entity already has component!");
-			return m_Scene->m_Registry.emplace<T>(m_EntityHandle, std::forward<Args>(args)...);  //有点难以理解
+			T& component = m_Scene->m_Registry.emplace<T>(m_EntityHandle, std::forward<Args>(args)...); //有点难以理解
+			m_Scene->OnComponentAdded<T>(*this, component);
+			return component; 
 		}
 
 		template<typename T>
@@ -44,6 +46,7 @@ namespace Flame {
 		operator bool() const { return m_EntityHandle != entt::null; }
 
 		operator uint32_t() const { return (uint32_t)m_EntityHandle; }
+		operator entt::entity() const { return m_EntityHandle; }
 
 		bool operator==(const Entity& other) const
 		{
