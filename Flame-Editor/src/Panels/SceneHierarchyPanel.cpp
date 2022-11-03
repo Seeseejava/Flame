@@ -49,26 +49,6 @@ namespace Flame {
 		if (m_SelectionContext)
 		{
 			DrawComponents(m_SelectionContext);
-
-			if (ImGui::Button("Add Component"))
-				ImGui::OpenPopup("AddComponent");
-
-			if (ImGui::BeginPopup("AddComponent"))
-			{
-				if (ImGui::MenuItem("Camera"))
-				{
-					m_SelectionContext.AddComponent<CameraComponent>();
-					ImGui::CloseCurrentPopup();
-				}
-
-				if (ImGui::MenuItem("Sprite Renderer"))
-				{
-					m_SelectionContext.AddComponent<SpriteRendererComponent>();
-					ImGui::CloseCurrentPopup();
-				}
-
-				ImGui::EndPopup();
-			}
 		}
 
 		ImGui::End();
@@ -80,7 +60,7 @@ namespace Flame {
 
 		// 每个node都自带OpenOnArrow的flag, 如果当前entity正好是被选择的go, 那么还会多一个selected flag
 		ImGuiTreeNodeFlags flags = ((m_SelectionContext == entity) ? ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnArrow;
-
+		flags |= ImGuiTreeNodeFlags_SpanAvailWidth; // 覆盖整个空间
 		// 这里的TreeNodeEx会让ImGui基于输入的HashCode(GUID), 绘制一个TreeNode, 由于这里需要一个
 		// void*指针, 这里直接把entity的id转成void*给它即可
 		// ex应该是expanded的意思, 用于判断go对应的Node是否处于展开状态
@@ -105,7 +85,7 @@ namespace Flame {
 		// 由于目前没有链式entity, 所以这里把展开的对象再绘制一个相同的子节点
 		if (opened)
 		{
-			ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow;
+			ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
 			bool opened = ImGui::TreeNodeEx((void*)9817239, flags, tag.c_str());
 			if (opened)
 				ImGui::TreePop();
@@ -124,6 +104,9 @@ namespace Flame {
 
 	static void DrawVec3Control(const std::string& label, glm::vec3& values, float resetValue = 0.0f, float columnWidth = 100.0f)
 	{
+		ImGuiIO& io = ImGui::GetIO();
+		auto boldFont = io.Fonts->Fonts[1];
+
 		// Translation、Scale都会有相同的类似DragFloat("##Y"的函数, 而ImGui是根据输入的"##Y"来作为identifier的
 		// 为了让不同组件的相同名字的值可以各自通过UI读写, 这里需要在绘制最开始加入ID, 绘制结束后PopId
 		ImGui::PushID(label.c_str());
@@ -146,9 +129,12 @@ namespace Flame {
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.8f, 0.1f, 0.15f, 1.0f });
 		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{ 0.9f, 0.2f, 0.2f, 1.0f });
 		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{ 0.8f, 0.1f, 0.15f, 1.0f });
+
+		ImGui::PushFont(boldFont);
 		// 按X按钮重置x值
 		if (ImGui::Button("X", buttonSize))
 			values.x = resetValue;
+		ImGui::PopFont();
 		ImGui::PopStyleColor(3);// 把上面Push的三个StyleColor给拿出来
 
 		// 把x值显示出来, 同时提供拖拽修改功能
@@ -161,8 +147,10 @@ namespace Flame {
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.2f, 0.7f, 0.2f, 1.0f });
 		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{ 0.3f, 0.8f, 0.3f, 1.0f });
 		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{ 0.2f, 0.7f, 0.2f, 1.0f });
+		ImGui::PushFont(boldFont);
 		if (ImGui::Button("Y", buttonSize))
 			values.y = resetValue;
+		ImGui::PopFont();
 		ImGui::PopStyleColor(3);
 
 		ImGui::SameLine();
@@ -174,8 +162,10 @@ namespace Flame {
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.1f, 0.25f, 0.8f, 1.0f });
 		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{ 0.2f, 0.35f, 0.9f, 1.0f });
 		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{ 0.1f, 0.25f, 0.8f, 1.0f });
+		ImGui::PushFont(boldFont);
 		if (ImGui::Button("Z", buttonSize))
 			values.z = resetValue;
+		ImGui::PopFont();
 		ImGui::PopStyleColor(3);
 
 		ImGui::SameLine();
@@ -190,6 +180,48 @@ namespace Flame {
 		ImGui::PopID();
 	}
 
+	template<typename T, typename UIFunction>
+	static void DrawComponent(const std::string& name, Entity entity, UIFunction uiFunction)
+	{
+		const ImGuiTreeNodeFlags treeNodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding;
+		if (entity.HasComponent<T>())
+		{
+			auto& component = entity.GetComponent<T>();
+			ImVec2 contentRegionAvailable = ImGui::GetContentRegionAvail();
+
+			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{ 4, 4 });
+			float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
+			ImGui::Separator();
+			bool open = ImGui::TreeNodeEx((void*)typeid(T).hash_code(), treeNodeFlags, name.c_str());
+			ImGui::PopStyleVar(
+			);
+			ImGui::SameLine(contentRegionAvailable.x - lineHeight * 0.5f);
+			if (ImGui::Button("+", ImVec2{ lineHeight, lineHeight }))
+			{
+				// 这里的Popup通过OpenPopup、BeginPopup和EndPopup一起生效, 输入的string为id
+				ImGui::OpenPopup("ComponentSettings");
+			}
+
+			bool removeComponent = false;
+			if (ImGui::BeginPopup("ComponentSettings"))
+			{
+				if (ImGui::MenuItem("Remove component"))
+					removeComponent = true;
+
+				ImGui::EndPopup();
+			}
+
+			if (open)
+			{
+				uiFunction(component);
+				ImGui::TreePop();
+			}
+
+			if (removeComponent)
+				entity.RemoveComponent<T>();
+		}
+	}
+
 
 	void SceneHierarchyPanel::DrawComponents(Entity entity)
 	{
@@ -200,135 +232,114 @@ namespace Flame {
 			char buffer[256];
 			memset(buffer, 0, sizeof(buffer));
 			strcpy_s(buffer, sizeof(buffer), tag.c_str());
-			if (ImGui::InputText("Tag", buffer, sizeof(buffer)))
+			if (ImGui::InputText("##Tag", buffer, sizeof(buffer)))
 			{
 				tag = std::string(buffer);
 			}
 		}
 
-		const ImGuiTreeNodeFlags treeNodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap; // ？
+		ImGui::SameLine();
+		ImGui::PushItemWidth(-1);
 
-		if (entity.HasComponent<TransformComponent>())
+		if (ImGui::Button("Add Component"))
+			ImGui::OpenPopup("AddComponent");
+
+		if (ImGui::BeginPopup("AddComponent"))
 		{
-			bool open = ImGui::TreeNodeEx((void*)typeid(TransformComponent).hash_code(), treeNodeFlags, "Transform");// 输入的id使用的C++的typeid的hash code
-
-			if (open) 
+			if (ImGui::MenuItem("Camera"))
 			{
-				auto& tc = entity.GetComponent<TransformComponent>();
-				DrawVec3Control("Translation", tc.Translation);
-
-				// 面板上展示的是degrees, 但是底层数据存的是radians
-				glm::vec3 rotation = glm::degrees(tc.Rotation);
-				DrawVec3Control("Rotation", rotation);
-				tc.Rotation = glm::radians(rotation);
-				DrawVec3Control("Scale", tc.Scale, 1.0f);
-
-				ImGui::TreePop();
+				m_SelectionContext.AddComponent<CameraComponent>();
+				ImGui::CloseCurrentPopup();
 			}
-		}
 
-		if (entity.HasComponent<CameraComponent>())
-		{
-			if (ImGui::TreeNodeEx((void*)typeid(CameraComponent).hash_code(), treeNodeFlags, "Camera"))
+			if (ImGui::MenuItem("Sprite Renderer"))
 			{
-				auto& cameraComponent = entity.GetComponent<CameraComponent>();
-				auto& camera = cameraComponent.Camera;
+				m_SelectionContext.AddComponent<SpriteRendererComponent>();
+				ImGui::CloseCurrentPopup();
+			}
 
-				ImGui::Checkbox("Primary", &cameraComponent.Primary);
+			ImGui::EndPopup();
+		}
+		ImGui::PopItemWidth();
 
-				const char* projectionTypeStrings[] = { "Perspective", "Orthographic" };
-				const char* currentProjectionTypeString = projectionTypeStrings[(int)camera.GetProjectionType()];
-				// BeginCombo是ImGui绘制EnumPopup的方法
-				if (ImGui::BeginCombo("Projection", currentProjectionTypeString))
-				{
-					for (int i = 0; i < 2; i++)
+		DrawComponent<TransformComponent>("Transform", entity, [](auto& component)
+			{
+					DrawVec3Control("Translation", component.Translation);
+					glm::vec3 rotation = glm::degrees(component.Rotation);
+					DrawVec3Control("Rotation", rotation);
+					component.Rotation = glm::radians(rotation);
+					DrawVec3Control("Scale", component.Scale, 1.0f);
+			});
+
+		DrawComponent<CameraComponent>("Camera", entity, [](auto& component)
+			{
+					auto& camera = component.Camera;
+
+					ImGui::Checkbox("Primary", &component.Primary);
+
+					const char* projectionTypeStrings[] = { "Perspective", "Orthographic" };
+					const char* currentProjectionTypeString = projectionTypeStrings[(int)camera.GetProjectionType()];
+					// BeginCombo是ImGui绘制EnumPopup的方法
+					if (ImGui::BeginCombo("Projection", currentProjectionTypeString))
 					{
-						bool isSelected = currentProjectionTypeString == projectionTypeStrings[i];
-						if (ImGui::Selectable(projectionTypeStrings[i], isSelected))
+						for (int i = 0; i < 2; i++)
 						{
-							currentProjectionTypeString = projectionTypeStrings[i];
-							camera.SetProjectionType((SceneCamera::ProjectionType)i);
+							bool isSelected = currentProjectionTypeString == projectionTypeStrings[i];
+							if (ImGui::Selectable(projectionTypeStrings[i], isSelected))
+							{
+								currentProjectionTypeString = projectionTypeStrings[i];
+								camera.SetProjectionType((SceneCamera::ProjectionType)i);
+							}
+
+							// 高亮当前已经选择的Item
+							if (isSelected)
+								ImGui::SetItemDefaultFocus();
 						}
 
-						// 高亮当前已经选择的Item
-						if (isSelected)
-							ImGui::SetItemDefaultFocus();
+						ImGui::EndCombo();
 					}
 
-					ImGui::EndCombo();
-				}
+					if (camera.GetProjectionType() == SceneCamera::ProjectionType::Perspective)
+					{
+						float verticalFov = glm::degrees(camera.GetPerspectiveVerticalFOV());
+						if (ImGui::DragFloat("Vertical FOV", &verticalFov))
+							camera.SetPerspectiveVerticalFOV(glm::radians(verticalFov));
 
-				if (camera.GetProjectionType() == SceneCamera::ProjectionType::Perspective)
-				{
-					float verticalFov = glm::degrees(camera.GetPerspectiveVerticalFOV());
-					if (ImGui::DragFloat("Vertical FOV", &verticalFov))
-						camera.SetPerspectiveVerticalFOV(glm::radians(verticalFov));
+						float orthoNear = camera.GetPerspectiveNearClip();
+						if (ImGui::DragFloat("Near", &orthoNear))
+							camera.SetPerspectiveNearClip(orthoNear);
 
-					float orthoNear = camera.GetPerspectiveNearClip();
-					if (ImGui::DragFloat("Near", &orthoNear))
-						camera.SetPerspectiveNearClip(orthoNear);
+						float orthoFar = camera.GetPerspectiveFarClip();
+						if (ImGui::DragFloat("Far", &orthoFar))
+							camera.SetPerspectiveFarClip(orthoFar);
+					}
 
-					float orthoFar = camera.GetPerspectiveFarClip();
-					if (ImGui::DragFloat("Far", &orthoFar))
-						camera.SetPerspectiveFarClip(orthoFar);
-				}
+					if (camera.GetProjectionType() == SceneCamera::ProjectionType::Orthographic)
+					{
+						float orthoSize = camera.GetOrthographicSize();
+						if (ImGui::DragFloat("Size", &orthoSize))
+							camera.SetOrthographicSize(orthoSize);
 
-				if (camera.GetProjectionType() == SceneCamera::ProjectionType::Orthographic)
-				{
-					float orthoSize = camera.GetOrthographicSize();
-					if (ImGui::DragFloat("Size", &orthoSize))
-						camera.SetOrthographicSize(orthoSize);
+						float orthoNear = camera.GetOrthographicNearClip();
+						if (ImGui::DragFloat("Near", &orthoNear))
+							camera.SetOrthographicNearClip(orthoNear);
 
-					float orthoNear = camera.GetOrthographicNearClip();
-					if (ImGui::DragFloat("Near", &orthoNear))
-						camera.SetOrthographicNearClip(orthoNear);
+						float orthoFar = camera.GetOrthographicFarClip();
+						if (ImGui::DragFloat("Far", &orthoFar))
+							camera.SetOrthographicFarClip(orthoFar);
 
-					float orthoFar = camera.GetOrthographicFarClip();
-					if (ImGui::DragFloat("Far", &orthoFar))
-						camera.SetOrthographicFarClip(orthoFar);
-
-					ImGui::Checkbox("Fixed Aspect Ratio", &cameraComponent.FixedAspectRatio);
-				}
-				ImGui::TreePop();
-			}
-
-		}
-
-		if (entity.HasComponent<SpriteRendererComponent>())
-		{
-			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{ 4, 4 });
-			bool open = ImGui::TreeNodeEx((void*)typeid(SpriteRendererComponent).hash_code(), treeNodeFlags, "Sprite Renderer");
-			ImGui::SameLine(ImGui::GetWindowWidth() - 25.0f);
-			// 绘制20x20大小的+号按钮
-			if (ImGui::Button("+", ImVec2{ 20, 20 }))
+						ImGui::Checkbox("Fixed Aspect Ratio", &component.FixedAspectRatio);
+					}
+			});
+		
+		DrawComponent<SpriteRendererComponent>("Sprite Renderer", entity, [](auto& component)
 			{
-				// 这里的Popup通过OpenPopup、BeginPopup和EndPopup一起生效, 输入的string为id
-				ImGui::OpenPopup("ComponentSettings");
-			}
-			ImGui::PopStyleVar();
-
-			bool removeComponent = false;
-			if (ImGui::BeginPopup("ComponentSettings"))
-			{
-				if (ImGui::MenuItem("Remove component"))
-					removeComponent = true; 
-
-				ImGui::EndPopup();
-			}
-
-			if (open)
-			{
-				auto& src = entity.GetComponent<SpriteRendererComponent>();
 				/*这里是支持Blend的，修改一个Quad的alpha，再修改其Z值，会产生Blend效果，类似于带颜色的透镜来看的视角。
 				但是由于这里还没有对绘制顺序进行要求，而Blend需要先绘制离相机远的，再绘制近的，
 				所以这里只有绿色的正方形在红色上方才会出现Blend效果，后续需要根据Z值大小改变物体先后绘制顺序。*/
-				ImGui::ColorEdit4("Color", glm::value_ptr(src.Color));
-				ImGui::TreePop();
-			}
+				ImGui::ColorEdit4("Color", glm::value_ptr(component.Color));
+			});
 
-			if (removeComponent)
-				entity.RemoveComponent<SpriteRendererComponent>();
-		}
 	}
 
 }
