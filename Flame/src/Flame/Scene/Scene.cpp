@@ -168,6 +168,8 @@ namespace Flame {
 	void Scene::OnComponentAdded<TagComponent>(Entity entity, TagComponent& component)
 	{
 	}
-
-
+	// 在Flame里写了个模板类，然后再在EditorLayer里调用这个模板类，
+	// 但问题在于，目前在引擎内部没有调用到AddComponent代码，导致该模板没有被生成出来，此时EditorLayer调用OnComponentAdded会失败，所以需要手动让该OnComponentAdded可以编译。
+	// 不过正常情况下不需要用到这个功能，正常情况下，模板应该被定义在header文件里
+	// 注意, 这里不是模板特化, 而是让编译器生成这几个特定类型的模板函数而已   ?
 }

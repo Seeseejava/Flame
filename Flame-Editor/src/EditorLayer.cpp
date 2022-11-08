@@ -4,6 +4,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "Flame/Scene/SceneSerializer.h"
+
 
 
 namespace Flame {
@@ -34,7 +36,7 @@ namespace Flame {
 
 		m_CheckerboardTexture = Texture2D::Create("assets/texture/Checkerboard.png");
 		m_SpriteSheet = Texture2D::Create("assets/RPGGame/texture/RPGpack_sheet_2X.png");
-		m_FaceTexture = Texture2D::Create("assets/VirtualCube/test5.png");
+		m_FaceTexture = Texture2D::Create("assets/VirtualCube/2.png");
 
 		FramebufferSpecification fbSpec;
 		fbSpec.Width = 1280;
@@ -43,8 +45,9 @@ namespace Flame {
 
 		m_ActiveScene = std::make_shared<Scene>();
 
+
 		// Entity £¨ÄæÐò»æÖÆ£©
-		m_SquareEntity = m_ActiveScene->CreateEntity("Green Square");
+		/*m_SquareEntity = m_ActiveScene->CreateEntity("Green Square");
 		m_SquareEntity.AddComponent<SpriteRendererComponent>(glm::vec4{ 0.0f, 1.0f, 0.0f, 1.0f });
 
 		auto redSquare = m_ActiveScene->CreateEntity("Red Square");
@@ -55,7 +58,7 @@ namespace Flame {
 		cc.Primary = false;
 
 		m_CameraEntity = m_ActiveScene->CreateEntity("Camera A");
-		m_CameraEntity.AddComponent<CameraComponent>();
+		m_CameraEntity.AddComponent<CameraComponent>();*/
 
 
 		m_MapWidth = s_MapWidth;
@@ -78,8 +81,7 @@ namespace Flame {
 		m_Particle.Position = { 0.0f, 0.0f };
 
 		m_CameraController.SetZoomLevel(5.0f);
-
-		// Panels
+// Panels
 		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
 	}
 
@@ -151,7 +153,7 @@ namespace Flame {
 
 			//--------------¼ÓÔØÈËÁ³Í¼Æ¬--------------------------
 			/*Renderer2D::BeginScene(m_CameraController.GetCamera());
-			Renderer2D::DrawQuad({ 0.5f, 0.5f, 0.0f }, { 7.0f, 7.0f * 640.0f / 427.0f }, m_FaceTexture);
+			Renderer2D::DrawQuad({ 0.5f, 0.5f, 0.0f }, { 7.0f, 7.0f * 1153.0f / 1039.0f }, m_FaceTexture);
 			Renderer2D::EndScene();*/
 
 			m_ActiveScene->OnUpdate(ts);
@@ -243,6 +245,17 @@ namespace Flame {
 			{
 				// Disabling fullscreen would allow the window to be moved to the front of other windows,
 				// which we can't undo at the moment without finer window depth/z control.
+				if (ImGui::MenuItem("Serialize"))
+				{
+					SceneSerializer serializer(m_ActiveScene);
+					serializer.Serialize("assets/scene/Example.flame");
+				}
+
+				if (ImGui::MenuItem("Deserialize"))
+				{
+					SceneSerializer serializer(m_ActiveScene);
+					serializer.Deserialize("assets/scene/Example.flame");
+				}
 
 				if (ImGui::MenuItem("Exit")) Application::Get().Close();
 

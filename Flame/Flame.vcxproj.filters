@@ -168,6 +168,9 @@
     <ClInclude Include="src\Flame\Scene\SceneCamera.h">
       <Filter>src\Flame\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="src\Flame\Scene\SceneSerializer.h">
+      <Filter>src\Flame\Scene</Filter>
+    </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h">
       <Filter>src\Platform\OpenGL</Filter>
     </ClInclude>
@@ -1509,6 +1512,9 @@
       <Filter>src\Flame\Scene</Filter>
     </ClCompile>
     <ClCompile Include="src\Flame\Scene\SceneCamera.cpp">
+      <Filter>src\Flame\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Flame\Scene\SceneSerializer.cpp">
       <Filter>src\Flame\Scene</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp">

@@ -10,3 +10,7 @@
 [submodule "Flame/vendor/imgui"]
 	path = Flame/vendor/imgui
 	url = https://github.com/Seeseejava/imgui
+
+[submodule "Flame/vendor/yaml-cpp"]
+	path = Flame/vendor/yaml-cpp
+	url = https://github.com/Seeseejava/yaml-cpp
