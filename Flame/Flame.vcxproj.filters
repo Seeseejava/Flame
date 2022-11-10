@@ -19,11 +19,17 @@
     <Filter Include="src\Flame\ImGui">
       <UniqueIdentifier>{ABA703BC-1733-7180-2044-F4748C4ECD80}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Flame\Math">
+      <UniqueIdentifier>{3ACBACE6-2699-A0EC-0F2D-1113FB997C51}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Flame\Renderer">
       <UniqueIdentifier>{87F2577D-73D6-18D3-DC36-1326C8390355}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Flame\Scene">
       <UniqueIdentifier>{9E9FB3BC-0A2B-2181-133C-A4757F467D81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Flame\Utils">
+      <UniqueIdentifier>{E133E1BC-4DBF-4E81-56D0-D175C2DAAA81}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Platform">
       <UniqueIdentifier>{21CA02E5-0D2D-9289-B6B2-CA3FA2F45D0C}</UniqueIdentifier>
@@ -36,6 +42,9 @@
     </Filter>
     <Filter Include="vendor">
       <UniqueIdentifier>{B3738122-9F15-ACF8-88D0-BF4C74113349}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\ImGuizmo">
+      <UniqueIdentifier>{73BF7F4C-DF4A-ED10-E85B-700554664911}</UniqueIdentifier>
     </Filter>
     <Filter Include="vendor\glm">
       <UniqueIdentifier>{829FC5A8-6E57-07F6-D75E-E051C335A2E6}</UniqueIdentifier>
@@ -57,9 +66,6 @@
     </Filter>
     <Filter Include="vendor\stb_image">
       <UniqueIdentifier>{0DA0BA59-F998-D9AB-22CB-BE300E23B9B7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Flame\Utils">
-      <UniqueIdentifier>{4cfbaf34-a19b-4c4e-9d87-9882bdab7178}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -116,6 +122,9 @@
     </ClInclude>
     <ClInclude Include="src\Flame\ImGui\ImGuiLayer.h">
       <Filter>src\Flame\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Flame\Math\Math.h">
+      <Filter>src\Flame\Math</Filter>
     </ClInclude>
     <ClInclude Include="src\Flame\Renderer\Buffer.h">
       <Filter>src\Flame\Renderer</Filter>
@@ -174,6 +183,9 @@
     <ClInclude Include="src\Flame\Scene\SceneSerializer.h">
       <Filter>src\Flame\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="src\Flame\Utils\PlatformUtils.h">
+      <Filter>src\Flame\Utils</Filter>
+    </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h">
       <Filter>src\Platform\OpenGL</Filter>
     </ClInclude>
@@ -203,6 +215,9 @@
     </ClInclude>
     <ClInclude Include="src\flamepch.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\ImGuizmo\ImGuizmo.h">
+      <Filter>vendor\ImGuizmo</Filter>
     </ClInclude>
     <ClInclude Include="vendor\glm\glm\common.hpp">
       <Filter>vendor\glm\glm</Filter>
@@ -1452,9 +1467,6 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
-    <ClInclude Include="src\Flame\Utils\PlatformUtils.h">
-      <Filter>src\Flame\Utils</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Flame\Core\Application.cpp">
@@ -1474,6 +1486,9 @@
     </ClCompile>
     <ClCompile Include="src\Flame\ImGui\ImGuiLayer.cpp">
       <Filter>src\Flame\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Flame\Math\Math.cpp">
+      <Filter>src\Flame\Math</Filter>
     </ClCompile>
     <ClCompile Include="src\Flame\Renderer\Buffer.cpp">
       <Filter>src\Flame\Renderer</Filter>
@@ -1544,6 +1559,9 @@
     <ClCompile Include="src\Platform\OpenGL\OpenGLVertexArray.cpp">
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
+    <ClCompile Include="src\Platform\WindowsPlatformUtils.cpp">
+      <Filter>src\Platform</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\WindowsWindow\WindowsInput.cpp">
       <Filter>src\Platform\WindowsWindow</Filter>
     </ClCompile>
@@ -1553,11 +1571,11 @@
     <ClCompile Include="src\flamepch.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="vendor\ImGuizmo\ImGuizmo.cpp">
+      <Filter>vendor\ImGuizmo</Filter>
+    </ClCompile>
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Platform\WindowsPlatformUtils.cpp">
-      <Filter>src\Platform\WindowsWindow</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

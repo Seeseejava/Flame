@@ -19,6 +19,7 @@ IncludeDir["glm"] = "Flame/vendor/glm"
 IncludeDir["stb_image"] = "Flame/vendor/stb_image"
 IncludeDir["entt"] = "Flame/vendor/entt/include"
 IncludeDir["yaml_cpp"] = "Flame/vendor/yaml-cpp/include"
+IncludeDir["ImGuizmo"] = "Flame/vendor/ImGuizmo"
 
 group "Dependency"
 include "Flame/vendor/GLFW"
@@ -50,6 +51,8 @@ project "Flame"
         "%{prj.name}/vendor/stb_image/**.cpp",
         "%{prj.name}/vendor/glm/glm/**.hpp",
         "%{prj.name}/vendor/glm/glm/**.inl",
+        "Flame/vendor/ImGuizmo/ImGuizmo.h",
+        "Flame/vendor/ImGuizmo/ImGuizmo.cpp",
     }
 
     defines
@@ -68,6 +71,7 @@ project "Flame"
         "%{IncludeDir.stb_image}",
         "%{IncludeDir.entt}",
         "%{IncludeDir.yaml_cpp}",
+        "%{IncludeDir.ImGuizmo}",
     }
 
     links
@@ -78,6 +82,11 @@ project "Flame"
         "yaml-cpp",
         "opengl32.lib",
     }
+
+    -- 对于ImGuizmo里的cpp, 不使用PCH, 因为我并不想去修改Submodule里它的cpp文件
+	-- 改了以后, 单独的submodule就不可以编译了
+	filter "files:Flame/vendor/ImGuizmo/ImGuizmo.cpp"
+    flags { "NoPCH" }
 
     filter "system:windows"
         --cppdialect "C++17"
@@ -195,6 +204,7 @@ project "Flame-Editor"
         "%{IncludeDir.glm}",
         "%{IncludeDir.entt}",
         "%{IncludeDir.yaml_cpp}",
+        "%{IncludeDir.ImGuizmo}",
     }
 
     links

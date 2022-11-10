@@ -14,3 +14,6 @@
 [submodule "Flame/vendor/yaml-cpp"]
 	path = Flame/vendor/yaml-cpp
 	url = https://github.com/Seeseejava/yaml-cpp
+[submodule "Flame/vendor/Imguizmo"]
+	path = Flame/vendor/Imguizmo
+	url = https://github.com/Seeseejava/ImGuizmo

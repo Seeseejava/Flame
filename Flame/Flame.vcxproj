@@ -77,7 +77,7 @@
       <PrecompiledHeaderFile>flamepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;FLAME_PLATFORM_WINDOWS;FLAME_BUILD_DLL;GLFW_INCLUDE_NONE;FLAME_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;vendor\stb_image;vendor\entt\include;vendor\yaml-cpp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;vendor\stb_image;vendor\entt\include;vendor\yaml-cpp\include;vendor\ImGuizmo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -97,7 +97,7 @@
       <PrecompiledHeaderFile>flamepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;FLAME_PLATFORM_WINDOWS;FLAME_BUILD_DLL;GLFW_INCLUDE_NONE;FLAME_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;vendor\stb_image;vendor\entt\include;vendor\yaml-cpp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;vendor\stb_image;vendor\entt\include;vendor\yaml-cpp\include;vendor\ImGuizmo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -121,7 +121,7 @@
       <PrecompiledHeaderFile>flamepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;FLAME_PLATFORM_WINDOWS;FLAME_BUILD_DLL;GLFW_INCLUDE_NONE;FLAME_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;vendor\stb_image;vendor\entt\include;vendor\yaml-cpp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;vendor\stb_image;vendor\entt\include;vendor\yaml-cpp\include;vendor\ImGuizmo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -140,7 +140,6 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\Flame\Utils\PlatformUtils.h" />
     <ClInclude Include="src\Flame.h" />
     <ClInclude Include="src\Flame\Core\Application.h" />
     <ClInclude Include="src\Flame\Core\Core.h" />
@@ -159,6 +158,7 @@
     <ClInclude Include="src\Flame\Events\KeyEvent.h" />
     <ClInclude Include="src\Flame\Events\MouseEvent.h" />
     <ClInclude Include="src\Flame\ImGui\ImGuiLayer.h" />
+    <ClInclude Include="src\Flame\Math\Math.h" />
     <ClInclude Include="src\Flame\Renderer\Buffer.h" />
     <ClInclude Include="src\Flame\Renderer\Camera.h" />
     <ClInclude Include="src\Flame\Renderer\FrameBuffer.h" />
@@ -178,6 +178,7 @@
     <ClInclude Include="src\Flame\Scene\Scene.h" />
     <ClInclude Include="src\Flame\Scene\SceneCamera.h" />
     <ClInclude Include="src\Flame\Scene\SceneSerializer.h" />
+    <ClInclude Include="src\Flame\Utils\PlatformUtils.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLFrameBuffer.h" />
@@ -188,6 +189,7 @@
     <ClInclude Include="src\Platform\OpenGL\imgui_impl_opengl3_loader.h" />
     <ClInclude Include="src\Platform\WindowsWindow\WindowsWindow.h" />
     <ClInclude Include="src\flamepch.h" />
+    <ClInclude Include="vendor\ImGuizmo\ImGuizmo.h" />
     <ClInclude Include="vendor\glm\glm\common.hpp" />
     <ClInclude Include="vendor\glm\glm\detail\_features.hpp" />
     <ClInclude Include="vendor\glm\glm\detail\_fixes.hpp" />
@@ -612,6 +614,7 @@
     <ClCompile Include="src\Flame\Core\Log.cpp" />
     <ClCompile Include="src\Flame\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\Flame\ImGui\ImGuiLayer.cpp" />
+    <ClCompile Include="src\Flame\Math\Math.cpp" />
     <ClCompile Include="src\Flame\Renderer\Buffer.cpp" />
     <ClCompile Include="src\Flame\Renderer\FrameBuffer.cpp" />
     <ClCompile Include="src\Flame\Renderer\OrthographicCamera.cpp" />
@@ -635,13 +638,16 @@
     <ClCompile Include="src\Platform\OpenGL\OpenGLShader.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLTexture.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLVertexArray.cpp" />
+    <ClCompile Include="src\Platform\WindowsPlatformUtils.cpp" />
     <ClCompile Include="src\Platform\WindowsWindow\WindowsInput.cpp" />
     <ClCompile Include="src\Platform\WindowsWindow\WindowsWindow.cpp" />
     <ClCompile Include="src\flamepch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="vendor\ImGuizmo\ImGuizmo.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="vendor\stb_image\stb_image.cpp" />
-    <ClCompile Include="src\Platform\WindowsPlatformUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="vendor\GLFW\GLFW.vcxproj">
