@@ -5,6 +5,8 @@
 
 #include "Panels/SceneHierarchyPanel.h"
 
+#include "Flame/Renderer/EditorCamera.h"
+
 namespace Flame {
 	class EditorLayer : public Layer
 	{
@@ -38,6 +40,8 @@ namespace Flame {
 		Entity m_SecondCamera;
 
 		bool m_PrimaryCamera = true;
+
+		EditorCamera m_EditorCamera;
 
 		Ref<Texture2D> m_CheckerboardTexture, m_SpriteSheet, m_FaceTexture;
 		Ref<SubTexture2D> m_TextureStair, m_TextureGrass, m_TextureTree;

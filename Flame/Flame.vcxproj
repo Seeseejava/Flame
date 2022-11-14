@@ -161,6 +161,7 @@
     <ClInclude Include="src\Flame\Math\Math.h" />
     <ClInclude Include="src\Flame\Renderer\Buffer.h" />
     <ClInclude Include="src\Flame\Renderer\Camera.h" />
+    <ClInclude Include="src\Flame\Renderer\EditorCamera.h" />
     <ClInclude Include="src\Flame\Renderer\FrameBuffer.h" />
     <ClInclude Include="src\Flame\Renderer\GraphicsContext.h" />
     <ClInclude Include="src\Flame\Renderer\OrthographicCamera.h" />
@@ -616,6 +617,7 @@
     <ClCompile Include="src\Flame\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\Flame\Math\Math.cpp" />
     <ClCompile Include="src\Flame\Renderer\Buffer.cpp" />
+    <ClCompile Include="src\Flame\Renderer\EditorCamera.cpp" />
     <ClCompile Include="src\Flame\Renderer\FrameBuffer.cpp" />
     <ClCompile Include="src\Flame\Renderer\OrthographicCamera.cpp" />
     <ClCompile Include="src\Flame\Renderer\OrthographicCameraController.cpp" />

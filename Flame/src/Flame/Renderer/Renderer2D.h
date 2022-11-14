@@ -4,6 +4,7 @@
 
 #include "SubTexture2D.h"
 #include "Flame/Renderer/Camera.h"
+#include "Flame/Renderer/EditorCamera.h"
 
 namespace Flame {
 
@@ -17,6 +18,7 @@ namespace Flame {
 		static void Shutdown();
 
 		static void BeginScene(const Camera& camera, const glm::mat4& transform);
+		static void BeginScene(const EditorCamera& camera);
 		static void BeginScene(const OrthographicCamera& camera); // TODO:Remove
 		static void EndScene();
 		static void Flush();
