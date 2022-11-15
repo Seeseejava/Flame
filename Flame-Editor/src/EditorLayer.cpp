@@ -44,7 +44,7 @@ namespace Flame {
 		m_FaceTexture = Texture2D::Create("assets/VirtualCube/2.png");
 
 		FramebufferSpecification fbSpec;
-		fbSpec.Attachments = { FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::Depth };
+		fbSpec.Attachments = { FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::RED_INTEGER, FramebufferTextureFormat::Depth };
 		fbSpec.Width = 1280;
 		fbSpec.Height = 720;
 		m_Framebuffer = Framebuffer::Create(fbSpec);
@@ -169,6 +169,20 @@ namespace Flame {
 
 			m_ActiveScene->OnUpdateEditor(ts, m_EditorCamera);
 
+			auto [mx, my] = ImGui::GetMousePos(); //相对于屏幕的坐标
+			mx -= m_ViewportBounds[0].x;
+			my -= m_ViewportBounds[0].y;
+			glm::vec2 viewportSize = m_ViewportBounds[1] - m_ViewportBounds[0];
+			my = viewportSize.y - my;
+			int mouseX = (int)mx;
+			int mouseY = (int)my;
+
+			if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)viewportSize.x && mouseY < (int)viewportSize.y)
+			{
+				//FLAME_CORE_WARN("{0}, {1}", mouseX, mouseY);
+				int pixelData = m_Framebuffer->ReadPixel(1, mouseX, mouseY);
+				FLAME_CORE_WARN("Pixel data = {0}", pixelData);
+			}
 
 		}
 
@@ -289,7 +303,10 @@ namespace Flame {
 		//设置窗口的padding为0是图片控件充满窗口
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
 		ImGui::Begin("Viewport");
-		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();//窗口尺寸
+
+		auto viewportOffset = ImGui::GetCursorPos(); // Includes tab bar (获得viewport有无bar后显示区域的坐标）：无bar（0，0），有bar(0.24) //注意于与ImGui::GetMousePos()的区别
+
+		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();// viewport显示区域大小，不包括tab bar
 		m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y }; // 没有这句viewport会是黑的 -> 说明图片大小必须和viewport大小相同才不会是黑的
 
 		m_ViewportFocused = ImGui::IsWindowFocused();
@@ -303,6 +320,19 @@ namespace Flame {
 
 		uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID(0); // 按索引显示哪一个colorbuffer
 		ImGui::Image((void*)textureID, ImVec2{ m_ViewportSize.x, m_ViewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+
+		auto windowSize = ImGui::GetWindowSize(); // 整个viewport大小，包括tab bar
+		ImVec2 minBound = ImGui::GetWindowPos(); // 整个viewport相对于屏幕左上角的位置
+		//FLAME_CORE_WARN("{0}, {1}", viewportPanelSize.x, viewportPanelSize.y);
+		//FLAME_CORE_WARN("{0}, {1}", windowSize.x, windowSize.y);
+		//FLAME_CORE_WARN("{0}, {1}", minBound.x, minBound.y);
+		minBound.x += viewportOffset.x;
+		minBound.y += viewportOffset.y;// 绘制区域在屏幕上的坐标
+
+		ImVec2 maxBound = { minBound.x + m_ViewportSize.x, minBound.y + m_ViewportSize.y };
+		m_ViewportBounds[0] = { minBound.x, minBound.y };
+		m_ViewportBounds[1] = { maxBound.x, maxBound.y };
+
 
 		// Gizmos
 		Entity selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();
