@@ -184,8 +184,8 @@ namespace Flame {
 			{
 				//FLAME_CORE_WARN("{0}, {1}", mouseX, mouseY);
 				int pixelData = m_Framebuffer->ReadPixel(1, mouseX, mouseY);
+				FLAME_CORE_WARN("Pixel data = {0}", pixelData);
 				m_HoveredEntity = pixelData == -1 ? Entity() : Entity((entt::entity)pixelData, m_ActiveScene.get());
-				//FLAME_CORE_WARN("Pixel data = {0}", pixelData);
 			}
 
 		}
