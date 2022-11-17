@@ -184,7 +184,8 @@ namespace Flame {
 			{
 				//FLAME_CORE_WARN("{0}, {1}", mouseX, mouseY);
 				int pixelData = m_Framebuffer->ReadPixel(1, mouseX, mouseY);
-				FLAME_CORE_WARN("Pixel data = {0}", pixelData);
+				m_HoveredEntity = pixelData == -1 ? Entity() : Entity((entt::entity)pixelData, m_ActiveScene.get());
+				//FLAME_CORE_WARN("Pixel data = {0}", pixelData);
 			}
 
 		}
@@ -293,6 +294,11 @@ namespace Flame {
 		m_SceneHierarchyPanel.OnImGuiRender();
 
 		ImGui::Begin("Stats");
+
+		std::string name = "None";
+		if (m_HoveredEntity)
+			name = m_HoveredEntity.GetComponent<TagComponent>().Tag;
+		ImGui::Text("Hovered Entity: %s", name.c_str());
 
 		auto stats = Renderer2D::GetStats();
 		ImGui::Text("Renderer2D Stats:");
