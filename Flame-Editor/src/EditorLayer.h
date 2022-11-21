@@ -4,6 +4,7 @@
 #include "ParticleSystem.h"
 
 #include "Panels/SceneHierarchyPanel.h"
+#include "Panels/ContentBrowserPanel.h"
 
 #include "Flame/Renderer/EditorCamera.h"
 
@@ -68,5 +69,6 @@ namespace Flame {
 
 		// Panels
 		SceneHierarchyPanel m_SceneHierarchyPanel;
+		ContentBrowserPanel m_ContentBrowserPanel;
 	};
 }

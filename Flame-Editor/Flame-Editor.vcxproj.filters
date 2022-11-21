@@ -12,6 +12,7 @@
     </ClInclude>
     <ClInclude Include="src\ParticleSystem.h" />
     <ClInclude Include="src\Random.h" />
+    <ClInclude Include="src\Panels\ContentBrowserPanel.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\EditorLayer.cpp" />
@@ -21,5 +22,6 @@
     </ClCompile>
     <ClCompile Include="src\ParticleSystem.cpp" />
     <ClCompile Include="src\Random.cpp" />
+    <ClCompile Include="src\Panels\ContentBrowserPanel.cpp" />
   </ItemGroup>
 </Project>

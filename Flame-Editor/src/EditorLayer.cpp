@@ -5,7 +5,6 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "Flame/Scene/SceneSerializer.h"
-
 #include "Flame/Utils/PlatformUtils.h"
 
 #include "ImGuizmo.h"
@@ -292,6 +291,7 @@ namespace Flame {
 		}
 
 		m_SceneHierarchyPanel.OnImGuiRender();
+		m_ContentBrowserPanel.OnImGuiRender();
 
 		ImGui::Begin("Stats");
 
