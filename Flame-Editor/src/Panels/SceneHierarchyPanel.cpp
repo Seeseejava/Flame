@@ -5,8 +5,11 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
+#include <filesystem>
 
 namespace Flame {
+
+	extern const std::filesystem::path g_AssetPath;
 
 	SceneHierarchyPanel::SceneHierarchyPanel(const Ref<Scene>& context)
 	{
@@ -344,6 +347,22 @@ namespace Flame {
 				但是由于这里还没有对绘制顺序进行要求，而Blend需要先绘制离相机远的，再绘制近的，
 				所以这里只有绿色的正方形在红色上方才会出现Blend效果，后续需要根据Z值大小改变物体先后绘制顺序。*/
 				ImGui::ColorEdit4("Color", glm::value_ptr(component.Color));
+
+				ImGui::Button("Texture", ImVec2(100.0f, 0.0f));
+				if (ImGui::BeginDragDropTarget())
+				{
+					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+					{
+						const wchar_t* path = (const wchar_t*)payload->Data;
+						std::filesystem::path texturePath = std::filesystem::path(g_AssetPath) / path;
+						component.Texture = Texture2D::Create(texturePath.string());
+					}
+					ImGui::EndDragDropTarget();
+				}
+
+
+
+				ImGui::DragFloat("Tiling Factor", &component.TilingFactor, 0.1f, 0.0f, 100.0f);
 			});
 
 	}

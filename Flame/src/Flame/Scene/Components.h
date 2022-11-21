@@ -3,6 +3,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include "SceneCamera.h"
+#include "Flame/Renderer/Texture.h"
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/quaternion.hpp>
@@ -44,6 +45,8 @@ namespace Flame {
 	struct SpriteRendererComponent
 	{
 		glm::vec4 Color{ 1.0f, 1.0f, 1.0f, 1.0f };
+		Ref<Texture2D> Texture;
+		float TilingFactor = 1.0f;
 
 		SpriteRendererComponent() = default;
 		SpriteRendererComponent(const SpriteRendererComponent&) = default;
