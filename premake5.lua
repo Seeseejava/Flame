@@ -20,12 +20,14 @@ IncludeDir["stb_image"] = "Flame/vendor/stb_image"
 IncludeDir["entt"] = "Flame/vendor/entt/include"
 IncludeDir["yaml_cpp"] = "Flame/vendor/yaml-cpp/include"
 IncludeDir["ImGuizmo"] = "Flame/vendor/ImGuizmo"
+IncludeDir["box2d"] = "Flame/vendor/box2d/include"
 
 group "Dependency"
 include "Flame/vendor/GLFW"
 include "Flame/vendor/Glad"
 include "Flame/vendor/imgui"
 include "Flame/vendor/yaml-cpp"
+include "Flame/vendor/box2d" --必须要有premake5.lua才能include
 group ""
 
 project "Flame"
@@ -72,6 +74,7 @@ project "Flame"
         "%{IncludeDir.entt}",
         "%{IncludeDir.yaml_cpp}",
         "%{IncludeDir.ImGuizmo}",
+        "%{IncludeDir.box2d}",
     }
 
     links
@@ -81,6 +84,7 @@ project "Flame"
         "ImGui",
         "yaml-cpp",
         "opengl32.lib",
+        "box2d",
     }
 
     -- 对于ImGuizmo里的cpp, 不使用PCH, 因为我并不想去修改Submodule里它的cpp文件

@@ -17,3 +17,7 @@
 [submodule "Flame/vendor/Imguizmo"]
 	path = Flame/vendor/Imguizmo
 	url = https://github.com/Seeseejava/ImGuizmo
+
+[submodule "Flame/vendor/box2d"]
+	path = Flame/vendor/box2d
+	url = https://github.com/Seeseejava/box2d
