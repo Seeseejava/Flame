@@ -5,6 +5,7 @@
 
 #include "Panels/SceneHierarchyPanel.h"
 #include "Panels/ContentBrowserPanel.h"
+#include "Panels/ToolBarPanel.h"
 
 #include "Flame/Renderer/EditorCamera.h"
 
@@ -71,5 +72,6 @@ namespace Flame {
 		// Panels
 		SceneHierarchyPanel m_SceneHierarchyPanel;
 		ContentBrowserPanel m_ContentBrowserPanel;
+		ToolBarPanel        m_ToolBarPanel;
 	};
 }

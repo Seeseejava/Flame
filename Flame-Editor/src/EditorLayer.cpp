@@ -117,11 +117,6 @@ namespace Flame {
 			m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 		}
 
-		// Update
-		if(m_ViewportFocused)
-			m_CameraController.OnUpdate(ts); //更新键盘事件
-
-		m_EditorCamera.OnUpdate(ts);
 
 		// Render
 		Renderer2D::ResetStats();
@@ -171,7 +166,24 @@ namespace Flame {
 			Renderer2D::DrawQuad({ 0.5f, 0.5f, 0.0f }, { 7.0f, 7.0f * 1153.0f / 1039.0f }, m_FaceTexture);
 			Renderer2D::EndScene();*/
 
-			m_ActiveScene->OnUpdateEditor(ts, m_EditorCamera);
+			switch (m_ToolBarPanel.m_SceneState)
+			{
+				case ToolBarPanel::SceneState::Edit:
+				{
+					if (m_ViewportFocused)
+						m_CameraController.OnUpdate(ts);//更新键盘事件
+
+					m_EditorCamera.OnUpdate(ts);
+
+					m_ActiveScene->OnUpdateEditor(ts, m_EditorCamera);
+					break;
+				}
+				case ToolBarPanel::SceneState::Play:
+				{
+					m_ActiveScene->OnUpdateRuntime(ts);
+					break;
+				}
+			}
 
 			auto [mx, my] = ImGui::GetMousePos(); //相对于屏幕的坐标
 			mx -= m_ViewportBounds[0].x;
@@ -294,6 +306,7 @@ namespace Flame {
 
 		m_SceneHierarchyPanel.OnImGuiRender();
 		m_ContentBrowserPanel.OnImGuiRender();
+		m_ToolBarPanel.OnImGuiRender();
 
 		ImGui::Begin("Stats");
 
