@@ -44,6 +44,9 @@ namespace Flame {
 		m_SpriteSheet = Texture2D::Create("assets/RPGGame/texture/RPGpack_sheet_2X.png");
 		m_FaceTexture = Texture2D::Create("assets/VirtualCube/2.png");
 
+		m_PlayIcon = Texture2D::Create("Resources/ToolBar/PlayButton.png");
+		m_StopIcon = Texture2D::Create("Resources/ToolBar/StopButton.png");
+
 		FramebufferSpecification fbSpec;
 		fbSpec.Attachments = { FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::RED_INTEGER, FramebufferTextureFormat::Depth };
 		fbSpec.Width = 1280;
@@ -166,9 +169,9 @@ namespace Flame {
 			Renderer2D::DrawQuad({ 0.5f, 0.5f, 0.0f }, { 7.0f, 7.0f * 1153.0f / 1039.0f }, m_FaceTexture);
 			Renderer2D::EndScene();*/
 
-			switch (m_ToolBarPanel.m_SceneState)
+			switch (m_SceneState)
 			{
-				case ToolBarPanel::SceneState::Edit:
+				case SceneState::Edit:
 				{
 					if (m_ViewportFocused)
 						m_CameraController.OnUpdate(ts);//更新键盘事件
@@ -178,7 +181,7 @@ namespace Flame {
 					m_ActiveScene->OnUpdateEditor(ts, m_EditorCamera);
 					break;
 				}
-				case ToolBarPanel::SceneState::Play:
+				case SceneState::Play:
 				{
 					m_ActiveScene->OnUpdateRuntime(ts);
 					break;
@@ -306,7 +309,6 @@ namespace Flame {
 
 		m_SceneHierarchyPanel.OnImGuiRender();
 		m_ContentBrowserPanel.OnImGuiRender();
-		m_ToolBarPanel.OnImGuiRender();
 
 		ImGui::Begin("Stats");
 
@@ -420,6 +422,36 @@ namespace Flame {
 		ImGui::End();
 		ImGui::PopStyleVar();
 
+		UI_Toolbar();
+
+		ImGui::End();
+	}
+
+	void EditorLayer::UI_Toolbar()
+	{
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 2));
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(0, 0));
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+		auto& colors = ImGui::GetStyle().Colors;
+		const auto& buttonHovered = colors[ImGuiCol_ButtonHovered];
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(buttonHovered.x, buttonHovered.y, buttonHovered.z, 0.5f));
+		const auto& buttonActive = colors[ImGuiCol_ButtonActive];
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(buttonActive.x, buttonActive.y, buttonActive.z, 0.5f));
+
+		ImGui::Begin("##toolbar", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+
+		float size = ImGui::GetWindowHeight() - 4.0f;
+		Ref<Texture2D> icon = m_SceneState == SceneState::Edit ? m_PlayIcon : m_StopIcon;
+		ImGui::SetCursorPosX((ImGui::GetWindowContentRegionMax().x * 0.5f) - (size * 0.5f));
+		if (ImGui::ImageButton((ImTextureID)icon->GetRendererID(), ImVec2(size, size), ImVec2(0, 0), ImVec2(1, 1), 0))
+		{
+			if (m_SceneState == SceneState::Edit)
+				OnScenePlay();
+			else if (m_SceneState == SceneState::Play)
+				OnSceneStop();
+		}
+		ImGui::PopStyleVar(2);
+		ImGui::PopStyleColor(3);
 		ImGui::End();
 	}
 
@@ -526,5 +558,18 @@ namespace Flame {
 			SceneSerializer serializer(m_ActiveScene);
 			serializer.Serialize(filepath);
 		}
+	}
+
+	void EditorLayer::OnScenePlay()
+	{
+		m_SceneState = SceneState::Play;
+		m_ActiveScene->OnRuntimeStart();
+	}
+
+	void EditorLayer::OnSceneStop()
+	{
+		m_SceneState = SceneState::Edit;
+		m_ActiveScene->OnRuntimeStop();
+
 	}
 }

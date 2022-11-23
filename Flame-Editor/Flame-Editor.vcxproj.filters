@@ -13,9 +13,6 @@
     <ClInclude Include="src\Panels\SceneHierarchyPanel.h">
       <Filter>Panels</Filter>
     </ClInclude>
-    <ClInclude Include="src\Panels\ToolBarPanel.h">
-      <Filter>Panels</Filter>
-    </ClInclude>
     <ClInclude Include="src\ParticleSystem.h" />
     <ClInclude Include="src\Random.h" />
   </ItemGroup>
@@ -26,9 +23,6 @@
       <Filter>Panels</Filter>
     </ClCompile>
     <ClCompile Include="src\Panels\SceneHierarchyPanel.cpp">
-      <Filter>Panels</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Panels\ToolBarPanel.cpp">
       <Filter>Panels</Filter>
     </ClCompile>
     <ClCompile Include="src\ParticleSystem.cpp" />
