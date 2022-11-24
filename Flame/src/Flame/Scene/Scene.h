@@ -5,6 +5,7 @@
 
 #include "Flame/Core/Timestep.h"
 #include "Flame/Renderer/EditorCamera.h"
+#include "Flame/Core/UUID.h"
 
 class b2World;
 
@@ -18,6 +19,7 @@ namespace Flame {
 		~Scene();
 
 		Entity CreateEntity(const std::string& name = std::string());
+		Entity CreateEntityWithUUID(UUID uuid, const std::string& name = std::string());
 		void DestroyEntity(Entity entity);
 
 		void OnRuntimeStart();

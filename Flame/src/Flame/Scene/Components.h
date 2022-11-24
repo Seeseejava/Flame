@@ -4,11 +4,20 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "SceneCamera.h"
 #include "Flame/Renderer/Texture.h"
+#include "Flame/Core/UUID.h"
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/quaternion.hpp>
 
 namespace Flame {
+
+	struct IDComponent
+	{
+		UUID ID;
+
+		IDComponent() = default;
+		IDComponent(const IDComponent&) = default;
+	};
 
 	struct TagComponent
 	{
