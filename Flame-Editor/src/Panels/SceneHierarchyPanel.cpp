@@ -26,25 +26,28 @@ namespace Flame {
 	{
 		ImGui::Begin("Scene Hierarchy");
 
-		m_Context->m_Registry.each([&](auto entityID)
-			{
-				Entity entity{ entityID , m_Context.get() };
-				DrawEntityNode(entity);
-			});
-
-		if (ImGui::IsMouseDown(0) && ImGui::IsWindowHovered())
-			m_SelectionContext = {};
-
-		// Right-click on blank space
-		// Right-click on blank space
-		// 1代表鼠标右键(0代表左键、2代表中键), bool over_item为false, 意味着这个窗口只在空白处点击才会触发 
-		// 后续应该允许在item上点击, 无非此时创建的是子GameObject
-		if (ImGui::BeginPopupContextWindow(0, 1, false))
+		if (m_Context)
 		{
-			if (ImGui::MenuItem("Create Empty Entity"))
-				m_Context->CreateEntity("Empty Entity");
+			m_Context->m_Registry.each([&](auto entityID)
+				{
+					Entity entity{ entityID , m_Context.get() };
+					DrawEntityNode(entity);
+				});
 
-			ImGui::EndPopup();
+			if (ImGui::IsMouseDown(0) && ImGui::IsWindowHovered())
+				m_SelectionContext = {};
+
+			// Right-click on blank space
+			// Right-click on blank space
+			// 1代表鼠标右键(0代表左键、2代表中键), bool over_item为false, 意味着这个窗口只在空白处点击才会触发 
+			// 后续应该允许在item上点击, 无非此时创建的是子GameObject
+			if (ImGui::BeginPopupContextWindow(0, 1, false))
+			{
+				if (ImGui::MenuItem("Create Empty Entity"))
+					m_Context->CreateEntity("Empty Entity");
+
+				ImGui::EndPopup();
+			}
 		}
 
 		ImGui::End();
@@ -417,7 +420,7 @@ namespace Flame {
 		DrawComponent<BoxCollider2DComponent>("Box Collider 2D", entity, [](auto& component)
 			{
 				ImGui::DragFloat2("Offset", glm::value_ptr(component.Offset));
-				ImGui::DragFloat2("Size", glm::value_ptr(component.Offset));
+				ImGui::DragFloat2("Size", glm::value_ptr(component.Size));
 				ImGui::DragFloat("Density", &component.Density, 0.01f, 0.0f, 1.0f);
 				ImGui::DragFloat("Friction", &component.Friction, 0.01f, 0.0f, 1.0f);
 				ImGui::DragFloat("Restitution", &component.Restitution, 0.01f, 0.0f, 1.0f);
