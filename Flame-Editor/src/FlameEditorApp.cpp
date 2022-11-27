@@ -2,6 +2,7 @@
 #include <Flame/Core/EntryPoint.h>
 
 #include "EditorLayer.h"
+#include "EditorLayer3D.h"
 
 namespace Flame {
 
@@ -11,7 +12,7 @@ namespace Flame {
 		FlameEditor()
 			: Application("Flame Editor")
 		{
-			PushLayer(new EditorLayer());
+			PushLayer(new EditorLayer3D());
 		}
 
 		~FlameEditor()

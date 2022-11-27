@@ -131,6 +131,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\EditorLayer3D.h" />
     <ClInclude Include="src\EditorLayer.h" />
     <ClInclude Include="src\Panels\ContentBrowserPanel.h" />
     <ClInclude Include="src\Panels\SceneHierarchyPanel.h" />
@@ -138,6 +139,7 @@
     <ClInclude Include="src\Random.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\EditorLayer3D.cpp" />
     <ClCompile Include="src\EditorLayer.cpp" />
     <ClCompile Include="src\FlameEditorApp.cpp" />
     <ClCompile Include="src\Panels\ContentBrowserPanel.cpp" />
