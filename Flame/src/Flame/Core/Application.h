@@ -17,10 +17,16 @@
 
 namespace Flame {
 
+	struct ApplicationProps
+	{
+		std::string Name;
+		uint32_t WindowWidth, WindowHeight;
+	};
+
 	class FLAME_API Application
 	{
 	public:
-		Application(const std::string& name = "Flame App");
+		Application(const ApplicationProps& props = { "Flame Engine", 1280, 720 });
 		virtual ~Application();
 
 		void Run();
@@ -51,7 +57,7 @@ namespace Flame {
 		static Application* s_Instance;
 	};
 
-	// To be defined in CLIENT
+	// Implemented by CLIENT
 	Application* CreateApplication();
 
 }

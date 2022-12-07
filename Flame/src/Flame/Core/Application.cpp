@@ -23,13 +23,13 @@ namespace Flame {
 	
 	
 
-	Application::Application(const std::string& name)
+	Application::Application(const ApplicationProps& props)
 	{
 		FLAME_PROFILE_FUNCTION();
 
 		FLAME_CORE_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
-		m_Window = std::unique_ptr<Window>(Window::Create(WindowProps(name)));
+		m_Window = std::unique_ptr<Window>(Window::Create(WindowProps(props.Name)));
 
 		m_Window->SetEventCallback(BIND_EVENT_FN(OnEvent));//用于类内非静态函数
 		m_Window->SetVSync(false);//若要启动false，需在nvida将监视器设置改为固定刷新，而不是G-Vsync compatible
