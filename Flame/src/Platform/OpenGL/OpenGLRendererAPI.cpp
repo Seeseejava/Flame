@@ -13,6 +13,7 @@ namespace Flame {
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);//source权重值用其alpha值，destination权重值为1-source权重值
 
 		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_LINE_SMOOTH); //线条平滑，相当于抗锯齿
 	}
 
 	void OpenGLRendererAPI::SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height)
@@ -38,6 +39,17 @@ namespace Flame {
 		//为什么这里nullptr不是indices(是因为index已经绑定到buffer中了吗？
 
 		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+
+	void OpenGLRendererAPI::DrawLines(const Ref<VertexArray>& vertexArray, uint32_t vertexCount)
+	{
+		vertexArray->Bind();
+		glDrawArrays(GL_LINES, 0, vertexCount);
+	}
+
+	void OpenGLRendererAPI::SetLineWidth(float width)
+	{
+		glLineWidth(width);
 	}
 
 }
