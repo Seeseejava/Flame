@@ -12,7 +12,7 @@ namespace Flame {
 
 		void SetContext(const Ref<Scene>& scene);
 
-		void OnImGuiRender();
+		void OnImGuiRender(bool* pOpen, bool* pOpenProperties);
 
 		Entity GetSelectedEntity() const { return m_SelectionContext; }
 		void SetSelectedEntity(Entity entity);

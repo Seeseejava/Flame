@@ -42,6 +42,8 @@ namespace Flame {
 
 		// UI Panels
 		void UI_Toolbar();
+
+		void LoadDefaultEditorConfig();
 	private:
 		OrthographicCameraController m_CameraController;
 

@@ -22,43 +22,46 @@ namespace Flame {
 		m_SelectionContext = {};
 	}
 
-	void SceneHierarchyPanel::OnImGuiRender()
+	void SceneHierarchyPanel::OnImGuiRender(bool* pOpen, bool* pOpenProperties)
 	{
-		ImGui::Begin("Scene Hierarchy");
-
-		if (m_Context)
+		if (*pOpen)
 		{
-			m_Context->m_Registry.each([&](auto entityID)
-				{
-					Entity entity{ entityID , m_Context.get() };
-					DrawEntityNode(entity);
-				});
+			ImGui::Begin("Scene Hierarchy");
 
-			if (ImGui::IsMouseDown(0) && ImGui::IsWindowHovered())
-				m_SelectionContext = {};
-
-			// Right-click on blank space
-			// Right-click on blank space
-			// 1代表鼠标右键(0代表左键、2代表中键), bool over_item为false, 意味着这个窗口只在空白处点击才会触发 
-			// 后续应该允许在item上点击, 无非此时创建的是子GameObject
-			if (ImGui::BeginPopupContextWindow(0, 1, false))
+			if (m_Context)
 			{
-				if (ImGui::MenuItem("Create Empty Entity"))
-					m_Context->CreateEntity("Empty Entity");
+				m_Context->m_Registry.each([&](auto entityID)
+					{
+						Entity entity{ entityID , m_Context.get() };
+						DrawEntityNode(entity);
+					});
 
-				ImGui::EndPopup();
+				if (ImGui::IsMouseDown(0) && ImGui::IsWindowHovered())
+					m_SelectionContext = {};
+
+				// Right-click on blank space
+				// Right-click on blank space
+				// 1代表鼠标右键(0代表左键、2代表中键), bool over_item为false, 意味着这个窗口只在空白处点击才会触发 
+				// 后续应该允许在item上点击, 无非此时创建的是子GameObject
+				if (ImGui::BeginPopupContextWindow(0, 1, false))
+				{
+					if (ImGui::MenuItem("Create Empty Entity"))
+						m_Context->CreateEntity("Empty Entity");
+
+					ImGui::EndPopup();
+				}
 			}
+
+			ImGui::End();
+
+			ImGui::Begin("Properties");
+			if (m_SelectionContext)
+			{
+				DrawComponents(m_SelectionContext);
+			}
+
+			ImGui::End();
 		}
-
-		ImGui::End();
-
-		ImGui::Begin("Properties");
-		if (m_SelectionContext)
-		{
-			DrawComponents(m_SelectionContext);
-		}
-
-		ImGui::End();
 	}
 
 	void SceneHierarchyPanel::SetSelectedEntity(Entity entity)
