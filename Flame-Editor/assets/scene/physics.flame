@@ -1,12 +1,23 @@
 Scene: Untitled
 Entities:
+  - Entity: 725164493733267128
+    TagComponent:
+      Tag: Empty Entity
+    TransformComponent:
+      Translation: [1.09544754, -0.78698349, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    CircleRendererComponent:
+      Color: [0.98455596, 0.638630867, 0, 1]
+      Thickness: 0.0500000007
+      Fade: 0.00100000005
   - Entity: 7966066569369642689
     TagComponent:
       Tag: floor
     TransformComponent:
-      Translation: [0, -1.23247695, 0]
-      Rotation: [0, 0, 0]
-      Scale: [4.93537617, 0.468313992, 1]
+      Translation: [1.71026611, -1.23247695, 0]
+      Rotation: [0, 0, 0.689523518]
+      Scale: [4.93537855, 0.468313903, 1]
     SpriteRendererComponent:
       Color: [0.795366764, 0.324402392, 0.0184254665, 1]
     Rigidbody2DComponent:
@@ -23,9 +34,9 @@ Entities:
     TagComponent:
       Tag: floor
     TransformComponent:
-      Translation: [0, -0.669364691, 0]
-      Rotation: [0, 0, 0]
-      Scale: [4.93537617, 0.468313992, 1]
+      Translation: [-1.85366118, 0.110702991, 0]
+      Rotation: [0, 0, -0.398329467]
+      Scale: [4.93537378, 0.468313903, 1]
     SpriteRendererComponent:
       Color: [0.795366764, 0.324402392, 0.0184254665, 1]
     Rigidbody2DComponent:

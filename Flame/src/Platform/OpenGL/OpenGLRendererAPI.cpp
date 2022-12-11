@@ -32,6 +32,7 @@ namespace Flame {
 
 	void OpenGLRendererAPI::DrawIndexed(const Ref<VertexArray>& vertexArray, uint32_t indexCount)
 	{
+		vertexArray->Bind(); // 没有这个就没有渲染数据了
 		uint32_t count = indexCount ? indexCount : vertexArray->GetIndexBuffer()->GetCount(); //这句话是什么意思？
 		glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
 		//为什么这里nullptr不是indices(是因为index已经绑定到buffer中了吗？
