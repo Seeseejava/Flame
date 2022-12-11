@@ -12,7 +12,7 @@ namespace Flame {
 		FlameEditor(const ApplicationProps& props)
 			: Application(props)
 		{
-			PushLayer(new EditorLayer3D());
+			PushLayer(new EditorLayer());
 		}
 
 		~FlameEditor()
