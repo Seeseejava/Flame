@@ -13,11 +13,13 @@ target_include_directories(Flame-Runtime
 )
 
 target_compile_definitions(Flame-Runtime
+
     PRIVATE FLAME_PLATFORM_WINDOWS
     PRIVATE FLAME_BUILD_DLL
     PRIVATE GLFW_INCLUDE_NONE
     PRIVATE IMGUI_IMPL_OPENGL_LOADER_CUSTOM
     PRIVATE FLAME_DEBUG
+   "ENGINE_ROOT_DIR=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}"
 )
 
 target_precompile_headers(Flame-Runtime PUBLIC "flamepch.h")

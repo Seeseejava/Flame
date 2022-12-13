@@ -8,6 +8,7 @@
 #include "Runtime/Renderer/RenderCommand.h"
 
 #include "Runtime/Core/Input.h"
+#include "Runtime/Resource/ConfigManager/ConfigManager.h"
 
 #include <glfw/glfw3.h>
 
@@ -88,16 +89,18 @@ namespace Flame {
 	void Application::Init(const ApplicationProps& props)
 	{
 		Log::Init();
+		ConfigManager::GetInstance().Initialize();
 
 		m_Window = std::unique_ptr<Window>(Window::Create(WindowProps(props.Name)));
 
 		m_Window->SetEventCallback(BIND_EVENT_FN(OnEvent));//用于类内非静态函数
 		m_Window->SetVSync(false);//若要启动false，需在nvida将监视器设置改为固定刷新，而不是G-Vsync compatible
 
-		Renderer::Init();
+
 
 		m_ImGuiLayer = new ImGuiLayer;
 		PushOverlay(m_ImGuiLayer);
+		Renderer::Init();
 	}
 
 	void Application::Run()

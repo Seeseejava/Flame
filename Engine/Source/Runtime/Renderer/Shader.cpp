@@ -5,6 +5,12 @@
 #include "Platform/OpenGL/OpenGLShader.h"
 namespace Flame {
 
+
+	Ref<Shader> Shader::Create(const std::filesystem::path& filepath)
+	{
+		return Create(filepath.string());
+	}
+
 	Ref<Shader> Shader::Create(const std::string& filepath)
 	{
 		switch (Renderer::GetAPI())
@@ -19,6 +25,7 @@ namespace Flame {
 		FLAME_CORE_ASSERT(false, "Unknown RendererAPI!");
 		return nullptr;
 	}
+
 
 
 	Ref<Shader> Shader::Create(const std::string& name, const std::string& vertexsrc, const std::string& fragmentsrc)

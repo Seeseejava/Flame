@@ -1,18 +1,17 @@
 #include "flamepch.h"
 #include "ContentBrowserPanel.h"
-
+#include "Runtime/Resource/AssetManager/AssetManager.h"
+#include "Runtime/Resource/ConfigManager/ConfigManager.h"
 #include <imgui/imgui.h>
 
 namespace Flame {
 
-	// Once we have projects, change this
-	extern const std::filesystem::path g_AssetPath = "assets";
 
 	ContentBrowserPanel::ContentBrowserPanel()
-		: m_CurrentDirectory(g_AssetPath)
+		: m_CurrentDirectory(ConfigManager::GetInstance().GetAssetsFolder())
 	{
-		m_DirectoryIcon = Texture2D::Create("Resources/ContentBrowser/DirectoryIcon.png");
-		m_FileIcon = Texture2D::Create("Resources/ContentBrowser/FileIcon.png");
+		m_DirectoryIcon = Texture2D::Create(AssetManager::GetInstance().GetFullPath("Resources/ContentBrowser/DirectoryIcon.png").string());
+		m_FileIcon = Texture2D::Create(AssetManager::GetInstance().GetFullPath("Resources/ContentBrowser/FileIcon.png").string());
 	}
 
 	void ContentBrowserPanel::OnImGuiRender(bool* pOpen)
@@ -25,7 +24,7 @@ namespace Flame {
 			return;
 		}
 
-		if (m_CurrentDirectory != std::filesystem::path(g_AssetPath))
+		if (m_CurrentDirectory != std::filesystem::path(ConfigManager::GetInstance().GetAssetsFolder()))
 		{
 			if (ImGui::Button("<-"))
 			{
@@ -47,7 +46,7 @@ namespace Flame {
 		for (auto& directoryEntry : std::filesystem::directory_iterator(m_CurrentDirectory))
 		{
 			const auto& path = directoryEntry.path();
-			auto relativePath = std::filesystem::relative(path, g_AssetPath);
+			auto relativePath = std::filesystem::relative(path, ConfigManager::GetInstance().GetAssetsFolder());
 			std::string filenameString = relativePath.filename().string();   //去掉filename就是相对路径的整个路径了
 
 			ImGui::PushID(filenameString.c_str());

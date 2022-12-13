@@ -8,6 +8,7 @@
 #include "Runtime/Scene/SceneSerializer.h"
 #include "Runtime/Utils/PlatformUtils.h"
 #include "Runtime/Math/Math.h"
+#include "Runtime/Resource/AssetManager/AssetManager.h"
 
 #include "ImGuizmo.h"
 
@@ -49,12 +50,11 @@ namespace Flame {
 	{
 		FLAME_PROFILE_FUNCTION();
 
-		m_CheckerboardTexture = Texture2D::Create("assets/texture/Checkerboard.png");
-		m_SpriteSheet = Texture2D::Create("assets/RPGGame/texture/RPGpack_sheet_2X.png");
-		m_FaceTexture = Texture2D::Create("assets/VirtualCube/2.png");
+		m_CheckerboardTexture = Texture2D::Create(AssetManager::GetInstance().GetFullPath("Assets/texture/Checkerboard.png"));
+		m_SpriteSheet = Texture2D::Create(AssetManager::GetInstance().GetFullPath("Assets/RPGGame/texture/RPGpack_sheet_2X.png"));
 
-		m_PlayIcon = Texture2D::Create("Resources/ToolBar/PlayButton.png");
-		m_StopIcon = Texture2D::Create("Resources/ToolBar/StopButton.png");
+		m_PlayIcon = Texture2D::Create(AssetManager::GetInstance().GetFullPath("Resources/ToolBar/PlayButton.png"));
+		m_StopIcon = Texture2D::Create(AssetManager::GetInstance().GetFullPath("Resources/ToolBar/StopButton.png"));
 
 		FramebufferSpecification fbSpec;
 		fbSpec.Attachments = { FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::RED_INTEGER, FramebufferTextureFormat::Depth };
@@ -411,7 +411,7 @@ namespace Flame {
 				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
 				{
 					const wchar_t* path = (const wchar_t*)payload->Data;
-					OpenScene(std::filesystem::path(g_AssetPath) / path);
+					OpenScene(std::filesystem::path(ConfigManager::GetInstance().GetAssetsFolder()) / path);
 				}
 				ImGui::EndDragDropTarget();
 			}
@@ -478,11 +478,13 @@ namespace Flame {
 
 	void EditorLayer::LoadDefaultEditorConfig()
 	{
-		const std::filesystem::path CurrentEditorConfigPath{ "imgui.ini" };
-		const std::filesystem::path DefaultEditorConfigPath{ "assets/config/imgui.ini" };
+		const std::filesystem::path CurrentEditorConfigPath{ AssetManager::GetInstance().GetFullPath("imgui.ini") };
+		const std::filesystem::path DefaultEditorConfigPath{ AssetManager::GetInstance().GetFullPath("Assets/Config/imgui.ini") };
 		FLAME_CORE_ASSERT(std::filesystem::exists(DefaultEditorConfigPath), "No imgui.ini");
 		if (std::filesystem::exists(CurrentEditorConfigPath))
 			std::filesystem::remove(CurrentEditorConfigPath);
+
+		// TODO:fix the bug
 		std::filesystem::copy(DefaultEditorConfigPath, std::filesystem::current_path());
 
 		bShowViewport = true;

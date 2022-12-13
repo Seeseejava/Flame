@@ -11,6 +11,9 @@ source_group(TREE ${EngineEditorDir} FILES ${EditorHeaderFiles} ${EditorSourceFi
 
 add_executable(Flame-Editor ${EditorHeaderFiles} ${EditorSourceFiles})
 
+
+#add_compile_definitions("ENGINE_ROOT_DIR=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}") #预定义
+
 target_link_libraries(Flame-Editor PRIVATE Flame-Runtime)
 
 target_include_directories(Flame-Editor PRIVATE

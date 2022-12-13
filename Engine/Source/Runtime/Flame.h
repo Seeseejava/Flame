@@ -37,7 +37,10 @@
 // -----------------------------------
 
 
-
+//---AssetManager-------------
+#include "Runtime/Resource/ConfigManager/ConfigManager.h"
+#include "Runtime/Resource/AssetManager/AssetManager.h"
+//-----------------------------
 
 //----Entry Point--------------
 //-----------------------------

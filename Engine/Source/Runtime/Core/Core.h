@@ -33,6 +33,19 @@
 
 #define BIT(x)  (1 << x)
 
+//如果要字符串化宏参数的扩展结果,必须使用两个级别的宏。
+#define FLAME_XSTRING(x) FLAME_STRING(x)
+#define FLAME_STRING(x)  #x
+			//#define xstr(s) str(s)
+			//#define str(s) #s
+			//#define foo 4
+			//str(foo)
+			//→ "foo"
+			//xstr(foo)
+			//→ xstr(4)
+			//→ str(4)
+			//→ "4"
+
 // #define FLAME_BIND_EVENT_FN(fn) std::bind(&fn , this, std::placeholders::_1)  两者等价且用lambda更佳
 // Generic Lambda：当Lambda的参数列表里出现至少一个auto类型的参数，那么此Lambda就是一个Generic Lambda表达式
 #define FLAME_BIND_EVENT_FN(fn) [this](auto&&... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...); }

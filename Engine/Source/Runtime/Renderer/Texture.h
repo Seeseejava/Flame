@@ -3,7 +3,7 @@
 #include <string>
 
 #include "Runtime/Core/Core.h"
-
+#include <filesystem>
 namespace Flame
 {
 	// Texture 可以分为多种类型, 比如CubeTexture, Texture2D
@@ -28,6 +28,7 @@ namespace Flame
 	{
 	public:
 		static Ref<Texture2D> Create(uint32_t width, uint32_t height);
+		static Ref<Texture2D> Create(const std::filesystem::path& path);
 		static Ref<Texture2D> Create(const std::string& path);
 	};
 

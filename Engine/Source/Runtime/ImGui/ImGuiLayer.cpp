@@ -7,6 +7,7 @@
 
 //#include "Platform/OpenGL/imgui_impl_opengl3_loader.h"
 #include "Runtime/Core/Application.h"
+#include "Runtime/Resource/AssetManager/AssetManager.h"
 
 // Temp
 #include <GLFW/glfw3.h>
