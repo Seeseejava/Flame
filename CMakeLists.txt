@@ -8,6 +8,10 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 project(Flame LANGUAGES C CXX)
 
+#对所有生产目标设置MSVC运行库
+#静态链接是debug，动态链接是debugdll
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>") 
+
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY   "${CMAKE_BINARY_DIR}/bin")
 
