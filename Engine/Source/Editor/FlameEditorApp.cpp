@@ -1,28 +1,15 @@
 #include <Flame.h>
-#include <Runtime/Core/EntryPoint.h>
+
 
 #include "EditorLayer.h"
 
 
 namespace Flame {
 
-	class FlameEditor : public Application
+	void MyAppInitialize(Application& app)
 	{
-	public:
-		FlameEditor(const ApplicationProps& props)
-			: Application(props)
-		{
-			PushLayer(new EditorLayer());
-		}
-
-		~FlameEditor()
-		{
-		}
-	};
-
-	Application* CreateApplication()
-	{
-		return new FlameEditor({ "Flame Editor", 1600, 900 });
+		app.Init();
+		app.PushLayer(new EditorLayer());
 	}
 
 }

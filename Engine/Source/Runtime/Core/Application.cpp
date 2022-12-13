@@ -17,33 +17,6 @@ namespace Flame {
 
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
-	Application* Application::s_Instance = nullptr;
-	
-	
-
-	Application::Application(const ApplicationProps& props)
-	{
-		FLAME_PROFILE_FUNCTION();
-
-		FLAME_CORE_ASSERT(!s_Instance, "Application already exists!");
-		s_Instance = this;
-		m_Window = std::unique_ptr<Window>(Window::Create(WindowProps(props.Name)));
-
-		m_Window->SetEventCallback(BIND_EVENT_FN(OnEvent));//用于类内非静态函数
-		m_Window->SetVSync(false);//若要启动false，需在nvida将监视器设置改为固定刷新，而不是G-Vsync compatible
-
-		Renderer::Init();
-
-		m_ImGuiLayer = new ImGuiLayer;
-		PushOverlay(m_ImGuiLayer);
-	}
-
-	Application::~Application()
-	{
-		FLAME_PROFILE_FUNCTION();
-
-		//Renderer::Shutdown();
-	}
 
 	void Application::PushLayer(Layer* layer)
 	{
@@ -89,6 +62,44 @@ namespace Flame {
 		}//backwards(这里不太懂,到了实际使用事件时再看看)
 	}
 
+
+	bool Application::OnWindowClose(WindowCloseEvent& e)
+	{
+		m_Running = false;
+		return true;
+	}
+
+	bool Application::OnWindowResize(WindowResizeEvent& e)
+	{
+		FLAME_PROFILE_FUNCTION();
+
+		if (e.GetWidth() == 0 || e.GetHeight() == 0)
+		{
+			m_Minimized = true;
+			return false;
+		}
+
+		m_Minimized = false;
+		Renderer::OnWindowResize(e.GetWidth(), e.GetHeight());
+
+		return false;
+	}
+
+	void Application::Init(const ApplicationProps& props)
+	{
+		Log::Init();
+
+		m_Window = std::unique_ptr<Window>(Window::Create(WindowProps(props.Name)));
+
+		m_Window->SetEventCallback(BIND_EVENT_FN(OnEvent));//用于类内非静态函数
+		m_Window->SetVSync(false);//若要启动false，需在nvida将监视器设置改为固定刷新，而不是G-Vsync compatible
+
+		Renderer::Init();
+
+		m_ImGuiLayer = new ImGuiLayer;
+		PushOverlay(m_ImGuiLayer);
+	}
+
 	void Application::Run()
 	{
 		FLAME_PROFILE_FUNCTION();
@@ -126,25 +137,9 @@ namespace Flame {
 		}
 	}
 
-	bool Application::OnWindowClose(WindowCloseEvent& e)
+	void Application::Clean()
 	{
-		m_Running = false;
-		return true;
+		//Renderer::Shutdown();
 	}
 
-	bool Application::OnWindowResize(WindowResizeEvent& e)
-	{
-		FLAME_PROFILE_FUNCTION();
-
-		if (e.GetWidth() == 0 || e.GetHeight() == 0)
-		{
-			m_Minimized = true;
-			return false;
-		}
-
-		m_Minimized = false;
-		Renderer::OnWindowResize(e.GetWidth(), e.GetHeight());
-
-		return false;
-	}
 }

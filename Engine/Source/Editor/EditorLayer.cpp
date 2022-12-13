@@ -218,8 +218,8 @@ namespace Flame {
 		//if (Input::IsMouseButtonPressed(FLAME_MOUSE_BUTTON_LEFT))
 		//{
 		//	auto [x, y] = Input::GetMousePosition();						//这个位置是相对于窗口左上角，且向右向下为正，单位为像素
-		//	auto width = Application::Get().GetWindow().GetWidth();
-		//	auto height = Application::Get().GetWindow().GetHeight();	//串口大小：1280x720
+		//	auto width = Application::GetInstance().GetWindow().GetWidth();
+		//	auto height = Application::GetInstance().GetWindow().GetHeight();	//串口大小：1280x720
 
 		//	auto bounds = m_CameraController.GetBounds();						//当zoomlevel时，left = -5 * 1280 / 720, bottom = -5;
 		//	auto pos = m_CameraController.GetCamera().GetPosition();			//当摄像机未移动时为0
@@ -312,7 +312,7 @@ namespace Flame {
 					SaveSceneAs();
 
 				if (ImGui::MenuItem("Exit")) 
-					Application::Get().Close();
+					Application::GetInstance().Close();
 
 				ImGui::EndMenu();
 			}
@@ -384,8 +384,8 @@ namespace Flame {
 
 			m_ViewportFocused = ImGui::IsWindowFocused();
 			m_ViewportHovered = ImGui::IsWindowHovered();
-			//Application::Get().GetImGuiLayer()->BlockEvents(!m_ViewportFocused || !m_ViewportHovered);
-			Application::Get().GetImGuiLayer()->BlockEvents(!m_ViewportFocused && !m_ViewportHovered);
+			//Application::GetInstance().GetImGuiLayer()->BlockEvents(!m_ViewportFocused || !m_ViewportHovered);
+			Application::GetInstance().GetImGuiLayer()->BlockEvents(!m_ViewportFocused && !m_ViewportHovered);
 
 			// This solution will render the 'old' sized framebuffer onto the 'new' sized ImGuiPanel and store the 'new' size in m_ViewportSize.
 			// The next frame will first resize the framebuffer as m_ViewportSize differs from m_Framebuffer.Width / Height before updating and rendering.
