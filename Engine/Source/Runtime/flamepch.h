@@ -5,6 +5,7 @@
 #include <utility>
 #include <algorithm>
 #include <functional>
+#include <thread>
 
 #include <string>
 #include <array>
@@ -12,6 +13,9 @@
 #include <vector>
 #include <unordered_map>
 #include <unordered_set>
+
+#include <concepts>
+#include <type_traits>
 
 #include "Runtime/Core/Log.h"
 
