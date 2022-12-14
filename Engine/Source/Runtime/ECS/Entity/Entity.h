@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Runtime/Core/UUID.h"
-#include "Scene.h"
-#include "Components.h"
+#include "Runtime/Scene/Scene.h"
+#include "Runtime/ECS/Component/ComponentGroup.h"
 
 #include "entt.hpp"
 

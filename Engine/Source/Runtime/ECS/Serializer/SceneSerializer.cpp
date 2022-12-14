@@ -1,8 +1,8 @@
 #include "flamepch.h"
 #include "SceneSerializer.h"
 
-#include "Entity.h"
-#include "Components.h"
+#include "Runtime/ECS/Entity/Entity.h"
+#include "Runtime/ECS/Component/ComponentGroup.h"
 
 #include <fstream>
 

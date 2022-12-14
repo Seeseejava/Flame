@@ -6,7 +6,7 @@
 #include "Runtime/Renderer/Camera.h"
 #include "Runtime/Renderer/EditorCamera.h"
 
-#include "Runtime/Scene/Components.h"
+#include "Runtime/ECS/Component/ComponentGroup.h"
 
 namespace Flame {
 

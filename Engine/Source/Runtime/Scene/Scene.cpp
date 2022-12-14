@@ -1,12 +1,12 @@
 #include "flamepch.h"
 #include "Scene.h"
 
-#include "Components.h"
+#include "Runtime/ECS/Component/ComponentGroup.h"
 #include "Runtime/Renderer/Renderer2D.h"
 
 #include <glm/glm.hpp>
 
-#include "Entity.h"
+#include "Runtime/ECS/Entity/Entity.h"
 
 // Box2D
 #include "box2d/b2_world.h"

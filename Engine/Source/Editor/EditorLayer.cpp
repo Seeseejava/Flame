@@ -5,7 +5,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "Runtime/Scene/SceneSerializer.h"
+#include "Runtime/ECS/Serializer/SceneSerializer.h"
 #include "Runtime/Utils/PlatformUtils.h"
 #include "Runtime/Math/Math.h"
 #include "Runtime/Resource/AssetManager/AssetManager.h"

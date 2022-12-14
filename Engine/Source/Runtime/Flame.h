@@ -16,8 +16,8 @@
 #include "Runtime/ImGui/ImGuiLayer.h"
 
 #include "Runtime/Scene/Scene.h"
-#include "Runtime/Scene/Components.h"
-#include "Runtime/Scene/Entity.h"
+#include "Runtime/ECS/Component/ComponentGroup.h"
+#include "Runtime/ECS/Entity/Entity.h"
 
 // ---Renderer------------------------
 #include "Runtime/Renderer/OrthographicCameraController.h"
