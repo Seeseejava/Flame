@@ -8,7 +8,7 @@ namespace Flame
 {
 	class ConfigManager final : public PublicSingleton<ConfigManager>
 	{
-		friend class PublicSingleton<ConfigManager>;
+		//friend class PublicSingleton<ConfigManager>;
 
 	public:
 		ConfigManager(const ConfigManager&) = delete;

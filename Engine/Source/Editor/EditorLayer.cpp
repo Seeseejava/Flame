@@ -177,23 +177,18 @@ namespace Flame {
 			Renderer2D::DrawQuad({ 0.5f, 0.5f, 0.0f }, { 7.0f, 7.0f * 1153.0f / 1039.0f }, m_FaceTexture);
 			Renderer2D::EndScene();*/
 
-			switch (m_SceneState)
+			if (ModeManager::IsEditState())
 			{
-				case SceneState::Edit:
-				{
-					if (m_ViewportFocused)
-						m_CameraController.OnUpdate(ts);//更新键盘事件
+				if (m_ViewportFocused)
+					m_CameraController.OnUpdate(ts);//更新键盘事件
 
-					m_EditorCamera.OnUpdate(ts);
+				m_EditorCamera.OnUpdate(ts);
 
-					m_ActiveScene->OnUpdateEditor(ts, m_EditorCamera);
-					break;
-				}
-				case SceneState::Play:
-				{
-					m_ActiveScene->OnUpdateRuntime(ts);
-					break;
-				}
+				m_ActiveScene->OnUpdateEditor(ts, m_EditorCamera);
+			}
+			else
+			{
+				m_ActiveScene->OnUpdateRuntime(ts);
 			}
 
 			auto [mx, my] = ImGui::GetMousePos(); //相对于屏幕的坐标
@@ -516,13 +511,13 @@ namespace Flame {
 		ImGui::Begin("##toolbar", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
 		float size = ImGui::GetWindowHeight() - 4.0f;
-		Ref<Texture2D> icon = m_SceneState == SceneState::Edit ? m_PlayIcon : m_StopIcon;
+		Ref<Texture2D> icon = ModeManager::IsEditState() ? m_PlayIcon : m_StopIcon;
 		ImGui::SetCursorPosX((ImGui::GetWindowContentRegionMax().x * 0.5f) - (size * 0.5f));
 		if (ImGui::ImageButton((ImTextureID)icon->GetRendererID(), ImVec2(size, size), ImVec2(0, 0), ImVec2(1, 1), 0))
 		{
-			if (m_SceneState == SceneState::Edit)
+			if (ModeManager::IsEditState())
 				OnScenePlay();
-			else if (m_SceneState == SceneState::Play)
+			else 
 				OnSceneStop();
 		}
 		ImGui::PopStyleVar(2);
@@ -604,14 +599,14 @@ namespace Flame {
 
 	void EditorLayer::OnOverlayRender()
 	{
-		if (m_SceneState == SceneState::Play)
+		if (ModeManager::IsEditState())
 		{
-			Entity camera = m_ActiveScene->GetPrimaryCameraEntity();
-			Renderer2D::BeginScene(camera.GetComponent<CameraComponent>().Camera, camera.GetComponent<TransformComponent>().GetTransform());
+			Renderer2D::BeginScene(m_EditorCamera);
 		}
 		else
 		{
-			Renderer2D::BeginScene(m_EditorCamera);
+			Entity camera = m_ActiveScene->GetPrimaryCameraEntity();
+			Renderer2D::BeginScene(camera.GetComponent<CameraComponent>().Camera, camera.GetComponent<TransformComponent>().GetTransform());
 		}
 
 		if (m_ShowPhysicsColliders)
@@ -689,8 +684,11 @@ namespace Flame {
 
 	void EditorLayer::OpenScene(const std::filesystem::path& path)
 	{
-		if (m_SceneState != SceneState::Edit)
+		if (!ModeManager::IsEditState())
+		{
 			OnSceneStop();
+			ModeManager::ChangeState();
+		}
 
 		if (path.extension().string() != ".flame")
 		{
@@ -738,7 +736,7 @@ namespace Flame {
 
 	void EditorLayer::OnScenePlay()
 	{
-		m_SceneState = SceneState::Play;
+		ModeManager::ChangeState();
 
 		m_ActiveScene = Scene::Copy(m_EditorScene);
 		m_ActiveScene->OnRuntimeStart();
@@ -748,7 +746,7 @@ namespace Flame {
 
 	void EditorLayer::OnSceneStop()
 	{
-		m_SceneState = SceneState::Edit;
+		ModeManager::ChangeState();
 
 		m_ActiveScene->OnRuntimeStop();
 		m_ActiveScene = m_EditorScene;
@@ -759,7 +757,7 @@ namespace Flame {
 
 	void EditorLayer::OnDuplicateEntity()
 	{
-		if (m_SceneState != SceneState::Edit)
+		if (!ModeManager::IsEditState())
 			return;
 
 		Entity selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();
