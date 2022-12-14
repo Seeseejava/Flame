@@ -34,12 +34,19 @@ namespace Flame {
 
 	extern const std::filesystem::path g_AssetPath;
 
+	// Window
 	static bool bShowViewport = true;
 	static bool bShowContentBrowser = true;
 	static bool bShowSceneHierachy = true;
 	static bool bShowProperties = true;
 	static bool bShowStats = true;
 	static bool bShowSettings = true;
+
+
+	// Help
+	static bool bShowTutorial = false;
+	static bool bShowAboutMe = false;
+
 
 	EditorLayer::EditorLayer()
 		:Layer("EditorLayer"), m_CameraController(1280.f / 720.f, true)
@@ -326,6 +333,15 @@ namespace Flame {
 
 				ImGui::EndMenu();
 			}
+
+			if (ImGui::BeginMenu("Help"))
+			{
+				ImGui::MenuItem("Tutorial", NULL, &bShowTutorial);
+				ImGui::MenuItem("About Me", NULL, &bShowAboutMe);
+
+				ImGui::EndMenu();
+			}
+
 			ImGui::EndMenuBar();
 		}
 		// ----MenuBar End----
@@ -465,6 +481,24 @@ namespace Flame {
 			ImGui::PopStyleVar();
 		}
 		// ----Windows End----
+		// 
+		// ----Help Begin----
+		// TODO
+		ImGuiWindowFlags helpMenuFlags = ImGuiWindowFlags_NoDocking;
+		if (bShowTutorial)
+		{
+			ImGui::Begin("Tutorial", &bShowTutorial, helpMenuFlags);
+			ImGui::Text("TODO: HELP LIST");
+
+			ImGui::End();
+		}
+		if (bShowAboutMe)
+		{
+			ImGui::Begin("About Me", &bShowAboutMe, helpMenuFlags);
+			ImGui::Text("This project is learned from Cherno!");
+			ImGui::End();
+		}
+		// ----Help End----
 		UI_Toolbar();
 
 		ImGui::End();
