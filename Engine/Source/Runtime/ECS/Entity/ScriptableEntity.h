@@ -12,14 +12,14 @@ namespace Flame
 		template<typename T>
 		T& GetComponent()
 		{
-			return mEntity.GetComponent<T>();
+			return m_Entity.GetComponent<T>();
 		}
 	protected:
 		virtual void OnCreate() {}
 		virtual void OnDestroy() {}
 		virtual void OnUpdate(Timestep ts) {}
 	private:
-		Entity mEntity;
+		Entity m_Entity;
 		friend class NativeScriptSystem;
 	};
 }
