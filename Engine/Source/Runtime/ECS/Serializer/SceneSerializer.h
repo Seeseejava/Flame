@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Runtime/Scene/Scene.h"
+#include "Runtime/ECS/Scene/Scene.h"
 
 
 namespace Flame {

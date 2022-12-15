@@ -43,11 +43,14 @@ namespace Flame {
 	private:
 		template<typename T>
 		void OnComponentAdded(Entity entity, T& component);
-	private:
+	public:
 		entt::registry m_Registry;
+	private:
 		uint32_t m_ViewportWidth = 0, m_ViewportHeight = 0;
 
 		b2World* m_PhysicsWorld = nullptr;
+
+		std::vector<class System*> m_Systems;
 
 		friend class Entity;
 		friend class SceneSerializer;

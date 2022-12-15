@@ -15,7 +15,7 @@
 
 #include "Runtime/ImGui/ImGuiLayer.h"
 
-#include "Runtime/Scene/Scene.h"
+#include "Runtime/ECS/Scene/Scene.h"
 #include "Runtime/ECS/Component/ComponentGroup.h"
 #include "Runtime/ECS/Entity/Entity.h"
 

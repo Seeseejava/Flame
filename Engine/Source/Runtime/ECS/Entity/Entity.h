@@ -1,10 +1,13 @@
 #pragma once
 
 #include "Runtime/Core/UUID.h"
-#include "Runtime/Scene/Scene.h"
+#include "Runtime/ECS/Scene/Scene.h"
 #include "Runtime/ECS/Component/ComponentGroup.h"
 
 #include "entt.hpp"
+
+#include <tuple>
+#include <type_traits>
 
 namespace Flame {
 
@@ -40,6 +43,21 @@ namespace Flame {
 			FLAME_CORE_ASSERT(HasComponent<T>(), "Entity does not have component!");
 			return m_Scene->m_Registry.get<T>(m_EntityHandle);
 		}
+
+		template<typename... T>
+		std::tuple<T*...> GetComponents()
+		{
+			FLAME_CORE_ASSERT((HasComponent<T>() && ...), "Entity does not have component!");
+			return std::make_tuple<T*...>((&m_Scene->m_Registry.get<T>(m_EntityHandle))...);
+		}
+
+		//template<typename... T>
+		//std::tuple<const T* const...> GetConstComponents()
+		//{
+		//	FLAME_CORE_ASSERT((HasComponent<T>() && ...), "Entity does not have component!");
+		//	return std::make_tuple(((const T* const)&m_Scene->m_Registry.get<T>(m_EntityHandle))...);
+		//}
+
 
 		template<typename T>
 		bool HasComponent()
