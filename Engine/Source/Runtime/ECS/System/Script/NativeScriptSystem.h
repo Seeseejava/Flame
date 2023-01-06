@@ -11,6 +11,6 @@ namespace Flame
 		NativeScriptSystem(Scene* Scene) : System(Scene) {}
 		virtual ~NativeScriptSystem() = default;
 	public:
-		void OnUpdate(Timestep ts) override;
+		void OnUpdateRuntime(Timestep ts) override;
 	};
 }

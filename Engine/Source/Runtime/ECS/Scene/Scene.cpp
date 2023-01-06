@@ -80,6 +80,8 @@ namespace Flame {
 #endif
 
 		m_Systems.push_back(new PhysicsSystem2D(this));
+		m_Systems.push_back(new NativeScriptSystem(this));
+		m_Systems.push_back(new RenderSystem2D(this));
 	}
 
 	Scene::~Scene()
@@ -184,84 +186,19 @@ namespace Flame {
 
 	void Scene::OnUpdateRuntime(Timestep ts)
 	{
-		// Physics
 		for (auto& system : m_Systems)
-			system->OnUpdate(ts);
-
-		// Render 2D
-		Camera* mainCamera = nullptr;
-		glm::mat4 cameraTransform;
-
 		{
-			auto view = m_Registry.view<TransformComponent, CameraComponent>();
-			for (auto entity : view)
-			{
-				auto [transform, camera] = view.get<TransformComponent, CameraComponent>(entity);//这里之前是引用，改成20之后去掉引用了
-
-				if (camera.Primary)
-				{
-					mainCamera = &camera.Camera;
-					cameraTransform = transform.GetTransform();
-					break;
-				}
-			}
+			system->OnUpdateRuntime(ts);
 		}
-		if (mainCamera)
-		{
-			Renderer2D::BeginScene(mainCamera->GetProjection(), cameraTransform);
-
-			// Draw sprites
-			{
-				auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
-				for (auto entity : group)
-				{
-					auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);//这里之前是引用，改成20之后去掉引用了
-
-					Renderer2D::DrawSprite(transform.GetTransform(), sprite, (int)entity);
-				}
-			}
-
-			// Draw circles
-			{
-				auto view = m_Registry.view<TransformComponent, CircleRendererComponent>();
-				for (auto entity : view)
-				{
-					auto [transform, circle] = view.get<TransformComponent, CircleRendererComponent>(entity);
-
-					Renderer2D::DrawCircle(transform.GetTransform(), circle.Color, circle.Thickness, circle.Fade, (int)entity);
-				}
-			}
-			Renderer2D::EndScene();
-		}
+		
 	}
 
 	void Scene::OnUpdateEditor(Timestep ts, EditorCamera& camera)
 	{
-		Renderer2D::BeginScene(camera);
-
-		// Draw sprites
+		for (auto& system : m_Systems)
 		{
-			auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
-			for (auto entity : group)
-			{
-				auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
-
-				Renderer2D::DrawSprite(transform.GetTransform(), sprite, (int)entity); // 没有加entityId时鼠标放在cube上也能显示50
-			}
+			system->OnUpdateEditor(ts, camera);
 		}
-
-		// Draw circles
-		{
-			auto view = m_Registry.view<TransformComponent, CircleRendererComponent>();
-			for (auto entity : view)
-			{
-				auto [transform, circle] = view.get<TransformComponent, CircleRendererComponent>(entity);
-
-				Renderer2D::DrawCircle(transform.GetTransform(), circle.Color, circle.Thickness, circle.Fade, (int)entity);
-			}
-		}
-
-		Renderer2D::EndScene();
 	}
 
 	void Scene::OnViewportResize(uint32_t width, uint32_t height)

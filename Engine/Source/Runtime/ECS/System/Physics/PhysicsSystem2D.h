@@ -12,7 +12,7 @@ namespace Flame
 		virtual ~PhysicsSystem2D() = default;
 	public:
 		void OnRuntiemStart() override;
-		void OnUpdate(Timestep ts) override;
+		void OnUpdateRuntime(Timestep ts) override;
 		void OnRuntimeStop() override;
 	private:
 		class b2World* m_PhysicsWorld = nullptr;

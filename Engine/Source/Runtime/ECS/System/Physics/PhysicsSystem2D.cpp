@@ -84,29 +84,28 @@ namespace Flame
 		}
 	}
 
-	void PhysicsSystem2D::OnUpdate(Timestep ts)
+	void PhysicsSystem2D::OnUpdateRuntime(Timestep ts)
 	{
-		if (!ModeManager::IsEditState())
+		
+		const int32_t velocityIterations = 6;
+		const int32_t positionIterations = 2;
+		m_PhysicsWorld->Step(ts, velocityIterations, positionIterations);
+
+		// Retrieve transform from Box2D
+		auto view = m_Scene->m_Registry.view<TransformComponent, Rigidbody2DComponent>();
+		for (auto e : view)
 		{
-			const int32_t velocityIterations = 6;
-			const int32_t positionIterations = 2;
-			m_PhysicsWorld->Step(ts, velocityIterations, positionIterations);
+			Entity entity = { e, m_Scene };
+			auto componentsTuple = entity.GetComponents<TransformComponent, Rigidbody2DComponent>();
+			auto [transform, rb2d] = componentsTuple;
 
-			// Retrieve transform from Box2D
-			auto view = m_Scene->m_Registry.view<TransformComponent, Rigidbody2DComponent>();
-			for (auto e : view)
-			{
-				Entity entity = { e, m_Scene };
-				auto componentsTuple = entity.GetComponents<TransformComponent, Rigidbody2DComponent>();
-				auto [transform, rb2d] = componentsTuple;
-
-				b2Body* body = (b2Body*)(*rb2d).RuntimeBody;
-				const auto& position = body->GetPosition();
-				(*transform).Translation.x = position.x;
-				(*transform).Translation.y = position.y;
-				(*transform).Rotation.z = body->GetAngle();
-			}
+			b2Body* body = (b2Body*)(*rb2d).RuntimeBody;
+			const auto& position = body->GetPosition();
+			(*transform).Translation.x = position.x;
+			(*transform).Translation.y = position.y;
+			(*transform).Rotation.z = body->GetAngle();
 		}
+		
 	}
 
 	void PhysicsSystem2D::OnRuntimeStop()

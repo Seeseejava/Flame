@@ -12,7 +12,8 @@ namespace Flame
 		System(Scene* scene) : m_Scene(scene) {}
 		virtual ~System() = default;
 	public:
-		virtual void OnUpdate(Timestep ts) {}
+		virtual void OnUpdateEditor(Timestep ts, EditorCamera& camera) {};
+		virtual void OnUpdateRuntime(Timestep ts) {}
 		virtual void OnRuntiemStart() {}
 		virtual void OnRuntimeStop() {}
 	protected:
