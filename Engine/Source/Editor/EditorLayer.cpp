@@ -192,6 +192,7 @@ namespace Flame {
 				m_EditorCamera.OnUpdate(ts);
 
 				m_ActiveScene->OnUpdateEditor(ts, m_EditorCamera);
+
 			}
 			else
 			{

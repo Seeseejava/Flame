@@ -1,6 +1,7 @@
 #include "flamepch.h"
 #include "Renderer.h"
-#include "Renderer2D.h"
+#include "Runtime/Renderer/Renderer2D.h"
+#include "Runtime/Renderer/Renderer3D.h"
 
 #include "Platform/OpenGL/OpenGLShader.h"
 
@@ -15,6 +16,7 @@ namespace Flame {
 
 		RenderCommand::Init();
 		Renderer2D::Init();
+		Renderer3D::Init();
 	}
 
 	void Renderer::OnWindowResize(uint32_t width, uint32_t height)

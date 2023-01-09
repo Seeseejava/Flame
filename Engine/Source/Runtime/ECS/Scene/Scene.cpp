@@ -79,9 +79,12 @@ namespace Flame {
 		}
 #endif
 
+		// 2D Scene
 		m_Systems.push_back(new PhysicsSystem2D(this));
 		m_Systems.push_back(new NativeScriptSystem(this));
 		m_Systems.push_back(new RenderSystem2D(this));
+
+
 	}
 
 	Scene::~Scene()
