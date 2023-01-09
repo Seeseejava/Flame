@@ -36,6 +36,7 @@ target_link_libraries(Flame-Runtime
     PUBLIC Box2D
     PUBLIC stb
     PUBLIC ImGuizmo
+    PUBLIC assimp
 )
 
 

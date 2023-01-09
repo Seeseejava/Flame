@@ -10,6 +10,7 @@
 #include "Runtime/ECS/Component/Shape/CircleRendererComponent.h"
 #include "Runtime/ECS/Component/Shape/SpriteRendererComponent.h"
 #include "Runtime/ECS/Component/Transform/TransformComponent.h" 
+#include "Runtime/ECS/Component/Mesh/StaticMeshComponent.h"
 
 #include <concepts>
 #include <type_traits>
@@ -28,6 +29,6 @@ namespace Flame
 	};
 
 	using AllComponents = ComponentGroup<TransformComponent, CircleRendererComponent, SpriteRendererComponent,
-		CameraComponent, NativeScriptComponent,
-		Rigidbody2DComponent, BoxCollider2DComponent, CircleCollider2DComponent>;
+		CameraComponent, NativeScriptComponent,Rigidbody2DComponent, BoxCollider2DComponent, 
+		CircleCollider2DComponent, StaticMeshComponent>;
 }

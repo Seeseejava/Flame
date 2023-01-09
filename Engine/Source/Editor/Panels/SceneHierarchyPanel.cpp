@@ -314,6 +314,15 @@ namespace Flame {
 				}
 			}
 
+			if (!m_SelectionContext.HasComponent<StaticMeshComponent>())
+			{
+				if (ImGui::MenuItem("Static Mesh Renderer"))
+				{
+					m_SelectionContext.AddComponent<StaticMeshComponent>();
+					ImGui::CloseCurrentPopup();
+				}
+			}
+
 			ImGui::EndPopup();
 		}
 		ImGui::PopItemWidth();
@@ -462,6 +471,14 @@ namespace Flame {
 				ImGui::DragFloat("Friction", &component.Friction, 0.01f, 0.0f, 1.0f);
 				ImGui::DragFloat("Restitution", &component.Restitution, 0.01f, 0.0f, 1.0f);
 				ImGui::DragFloat("Restitution Threshold", &component.RestitutionThreshold, 0.01f, 0.0f);
+			});
+
+		DrawComponent<StaticMeshComponent>("Static Mesh Renderer", entity, [](auto& component)
+			{
+				if (ImGui::InputText("Mesh Path", component.path, sizeof(component.path)))
+				{
+					component.mesh = Model(component.path);
+				}
 			});
 
 
