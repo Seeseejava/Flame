@@ -45,7 +45,6 @@ namespace Flame {
 
 		void LoadDefaultEditorConfig();
 	private:
-		OrthographicCameraController m_CameraController;
 
 		// Temp
 		Ref<VertexArray> m_SquareVA;

@@ -24,11 +24,6 @@ namespace Flame {
 		RenderCommand::SetViewport(0, 0, width, height);
 	}
 
-	void Renderer::BeginScene(OrthographicCamera& camera)
-	{
-		//设置环境相关的信息（摄像机参数、环境光照
-		m_SceneData->ViewProjectionMatrix = camera.GetViewProjectionMatrix();
-	}
 
 	void Renderer::EndScene()
 	{

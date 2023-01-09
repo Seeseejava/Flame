@@ -60,20 +60,3 @@ void ParticleSystem::OnUpdate(Flame::Timestep ts)
 	}
 }
 
-void ParticleSystem::OnRender(Flame::OrthographicCamera& Camera)
-{
-	Flame::Renderer2D::BeginScene(Camera);
-	for (auto& particle : m_ParticlePool)
-	{
-		if (!particle.Active)
-			continue;
-
-		float life = particle.LifeRemaining / particle.LifeTime;
-		glm::vec4 color = glm::lerp(particle.ColorEnd, particle.ColorBegin, life);
-		color.a = color.a * life;
-
-		float size = glm::lerp(particle.SizeEnd, particle.SizeBegin, life);
-		Flame::Renderer2D::DrawRotatedQuad({ particle.Position.x, particle.Position.y, 0.3f }, { size, size }, particle.Rotation, color);
-	}
-	Flame::Renderer2D::EndScene();
-}

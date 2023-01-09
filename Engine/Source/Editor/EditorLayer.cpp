@@ -49,7 +49,7 @@ namespace Flame {
 
 
 	EditorLayer::EditorLayer()
-		:Layer("EditorLayer"), m_CameraController(1280.f / 720.f, true)
+		:Layer("EditorLayer")
 	{
 	}
 
@@ -108,7 +108,6 @@ namespace Flame {
 		m_Particle.VelocityVariation = { 3.0f, 1.0f };
 		m_Particle.Position = { 0.0f, 0.0f };
 
-		m_CameraController.SetZoomLevel(5.0f);
 
 	}
 
@@ -129,7 +128,6 @@ namespace Flame {
 			(spec.Width != m_ViewportSize.x || spec.Height != m_ViewportSize.y))
 		{
 			m_Framebuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-			m_CameraController.OnResize(m_ViewportSize.x, m_ViewportSize.y);
 
 			m_EditorCamera.SetViewportSize(m_ViewportSize.x, m_ViewportSize.y);
 			m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
@@ -186,8 +184,6 @@ namespace Flame {
 
 			if (ModeManager::IsEditState())
 			{
-				if (m_ViewportFocused)
-					m_CameraController.OnUpdate(ts);//更新键盘事件
 
 				m_EditorCamera.OnUpdate(ts);
 
@@ -562,7 +558,6 @@ namespace Flame {
 
 	void EditorLayer::OnEvent(Event& e)
 	{
-		m_CameraController.OnEvent(e);
 		m_EditorCamera.OnEvent(e);
 
 		EventDispatcher dispatcher(e);

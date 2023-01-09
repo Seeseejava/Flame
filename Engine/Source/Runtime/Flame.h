@@ -20,7 +20,6 @@
 #include "Runtime/ECS/Entity/Entity.h"
 
 // ---Renderer------------------------
-#include "Runtime/Renderer/OrthographicCameraController.h"
 #include "Runtime/Renderer/Renderer.h"
 #include "Runtime/Renderer/Renderer2D.h"
 #include "Runtime/Renderer/Renderer3D.h"
@@ -34,7 +33,7 @@
 
 #include "Runtime/Renderer/VertexArray.h"
 
-#include "Runtime/Renderer/OrthographicCamera.h"
+
 // -----------------------------------
 
 

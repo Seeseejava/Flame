@@ -215,20 +215,6 @@ namespace Flame
         StartBatch();
     }
 
-    void Renderer2D::BeginScene(const OrthographicCamera& camera)
-    {
-        s_Data.QuadShader->Bind();
-        s_Data.QuadShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
-
-        s_Data.CircleShader->Bind();
-        s_Data.CircleShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
-
-        s_Data.LineShader->Bind();
-        s_Data.LineShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
-
-        StartBatch();
-    }
-
     void Renderer2D::EndScene()
     {
         Flush();
