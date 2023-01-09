@@ -1,7 +1,8 @@
 #pragma once
 
 #include <memory.h>
-#include "Runtime/Renderer/Buffer.h"
+#include "Runtime/Renderer/VertexBuffer.h"
+#include "Runtime/Renderer/IndexBuffer.h"
 
 namespace Flame {
 

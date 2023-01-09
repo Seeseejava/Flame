@@ -1,14 +1,14 @@
 #pragma once
 
-#include "Runtime/Renderer/Buffer.h"
+#include "Runtime/Renderer/VertexBuffer.h"
 
 namespace Flame {
 
 	class OpenGLVertexBuffer : public VertexBuffer
 	{
 	public:
-		OpenGLVertexBuffer(uint32_t size);
-		OpenGLVertexBuffer(float* vertices, uint32_t size);
+		OpenGLVertexBuffer(uint32_t size, VertexBufferUsage usage = VertexBufferUsage::Dynamic);
+		OpenGLVertexBuffer(float* vertices, uint32_t size, VertexBufferUsage usage = VertexBufferUsage::Static);
 		virtual ~OpenGLVertexBuffer();
 
 		virtual void Bind() const override;
@@ -21,21 +21,9 @@ namespace Flame {
 
 	private:
 		uint32_t m_RendererID;
+		VertexBufferUsage m_Usage;
 		BufferLayout m_Layout;
 	};
 
-	class OpenGLIndexBuffer : public IndexBuffer
-	{
-	public:
-		OpenGLIndexBuffer(uint32_t* indices, uint32_t m_Count);
-		virtual ~OpenGLIndexBuffer();
-
-		virtual void Bind() const;
-		virtual void Unbind() const;
-
-		virtual uint32_t GetCount() const { return m_Count; };
-	private:
-		uint32_t m_RendererID;
-		uint32_t m_Count;
-	};
+	
 }
