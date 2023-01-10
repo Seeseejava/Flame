@@ -26,7 +26,7 @@ namespace Flame
 
 	void Renderer3D::DrawModel(const glm::mat4& transform, StaticMeshComponent& MeshComponent, int EntityID)
 	{
-		MeshComponent.mesh.Draw(transform, m_Shader, EntityID);
+		MeshComponent.Mesh.Draw(transform, m_Shader, EntityID);
 	}
 
 

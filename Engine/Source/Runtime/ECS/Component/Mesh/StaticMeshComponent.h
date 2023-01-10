@@ -3,6 +3,7 @@
 #include "Runtime/ECS/Component/ComponentBase.h"
 #include "Runtime/Renderer/Model.h"
 
+#include <filesystem>
 namespace Flame
 {
 	class StaticMeshComponent : public ComponentBase
@@ -10,15 +11,18 @@ namespace Flame
 	public:
 		StaticMeshComponent() = default;
 		StaticMeshComponent(const StaticMeshComponent&) = default;
-		StaticMeshComponent(const std::string& Path)
+		StaticMeshComponent(const std::string& path)
+			: Path(path)
 		{
-			memcpy(path, Path.c_str(), sizeof(char) * Path.size());
-			path[Path.size()] = '\0';
 		}
 
-		Model mesh;
-		//std::string path;
+		StaticMeshComponent(const std::filesystem::path& path)
+			: Path(path)
+		{
+		}
 
-		char path[256];
+
+		Model Mesh;
+		std::filesystem::path Path;
 	};
 }

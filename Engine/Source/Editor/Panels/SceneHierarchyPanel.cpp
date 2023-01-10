@@ -7,6 +7,7 @@
 
 #include <filesystem>
 #include "Runtime/Resource/ConfigManager/ConfigManager.h"
+#include "Runtime/Utils/PlatformUtils.h"
 
 namespace Flame {
 
@@ -475,9 +476,29 @@ namespace Flame {
 
 		DrawComponent<StaticMeshComponent>("Static Mesh Renderer", entity, [](auto& component)
 			{
-				if (ImGui::InputText("Mesh Path", component.path, sizeof(component.path)))
+				ImGui::Text("Mesh Path");
+				ImGui::SameLine();
+
+				ImGui::Text(component.Path.string().c_str());
+
+				ImGui::SameLine();
+				if (ImGui::Button("..."))
 				{
-					component.mesh = Model(component.path);
+					std::string filepath = FileDialogs::OpenFile("Model (*.obj *.fbx)\0*.obj;*.fbx\0");
+					if (filepath.find("Assets") != std::string::npos)
+					{
+						filepath = filepath.substr(filepath.find("Assets"), filepath.length());
+					}
+					else
+					{
+						// TODO: Import Model
+						FLAME_CORE_ASSERT(false, "Flame Now Only support the model from Assets!");
+					}
+					if (!filepath.empty())
+					{
+						component.Mesh = Model(filepath);
+						component.Path = filepath;
+					}
 				}
 			});
 
