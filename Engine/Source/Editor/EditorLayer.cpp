@@ -45,6 +45,7 @@ namespace Flame {
 
 	// Help
 	static bool bShowTutorial = false;
+	static bool bShowDemoImGui = false;
 	static bool bShowAboutMe = false;
 
 
@@ -116,6 +117,7 @@ namespace Flame {
 		FLAME_PROFILE_FUNCTION();
 
 	}
+
 
 	void EditorLayer::OnUpdate(Timestep ts)
 	{
@@ -284,7 +286,7 @@ namespace Flame {
 		//-----设置docking栏的最小宽度
 		ImGuiStyle& style = ImGui::GetStyle();
 		float minWinSizeX = style.WindowMinSize.x;
-		style.WindowMinSize.x = 370.0f;
+		style.WindowMinSize.x = 200.0f;
 
 		if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
 		{
@@ -335,6 +337,7 @@ namespace Flame {
 			{
 				ImGui::MenuItem("Tutorial", NULL, &bShowTutorial);
 				ImGui::MenuItem("About Me", NULL, &bShowAboutMe);
+				ImGui::MenuItem("Demo ImGui", NULL, &bShowDemoImGui);
 
 				ImGui::EndMenu();
 			}
@@ -488,6 +491,10 @@ namespace Flame {
 			ImGui::Text("TODO: HELP LIST");
 
 			ImGui::End();
+		}
+		if (bShowDemoImGui)
+		{
+			ImGui::ShowDemoWindow(&bShowDemoImGui);
 		}
 		if (bShowAboutMe)
 		{
