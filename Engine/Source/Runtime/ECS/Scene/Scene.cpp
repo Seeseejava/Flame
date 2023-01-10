@@ -1,6 +1,8 @@
 #include "flamepch.h"
 #include "Scene.h"
 
+#include "Runtime/Resource/ModeManager/ModeManager.h"
+#include "Runtime/Core/Core.h"
 #include "Runtime/ECS/Component/ComponentGroup.h"
 #include "Runtime/ECS/System/SystemGroup.h"
 #include "Runtime/Renderer/Renderer3D.h"
@@ -79,20 +81,23 @@ namespace Flame {
 		}
 #endif
 
-		// 2D Scene
-		/*m_Systems.push_back(new PhysicsSystem2D(this));
-		m_Systems.push_back(new NativeScriptSystem(this));
-		m_Systems.push_back(new RenderSystem2D(this));*/
-
-
+		if (ModeManager::b3DMode)
+		{
+			m_Systems.clear();
+			m_Systems.emplace_back(std::make_unique<RenderSystem3D>(this));
+		}
+		else
+		{
+			m_Systems.clear();
+			m_Systems.emplace_back(std::make_unique<PhysicsSystem2D>(this));
+			m_Systems.emplace_back(std::make_unique<NativeScriptSystem>(this));
+			m_Systems.emplace_back(std::make_unique<RenderSystem2D>(this));
+		}
 	}
 
 	Scene::~Scene()
 	{
-		for (auto& system : m_Systems)
-		{
-			delete system;
-		}
+
 	}
 
 	template<typename Component>
@@ -148,6 +153,23 @@ namespace Flame {
 		CopyComponent<CircleCollider2DComponent>(dstSceneRegistry, srcSceneRegistry, enttMap);
 
 		return newScene;
+	}
+
+	void Scene::ChangeDimMode()
+	{
+		int nowDimMode = ModeManager::b3DMode;
+		if (nowDimMode)
+		{
+			m_Systems.clear();
+			m_Systems.emplace_back(std::make_unique<RenderSystem3D>(this));
+		}
+		else
+		{
+			m_Systems.clear();
+			m_Systems.emplace_back(std::make_unique<PhysicsSystem2D>(this));
+			m_Systems.emplace_back(std::make_unique<NativeScriptSystem>(this));
+			m_Systems.emplace_back(std::make_unique<RenderSystem2D>(this));
+		}
 	}
 
 	Entity Scene::CreateEntity(const std::string& name)

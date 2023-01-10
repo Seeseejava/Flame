@@ -66,10 +66,10 @@ namespace Flame
 
 		// Draw sprites
 		{
-			auto group = m_Scene->m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
-			for (auto entity : group)
+			auto view = m_Scene->m_Registry.view<TransformComponent, SpriteRendererComponent>();   // 之前用的group会报错
+			for (auto entity : view)
 			{
-				auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+				auto [transform, sprite] = view.get<TransformComponent, SpriteRendererComponent>(entity);
 
 				Renderer2D::DrawSprite(transform.GetTransform(), sprite, (int)entity);
 			}

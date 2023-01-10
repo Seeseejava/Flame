@@ -5,6 +5,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "Runtime/Resource/ModeManager/ModeManager.h"
 #include "Runtime/ECS/Serializer/SceneSerializer.h"
 #include "Runtime/Utils/PlatformUtils.h"
 #include "Runtime/Math/Math.h"
@@ -243,6 +244,9 @@ namespace Flame {
 	void EditorLayer::OnImGuiRender()
 	{
 		FLAME_PROFILE_FUNCTION();
+
+		static bool bChangeDim = false;
+
 		// ----DockSpace Begin----
 		static bool docspaceOpen = true;//?
 		static bool opt_fullscreen = true;
@@ -379,6 +383,17 @@ namespace Flame {
 		{
 			ImGui::Begin("Settings");
 			ImGui::Checkbox("Show physics colliders", &m_ShowPhysicsColliders);
+
+			const char* modes[] = { "2D", "3D" };
+			int lastMode = ModeManager::b3DMode;
+			if (ImGui::Combo("Mode", &ModeManager::b3DMode, modes, IM_ARRAYSIZE(modes)))
+			{
+				if (lastMode != ModeManager::b3DMode)
+				{
+					bChangeDim = true;
+				}
+			}
+
 			ImGui::End();
 		}
 
@@ -507,6 +522,13 @@ namespace Flame {
 
 		ImGui::End();
 		// ----DockSpace End----
+
+		if (bChangeDim)
+		{
+			m_ActiveScene->ChangeDimMode();
+			bChangeDim = false;
+		}
+
 	}
 
 	void EditorLayer::LoadDefaultEditorConfig()

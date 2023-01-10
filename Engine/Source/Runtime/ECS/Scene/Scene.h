@@ -20,6 +20,8 @@ namespace Flame {
 
 		static Ref<Scene> Copy(Ref<Scene> other);
 
+		void ChangeDimMode();
+
 		Entity CreateEntity(const std::string& name = std::string());
 		Entity CreateEntityWithUUID(UUID uuid, const std::string& name = std::string());
 		void DestroyEntity(Entity entity);
@@ -50,7 +52,7 @@ namespace Flame {
 
 		b2World* m_PhysicsWorld = nullptr;
 
-		std::vector<class System*> m_Systems;
+		std::vector<Scope<class System>> m_Systems;
 
 		friend class Entity;
 		friend class SceneSerializer;
