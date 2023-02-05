@@ -31,12 +31,20 @@ target_link_libraries(Flame-Runtime
     PUBLIC ${OPENGL_LIBRARIES}
     PUBLIC yaml-cpp
     PUBLIC spdlog
+    PUBLIC headers
     PUBLIC glm
     PUBLIC entt
     PUBLIC Box2D
     PUBLIC stb
     PUBLIC ImGuizmo
     PUBLIC assimp
+    PUBLIC BulletSoftBody
+    PUBLIC Bullet3Dynamics 
+    PUBLIC BulletDynamics 
+    PUBLIC Bullet3Collision 
+    PUBLIC BulletCollision 
+    PUBLIC Bullet3Common 
+    PUBLIC LinearMath 
 )
 
 

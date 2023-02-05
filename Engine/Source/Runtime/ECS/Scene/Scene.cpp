@@ -85,6 +85,7 @@ namespace Flame {
 		{
 			m_Systems.clear();
 			m_Systems.emplace_back(std::make_unique<RenderSystem3D>(this));
+			m_Systems.emplace_back(std::make_unique<PhysicsSystem3D>(this));
 		}
 		else
 		{
@@ -162,6 +163,7 @@ namespace Flame {
 		{
 			m_Systems.clear();
 			m_Systems.emplace_back(std::make_unique<RenderSystem3D>(this));
+			m_Systems.emplace_back(std::make_unique<PhysicsSystem3D>(this));
 		}
 		else
 		{
