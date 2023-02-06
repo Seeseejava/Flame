@@ -4,7 +4,7 @@
 
 
 #include "Runtime/Core/Timestep.h"
-#include "Runtime/Renderer/EditorCamera.h"
+#include "Runtime/Camera/EditorCamera.h"
 #include "Runtime/Core/UUID.h"
 
 class b2World;

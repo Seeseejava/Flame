@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Runtime/Renderer/Camera.h"
-#include "Runtime/Renderer/EditorCamera.h"
+
+#include "Runtime/Camera/EditorCamera.h"
 #include "Runtime/ECS/Component/Mesh/StaticMeshComponent.h"
 
 namespace Flame

@@ -1,5 +1,5 @@
 #include "flamepch.h"
-#include "EditorCamera.h"
+#include "Runtime/Camera/EditorCamera.h"
 
 #include "Runtime/Core/Input.h"
 #include "Runtime/Core/KeyCodes.h"

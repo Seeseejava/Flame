@@ -1,6 +1,6 @@
 #pragma once
 #include "Runtime/ECS/Component/ComponentBase.h"
-#include "Runtime/Renderer/SceneCamera.h"
+#include "Runtime/Camera/SceneCamera.h"
 
 namespace Flame
 {
