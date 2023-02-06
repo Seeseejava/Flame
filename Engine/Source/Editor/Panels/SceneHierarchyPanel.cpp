@@ -324,6 +324,24 @@ namespace Flame {
 				}
 			}
 
+			if (!m_SelectionContext.HasComponent<Rigidbody3DComponent>())
+			{
+				if (ImGui::MenuItem("Rigidbody 3D"))
+				{
+					m_SelectionContext.AddComponent<Rigidbody3DComponent>();
+					ImGui::CloseCurrentPopup();
+				}
+			}
+
+			if (!m_SelectionContext.HasComponent<BoxCollider3DComponent>())
+			{
+				if (ImGui::MenuItem("Box Collider 3D"))
+				{
+					m_SelectionContext.AddComponent<BoxCollider3DComponent>();
+					ImGui::CloseCurrentPopup();
+				}
+			}
+
 			ImGui::EndPopup();
 		}
 		ImGui::PopItemWidth();
@@ -500,6 +518,34 @@ namespace Flame {
 						component.Path = filepath;
 					}
 				}
+			});
+
+		DrawComponent<Rigidbody3DComponent>("Rigidbody 3D", entity, [](auto& component)
+			{
+				const char* bodyTypeStrings[] = { "Static", "Dynamic", "Kinematic" };
+				const char* currentBodyTypeString = bodyTypeStrings[(int)component.Type];
+				if (ImGui::BeginCombo("Body Type", currentBodyTypeString))
+				{
+					for (int i = 0; i < 2; i++)
+					{
+						bool isSelected = currentBodyTypeString == bodyTypeStrings[i];
+						if (ImGui::Selectable(bodyTypeStrings[i], isSelected))
+						{
+							currentBodyTypeString = bodyTypeStrings[i];
+							component.Type = (Rigidbody3DComponent::Body3DType)i;
+						}
+
+						if (isSelected)
+							ImGui::SetItemDefaultFocus();
+					}
+
+					ImGui::EndCombo();
+				}
+			});
+
+		DrawComponent<BoxCollider3DComponent>("Box Collider 3D", entity, [](auto& component)
+			{
+
 			});
 
 
