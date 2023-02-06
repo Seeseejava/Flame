@@ -5,7 +5,10 @@ layout(location = 0) in vec3 a_Pos;
 layout(location = 1) in vec2 a_Coord;
 layout(location = 2) in vec3 a_Normal;
 
-uniform mat4 u_ViewProjection;
+layout(std140, binding = 0) uniform Camera
+{
+	mat4 u_ViewProjection;
+};
 uniform mat4 u_Model;
 
 out vec2 v_Coord;

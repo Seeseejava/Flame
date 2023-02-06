@@ -3,11 +3,13 @@
 
 #include "VertexArray.h"
 #include "Shader.h"
+#include "Runtime/Renderer/UniformBuffer.h"
 #include "RenderCommand.h"
 
 #include "Runtime/Resource/AssetManager/AssetManager.h"
 
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>   //’‚ « ≤√¥£ø
 
 namespace Flame
 {
@@ -84,6 +86,13 @@ namespace Flame
         glm::vec4 QuadVertexPositions[4];
 
         Renderer2D::Statistics Stats;
+
+		struct CameraData
+		{
+			glm::mat4 ViewProjection;
+		};
+		CameraData CameraBuffer;
+		Ref<UniformBuffer> CameraUniformBuffer;
     };
 
     static Renderer2DData s_Data;
@@ -176,6 +185,8 @@ namespace Flame
         s_Data.QuadVertexPositions[1] = { 0.5f, -0.5f, 0.0f, 1.0f };
         s_Data.QuadVertexPositions[2] = { 0.5f,  0.5f, 0.0f, 1.0f };
         s_Data.QuadVertexPositions[3] = { -0.5f,  0.5f, 0.0f, 1.0f };
+
+        s_Data.CameraUniformBuffer = UniformBuffer::Create(sizeof(Renderer2DData::CameraData), 0);
     }
 
     void Renderer2D::Shutdown()
@@ -185,32 +196,16 @@ namespace Flame
 
     void Renderer2D::BeginScene(const Camera& camera, const glm::mat4& transform)
     {
-        glm::mat4 viewProj = camera.GetProjection() * glm::inverse(transform);
-
-        s_Data.QuadShader->Bind();
-        s_Data.QuadShader->SetMat4("u_ViewProjection", viewProj);
-
-        s_Data.CircleShader->Bind();
-        s_Data.CircleShader->SetMat4("u_ViewProjection", viewProj);
-
-        s_Data.LineShader->Bind();
-        s_Data.LineShader->SetMat4("u_ViewProjection", viewProj);
+		s_Data.CameraBuffer.ViewProjection = camera.GetProjection() * glm::inverse(transform);
+		s_Data.CameraUniformBuffer->SetData(&s_Data.CameraBuffer, sizeof(Renderer2DData::CameraData));
 
         StartBatch();
     }
 
     void Renderer2D::BeginScene(const EditorCamera& camera)
     {
-        glm::mat4 viewProj = camera.GetViewProjection();
-
-        s_Data.QuadShader->Bind();
-        s_Data.QuadShader->SetMat4("u_ViewProjection", viewProj);
-
-        s_Data.CircleShader->Bind();
-        s_Data.CircleShader->SetMat4("u_ViewProjection", viewProj);
-
-        s_Data.LineShader->Bind();
-        s_Data.LineShader->SetMat4("u_ViewProjection", viewProj);
+        s_Data.CameraBuffer.ViewProjection = camera.GetViewProjection();
+		s_Data.CameraUniformBuffer->SetData(&s_Data.CameraBuffer, sizeof(Renderer2DData::CameraData));
 
         StartBatch();
     }
