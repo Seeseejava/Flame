@@ -14,6 +14,7 @@ namespace Flame {
 
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_LINE_SMOOTH); //线条平滑，相当于抗锯齿
+
 	}
 
 	void OpenGLRendererAPI::SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height)
