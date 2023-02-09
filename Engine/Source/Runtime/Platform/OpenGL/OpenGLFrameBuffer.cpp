@@ -201,8 +201,8 @@ namespace Flame {
 						Utils::AttachColorTexture(m_ColorAttachments[i], m_Specification.Samples, GL_RGBA8, GL_RGBA, m_Specification.Width, m_Specification.Height, i);
 						break;
 					case FramebufferTextureFormat::RED_INTEGER:
-						Utils::AttachColorTexture(m_ColorAttachments[i], m_Specification.Samples, GL_R32I, GL_RED_INTEGER, m_Specification.Width, m_Specification.Height, i);
-						//Utils::AttachColorRenderBuffer(m_ColorAttachments[i], m_Specification.Samples, GL_R32I, m_Specification.Width, m_Specification.Height, i);
+						//Utils::AttachColorTexture(m_ColorAttachments[i], m_Specification.Samples, GL_R32I, GL_RED_INTEGER, m_Specification.Width, m_Specification.Height, i);
+						Utils::AttachColorRenderBuffer(m_ColorAttachments[i], m_Specification.Samples, GL_R32I, m_Specification.Width, m_Specification.Height, i);
 				}
 			}
 		}
@@ -247,6 +247,15 @@ namespace Flame {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
+	void OpenGLFramebuffer::BindReadFramebuffer()
+	{
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, m_RendererID);
+	}
+
+	void OpenGLFramebuffer::BindDrawFramebuffer()
+	{
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_RendererID);
+	}
 
 	void OpenGLFramebuffer::Resize(uint32_t width, uint32_t height)
 	{
@@ -260,7 +269,7 @@ namespace Flame {
 	{
 		FLAME_CORE_ASSERT(attachmentIndex < m_ColorAttachments.size(), "Index Error");
 
-		glBindFramebuffer(GL_READ_FRAMEBUFFER, m_RendererID);
+		//glBindFramebuffer(GL_READ_FRAMEBUFFER, m_RendererID);
 		glReadBuffer(GL_COLOR_ATTACHMENT0 + attachmentIndex);
 		int pixelData;
 		glReadPixels(x, y, 1, 1, GL_RED_INTEGER, GL_INT, &pixelData);
@@ -278,8 +287,8 @@ namespace Flame {
 		switch (spec.TextureFormat)
 		{
 		case FramebufferTextureFormat::RED_INTEGER:
-			//glClearBufferiv(GL_COLOR, attachmentIndex, &value);
-			glClearTexImage(m_ColorAttachments[attachmentIndex], 0, GL_RED_INTEGER, GL_INT, &value);
+			glClearBufferiv(GL_COLOR, attachmentIndex, &value);
+			//glClearTexImage(m_ColorAttachments[attachmentIndex], 0, GL_RED_INTEGER, GL_INT, &value);
 			break;
 		case FramebufferTextureFormat::RGBA8:
 			glClearTexImage(m_ColorAttachments[attachmentIndex], 0, GL_RGBA8, GL_INT, &value);

@@ -7,6 +7,7 @@
 #include "Panels/ContentBrowserPanel.h"
 
 #include "Runtime/Camera/EditorCamera.h"
+#include "Runtime/Renderer/RenderPass.h"
 
 namespace Flame {
 	class EditorLayer : public Layer
@@ -50,6 +51,7 @@ namespace Flame {
 		Ref<VertexArray> m_SquareVA;
 		Ref<Shader> m_FlatColorShader;
 		Ref<Framebuffer> m_Framebuffer;
+		Ref<RenderPass> m_RenderPass;
 
 		Ref<Scene> m_ActiveScene;
 		Ref<Scene> m_EditorScene;

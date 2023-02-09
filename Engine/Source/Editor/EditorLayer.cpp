@@ -69,7 +69,12 @@ namespace Flame {
 		fbSpec.Attachments = { FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::RED_INTEGER, FramebufferTextureFormat::Depth };
 		fbSpec.Width = 1280;
 		fbSpec.Height = 720;
+		fbSpec.Samples = 1;
 		m_Framebuffer = Framebuffer::Create(fbSpec);
+
+		RenderPassSpecification rpSpec = { m_Framebuffer, "MainPass" };
+		m_RenderPass = std::make_shared<RenderPass>(rpSpec);
+		m_RenderPass->AddPostProcessing(PostProcessingType::MSAA);
 
 		m_ActiveScene = std::make_shared<Scene>();
 

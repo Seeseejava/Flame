@@ -18,7 +18,6 @@ namespace Flame {
 
 	Ref<IndexBuffer> IndexBuffer::Create(uint32_t* indices, uint32_t count)
 	{
-
 		switch (Renderer::GetAPI())
 		{
 		case RendererAPI::API::None:
