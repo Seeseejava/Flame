@@ -6,6 +6,19 @@
 
 namespace Flame {
 
+	namespace Utils
+	{
+
+	static bool HaveDirectoryMember(std::filesystem::path currentPath)
+	{
+		for (auto& directoryEntry : std::filesystem::directory_iterator(currentPath))
+		{
+			if (directoryEntry.is_directory())
+				return true;
+		}
+		return false;
+	}
+	}
 
 	ContentBrowserPanel::ContentBrowserPanel()
 		: m_CurrentDirectory(ConfigManager::GetInstance().GetAssetsFolder())
@@ -28,23 +41,80 @@ namespace Flame {
 
 		if (ImGui::BeginChild("CONTENT_BROWSER_TREE"))
 		{
-
+			DrawTree();
 		}
 		ImGui::EndChild();
 
 		ImGui::NextColumn();
 		ImGui::Separator();
 
-		ImGui::BeginChild("CONTENT_BROWSER_CONTENT");
-
-		if (m_CurrentDirectory != std::filesystem::path(ConfigManager::GetInstance().GetAssetsFolder()))
+		if (ImGui::BeginChild("CONTENT_BROWSER_CONTENT"))
 		{
-			if (ImGui::Button("<-"))
-			{
-				m_CurrentDirectory = m_CurrentDirectory.parent_path();
-			}
+			DrawContent();
+		}
+		ImGui::EndChild();
+
+		ImGui::Columns(1);
+
+		ImGui::End();
+
+	}
+
+	void ContentBrowserPanel::DrawTree()
+	{
+		DrawTreeRecursive(ConfigManager::GetInstance().GetAssetsFolder());
+	}
+
+	void ContentBrowserPanel::DrawTreeRecursive(std::filesystem::path currentPath)
+	{
+		const ImGuiTreeNodeFlags baseFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick |
+			ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_SpanFullWidth;
+
+		ImGuiTreeNodeFlags nodeFlags = baseFlags;
+
+		if (m_SelectedDirectory && *m_SelectedDirectory == currentPath)
+		{
+				nodeFlags |= ImGuiTreeNodeFlags_Selected;
 		}
 
+		bool bNeedOpen = true;
+		if (!Utils::HaveDirectoryMember(currentPath))
+		{
+			nodeFlags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
+			bNeedOpen = false;
+		}
+
+		bool nodeOpen = ImGui::TreeNodeEx(currentPath.filename().string().c_str(), nodeFlags);
+
+		if (ImGui::IsItemClicked())
+		{
+			m_SelectedDirectory = currentPath;
+		}
+
+		if (nodeOpen && bNeedOpen)
+		{
+			for (auto p : std::filesystem::directory_iterator(currentPath))
+			{
+				auto path = p.path();
+				if (!std::filesystem::is_directory(path))
+				{
+					continue;
+				}
+
+				DrawTreeRecursive(path);
+			}
+			ImGui::TreePop();
+		}
+	}
+
+	void ContentBrowserPanel::DrawContent()
+	{
+		if (!m_SelectedDirectory)
+		{
+			return;
+		}
+
+		m_CurrentDirectory = *m_SelectedDirectory;
 
 		static float padding = 16.0f;
 		static float thumbnailSize = 128.0f;
@@ -82,6 +152,7 @@ namespace Flame {
 				if (directoryEntry.is_directory())
 				{
 					m_CurrentDirectory /= path.filename();
+					m_SelectedDirectory = m_CurrentDirectory;
 				}
 			}
 			ImGui::TextWrapped(filenameString.c_str());  //auto-resizing 
@@ -96,11 +167,6 @@ namespace Flame {
 		ImGui::SliderFloat("Thumbnail Size", &thumbnailSize, 16, 512);
 		ImGui::SliderFloat("Padding", &padding, 0, 32);
 
-		ImGui::EndChild();
-
-		ImGui::Columns(1);
-		// TODO: status bar
-		ImGui::End();
 	}
 
 }

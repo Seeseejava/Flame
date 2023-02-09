@@ -13,7 +13,12 @@ namespace Flame {
 
 		void OnImGuiRender(bool* pOpen);
 	private:
+		void DrawTree();
+		void DrawTreeRecursive(std::filesystem::path currentPath);
+		void DrawContent();
+	private:
 		std::filesystem::path m_CurrentDirectory;
+		std::optional<std::filesystem::path> m_SelectedDirectory;
 
 		Ref<Texture2D> m_DirectoryIcon;
 		Ref<Texture2D> m_FileIcon;
