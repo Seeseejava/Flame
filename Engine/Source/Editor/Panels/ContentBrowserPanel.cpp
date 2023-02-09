@@ -24,6 +24,19 @@ namespace Flame {
 			return;
 		}
 
+		ImGui::Columns(2);
+
+		if (ImGui::BeginChild("CONTENT_BROWSER_TREE"))
+		{
+
+		}
+		ImGui::EndChild();
+
+		ImGui::NextColumn();
+		ImGui::Separator();
+
+		ImGui::BeginChild("CONTENT_BROWSER_CONTENT");
+
 		if (m_CurrentDirectory != std::filesystem::path(ConfigManager::GetInstance().GetAssetsFolder()))
 		{
 			if (ImGui::Button("<-"))
@@ -31,6 +44,7 @@ namespace Flame {
 				m_CurrentDirectory = m_CurrentDirectory.parent_path();
 			}
 		}
+
 
 		static float padding = 16.0f;
 		static float thumbnailSize = 128.0f;
@@ -82,6 +96,9 @@ namespace Flame {
 		ImGui::SliderFloat("Thumbnail Size", &thumbnailSize, 16, 512);
 		ImGui::SliderFloat("Padding", &padding, 0, 32);
 
+		ImGui::EndChild();
+
+		ImGui::Columns(1);
 		// TODO: status bar
 		ImGui::End();
 	}

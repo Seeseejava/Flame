@@ -1,13 +1,14 @@
 #include "flamepch.h"
 #include "WindowsWindow.h"
 
+#include "Runtime/Resource/AssetManager/AssetManager.h"
 #include "Runtime/Events/ApplicationEvent.h"
 #include "Runtime/Events/MouseEvent.h"
 #include "Runtime/Events/KeyEvent.h"
 
 #include "Platform/OpenGL/OpenGLContext.h"
 
-
+#include <stb_image/stb_image.h>
 
 namespace Flame {
 
@@ -72,6 +73,11 @@ namespace Flame {
 		指针的初始值是NULL。*/
 
 		SetVSync(true);
+
+		GLFWimage images[1];
+		images[0].pixels = stbi_load(AssetManager::GetInstance().GetFullPath("Resources/Icon/Flame2.jpg").string().c_str(), &images[0].width, &images[0].height, 0, 4); //rgba channels 
+		glfwSetWindowIcon(m_Window, 1, images);
+		stbi_image_free(images[0].pixels);
 
 		// Set GLFW callbacks
 		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height)
