@@ -5,6 +5,7 @@
 #include "Runtime/Renderer/VertexArray.h"
 #include "Runtime/Renderer/Shader.h"
 #include "Runtime/Renderer/RenderCommand.h"
+#include "Runtime/Renderer/UniformBuffer.h"
 
 #include "Runtime/Resource/AssetManager/AssetManager.h"
 
@@ -14,10 +15,40 @@ namespace Flame
 {
 	static Ref<Shader> m_Shader;
 
+	struct Renderer3DData
+	{
+		struct CameraData
+		{
+			glm::mat4 ViewProjection;
+		};
+		CameraData CameraBuffer;
+		Ref<UniformBuffer> CameraUniformBuffer;
+	};
+
+	static Renderer3DData s_Data;
+
+	static Ref<CubeMapTexture> m_SkyBox;
+	static Ref<Shader> m_SkyBoxShader;
+
+	std::vector<std::string> m_Paths{
+		"Assets/textures/Skybox/right.jpg",
+		"Assets/textures/Skybox/left.jpg",
+		"Assets/textures/Skybox/top.jpg",
+		"Assets/textures/Skybox/bottom.jpg",
+		"Assets/textures/Skybox/front.jpg",
+		"Assets/textures/Skybox/back.jpg"
+	};
+
+
 	void Renderer3D::Init()
 	{
 		//Shader
 		m_Shader = Shader::Create(AssetManager::GetInstance().GetFullPath("Shaders/Common.glsl"));
+
+		s_Data.CameraUniformBuffer = UniformBuffer::Create(sizeof(Renderer3DData::CameraData), 1);
+
+		m_SkyBoxShader = Shader::Create(AssetManager::GetInstance().GetFullPath("Shaders/SkyBox.glsl"));
+		m_SkyBox = CubeMapTexture::Create(m_Paths);
 	}
 
 	void Renderer3D::Shutdown()
@@ -32,20 +63,14 @@ namespace Flame
 
 	void Renderer3D::BeginScene(const Camera& camera, const glm::mat4& transform)
 	{
-
-		glm::mat4 viewProj = camera.GetProjection() * glm::inverse(transform);
-
-		m_Shader->Bind();
-		m_Shader->SetMat4("u_ViewProjection", viewProj);
+		s_Data.CameraBuffer.ViewProjection = camera.GetProjection() * glm::inverse(transform);
+		s_Data.CameraUniformBuffer->SetData(&s_Data.CameraBuffer, sizeof(Renderer3DData::CameraData));
 	}
 
 	void Renderer3D::BeginScene(const EditorCamera& camera)
 	{
-
-		glm::mat4 viewProj = camera.GetViewProjection();
-
-		m_Shader->Bind();
-		m_Shader->SetMat4("u_ViewProjection", viewProj);
+		s_Data.CameraBuffer.ViewProjection = camera.GetViewProjection();
+		s_Data.CameraUniformBuffer->SetData(&s_Data.CameraBuffer, sizeof(Renderer3DData::CameraData));
 	}
 
 	void Renderer3D::EndScene()
@@ -53,5 +78,14 @@ namespace Flame
 		m_Shader->Unbind();
 	}
 
+	Ref<CubeMapTexture> Renderer3D::GetSkyBox()
+	{
+		return Ref<CubeMapTexture>();
+	}
 
+	Ref<CubeMapTexture> Renderer3D::GetDefaultSkyBox()
+	{
+		return Ref<CubeMapTexture>();
+	}
+	
 }

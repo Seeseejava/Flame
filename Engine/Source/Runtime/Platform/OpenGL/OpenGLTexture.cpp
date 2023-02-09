@@ -1,7 +1,10 @@
 #include "flamepch.h"
 #include "OpenGLTexture.h"
 
-#include "stb_image.h"
+#include "Runtime/Resource/AssetManager/AssetManager.h"
+#include "Runtime/Platform/OpenGL/OpenGLTexture.h"
+
+#include <stb_image.h>
 
 
 
@@ -37,7 +40,7 @@ namespace Flame {
 		stbi_uc* data = nullptr;
 		{
 			FLAME_PROFILE_SCOPE("stbi_load - OpenGLTexture2D::OpenGLTexture2D(const std:string&)");
-			data = stbi_load(path.c_str(), &width, &height, &channels, 0);//stbi_uc*是unsigned char,这里为什么期待的通道数是0
+			data = stbi_load(AssetManager::GetInstance().GetFullPath(path).string().c_str(), &width, &height, &channels, 0);//stbi_uc*是unsigned char,这里为什么期待的通道数是0
 		}
 		FLAME_CORE_ASSERT(data, "Failed to load image!");
 
@@ -102,4 +105,60 @@ namespace Flame {
 		glBindTextureUnit(slot, m_RendererID);//(unit, texture)
 	}
 
+	void OpenGLTexture2D::UnBind() const
+	{
+		glBindTexture(GL_TEXTURE, 0);
+	}
+
+	// refer to https://learnopengl-cn.github.io/04%20Advanced%20OpenGL/06%20Cubemaps/
+	OpenGLCubeMapTexture::OpenGLCubeMapTexture(std::vector<std::string>& paths)
+		: m_Paths(paths)
+	{
+		glDeleteTextures(1, &m_RendererID);
+		glGenTextures(1, &m_RendererID);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, m_RendererID);
+
+		int width, height, nrChannels;
+		for (unsigned int i = 0; i < paths.size(); i++)
+		{
+			unsigned char* data = stbi_load(paths[i].c_str(), &width, &height, &nrChannels, 0);
+			if (data)
+			{
+				glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+					0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data
+				);
+				stbi_image_free(data);
+			}
+			else
+			{
+				FLAME_CORE_ERROR("Cubemap don't loaded correctly!");
+				stbi_image_free(data);
+			}
+		}
+
+		m_Width = width;
+		m_Height = height;
+
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+	}
+
+	OpenGLCubeMapTexture::~OpenGLCubeMapTexture()
+	{
+		glDeleteTextures(1, &m_RendererID);
+	}
+
+	void OpenGLCubeMapTexture::Bind(uint32_t slot) const
+	{
+		glActiveTexture(GL_TEXTURE0 + slot);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, m_RendererID);
+	}
+
+	void OpenGLCubeMapTexture::UnBind() const
+	{
+		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+	}
 }

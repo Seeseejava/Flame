@@ -34,4 +34,16 @@ namespace Flame {
 		return nullptr;
 	}
 
+	Ref<CubeMapTexture> CubeMapTexture::Create(std::vector<std::string>& paths)
+	{
+		switch (RendererAPI::GetAPI())
+		{
+		case RendererAPI::API::None:    FLAME_CORE_ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;
+		case RendererAPI::API::OpenGL:  return std::make_shared<OpenGLCubeMapTexture>(paths);
+
+		}
+
+		FLAME_CORE_ASSERT(false, "Unknown RendererAPI!");
+		return nullptr;
+	}
 }

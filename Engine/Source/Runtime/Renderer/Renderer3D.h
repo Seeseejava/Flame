@@ -3,6 +3,7 @@
 
 #include "Runtime/Camera/EditorCamera.h"
 #include "Runtime/ECS/Component/Mesh/StaticMeshComponent.h"
+#include "Runtime/Renderer/Texture.h"
 
 namespace Flame
 {
@@ -17,5 +18,8 @@ namespace Flame
 		static void EndScene();
 
 		static void DrawModel(const glm::mat4& transform, StaticMeshComponent& MeshComponent, int EntityID);
+
+		static Ref<CubeMapTexture> GetSkyBox();
+		static Ref<CubeMapTexture> GetDefaultSkyBox();
 	};
 }
