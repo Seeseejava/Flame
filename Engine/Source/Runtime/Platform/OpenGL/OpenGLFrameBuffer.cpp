@@ -202,7 +202,7 @@ namespace Flame {
 						break;
 					case FramebufferTextureFormat::RED_INTEGER:
 						//Utils::AttachColorTexture(m_ColorAttachments[i], m_Specification.Samples, GL_R32I, GL_RED_INTEGER, m_Specification.Width, m_Specification.Height, i);
-						Utils::AttachColorRenderBuffer(m_ColorAttachments[i], m_Specification.Samples, GL_R32I, m_Specification.Width, m_Specification.Height, i);
+						Utils::AttachColorRenderBuffer(m_ColorAttachments[i], m_Specification.Samples, GL_R32I, m_Specification.Width, m_Specification.Height, i); // dont use multisample in Renderbuffer
 				}
 			}
 		}
@@ -269,10 +269,45 @@ namespace Flame {
 	{
 		FLAME_CORE_ASSERT(attachmentIndex < m_ColorAttachments.size(), "Index Error");
 
-		//glBindFramebuffer(GL_READ_FRAMEBUFFER, m_RendererID);
+		uint32_t width = m_Specification.Width;
+		uint32_t height = m_Specification.Height;
+		unsigned int intermediateFBO;
+		glGenFramebuffers(1, &intermediateFBO);
+		glBindFramebuffer(GL_FRAMEBUFFER, intermediateFBO);
+
+		unsigned int tempTex;
+		glGenRenderbuffers(1, &tempTex);
+		glBindRenderbuffer(GL_RENDERBUFFER, tempTex);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_R32I, width, height);
+		glBindRenderbuffer(GL_RENDERBUFFER, 0);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_RENDERBUFFER, tempTex);
+
+		glBindFramebuffer(GL_FRAMEBUFFER, m_RendererID);
+		glReadBuffer(GL_COLOR_ATTACHMENT1);
+
+		glBindFramebuffer(GL_FRAMEBUFFER, intermediateFBO);
+		glDrawBuffer(GL_COLOR_ATTACHMENT1);
+
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, m_RendererID);
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, intermediateFBO);
+		glNamedFramebufferReadBuffer(m_RendererID, GL_COLOR_ATTACHMENT1);
+		glNamedFramebufferDrawBuffer(intermediateFBO, GL_COLOR_ATTACHMENT1);
+		glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+
+		glBindFramebuffer(GL_FRAMEBUFFER, m_RendererID);
+		glReadBuffer(GL_COLOR_ATTACHMENT0);
+		//glDrawBuffer(GL_COLOR_ATTACHMENT0);
+
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, intermediateFBO);
+		//glNamedFramebufferReadBuffer(intermediateFBO, GL_COLOR_ATTACHMENT1);
 		glReadBuffer(GL_COLOR_ATTACHMENT0 + attachmentIndex);
 		int pixelData;
 		glReadPixels(x, y, 1, 1, GL_RED_INTEGER, GL_INT, &pixelData);
+		glReadBuffer(GL_COLOR_ATTACHMENT0);
 		return pixelData;
 
 	}

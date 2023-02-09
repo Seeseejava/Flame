@@ -69,7 +69,7 @@ namespace Flame {
 		fbSpec.Attachments = { FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::RED_INTEGER, FramebufferTextureFormat::Depth };
 		fbSpec.Width = 1280;
 		fbSpec.Height = 720;
-		fbSpec.Samples = 1;
+		fbSpec.Samples = 4;
 		m_Framebuffer = Framebuffer::Create(fbSpec);
 
 		RenderPassSpecification rpSpec = { m_Framebuffer, "MainPass" };
@@ -423,6 +423,7 @@ namespace Flame {
 			// This results in never rendering an empty(black) framebuffer.
 
 			uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID(0); // 按索引显示哪一个colorbuffer
+			textureID = m_RenderPass->ExcuteAndReturnFinalTex();
 			ImGui::Image((void*)textureID, ImVec2{ m_ViewportSize.x, m_ViewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
 
 			auto windowSize = ImGui::GetWindowSize(); // 整个viewport大小，包括tab bar
