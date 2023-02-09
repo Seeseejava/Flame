@@ -30,6 +30,7 @@ namespace Flame {
 	void ContentBrowserPanel::OnImGuiRender(bool* pOpen)
 	{
 
+
 		// from imgui_demo.cpp: ShowAboutWindow function, should we add flag ImGuiWindowFlags_AlwaysAutoResize?
 		if (!ImGui::Begin("Content Browser", pOpen))
 		{
@@ -38,6 +39,13 @@ namespace Flame {
 		}
 
 		ImGui::Columns(2);
+
+		static bool init = true;
+		if (init)
+		{
+			ImGui::SetColumnWidth(0, 200.0f);
+			init = false;
+		}
 
 		if (ImGui::BeginChild("CONTENT_BROWSER_TREE"))
 		{
@@ -65,7 +73,7 @@ namespace Flame {
 		DrawTreeRecursive(ConfigManager::GetInstance().GetAssetsFolder());
 	}
 
-	void ContentBrowserPanel::DrawTreeRecursive(std::filesystem::path currentPath)
+	void ContentBrowserPanel::DrawTreeRecursive(const std::filesystem::path& currentPath)
 	{
 		const ImGuiTreeNodeFlags baseFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick |
 			ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_SpanFullWidth;
@@ -116,7 +124,7 @@ namespace Flame {
 
 		m_CurrentDirectory = *m_SelectedDirectory;
 
-		static float padding = 16.0f;
+		static float padding = 8.0f;
 		static float thumbnailSize = 128.0f;
 		float cellSize = thumbnailSize + padding;
 
@@ -129,6 +137,8 @@ namespace Flame {
 
 		for (auto& directoryEntry : std::filesystem::directory_iterator(m_CurrentDirectory))
 		{
+			ImGui::BeginGroup();
+
 			const auto& path = directoryEntry.path();
 			auto relativePath = std::filesystem::relative(path, ConfigManager::GetInstance().GetAssetsFolder());
 			std::string filenameString = relativePath.filename().string();   //去掉filename就是相对路径的整个路径了
@@ -155,7 +165,15 @@ namespace Flame {
 					m_SelectedDirectory = m_CurrentDirectory;
 				}
 			}
+
+			ImVec2 text_size = ImGui::CalcTextSize(filenameString.c_str());
+			ImVec2 pos = ImGui::GetCursorPos();
+			pos.x += (thumbnailSize - text_size.x) * 0.5f;
+			ImGui::SetCursorPos(pos);
+
 			ImGui::TextWrapped(filenameString.c_str());  //auto-resizing 
+
+			ImGui::EndGroup();
 
 			ImGui::NextColumn();
 
@@ -164,8 +182,8 @@ namespace Flame {
 
 		ImGui::Columns(1);
 
-		ImGui::SliderFloat("Thumbnail Size", &thumbnailSize, 16, 512);
-		ImGui::SliderFloat("Padding", &padding, 0, 32);
+		//ImGui::SliderFloat("Thumbnail Size", &thumbnailSize, 16, 512);
+		//ImGui::SliderFloat("Padding", &padding, 0, 32);
 
 	}
 

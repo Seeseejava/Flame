@@ -40,7 +40,7 @@ namespace Flame {
 	static bool bShowContentBrowser = true;
 	static bool bShowSceneHierachy = true;
 	static bool bShowProperties = true;
-	static bool bShowStats = true;
+	static bool bShowStats = false;
 	static bool bShowSettings = true;
 
 
@@ -147,11 +147,12 @@ namespace Flame {
 		{
 			FLAME_PROFILE_SCOPE("Renderer Prep");
 			//清除默认frambuffer
-			Flame::RenderCommand::SetClearColor(glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));// 默认窗口颜色仍为magenta
+			Flame::RenderCommand::SetClearColor(glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));// 默认窗口颜色仍为magenta(这一句好像没用）
 			Flame::RenderCommand::Clear();
 			m_Framebuffer->Bind();
 			// clear我的Framebuffer
-			RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
+			RenderCommand::SetClearColor({ 0.4f, 0.4f, 0.4f, 1 });
+			//RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 			RenderCommand::Clear();
 
 			// Clear our entity ID attachment to -1
