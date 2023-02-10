@@ -29,6 +29,7 @@ namespace Flame
 
 	static Ref<CubeMapTexture> m_SkyBox;
 	static Ref<Shader> m_SkyBoxShader;
+	static Model m_Box;
 
 	std::vector<std::string> m_Paths{
 		"Assets/textures/Skybox/right.jpg",
@@ -49,6 +50,8 @@ namespace Flame
 
 		m_SkyBoxShader = Shader::Create(AssetManager::GetInstance().GetFullPath("Shaders/SkyBox.glsl"));
 		m_SkyBox = CubeMapTexture::Create(m_Paths);
+
+		m_Box = Model(AssetManager::GetInstance().GetFullPath("Assets/Models/Box.obj").string());
 	}
 
 	void Renderer3D::Shutdown()
@@ -88,4 +91,20 @@ namespace Flame
 		return Ref<CubeMapTexture>();
 	}
 	
+	void Renderer3D::DrawSkyBox(const EditorCamera& camera)
+	{
+		s_Data.CameraBuffer.ViewProjection = camera.GetProjection() * glm::mat4(glm::mat3(camera.GetViewMatrix()));
+		s_Data.CameraUniformBuffer->SetData(&s_Data.CameraBuffer, sizeof(Renderer3DData::CameraData), 0);
+
+		RenderCommand::Cull(0);
+
+		RenderCommand::DepthFunc(DepthComp::LEQUAL);
+		m_SkyBoxShader->Bind();
+
+		m_SkyBox->Bind(1);
+		m_SkyBoxShader->SetInt("SkyBox", 0);
+		m_Box.Draw();
+
+		RenderCommand::DepthFunc(DepthComp::LESS);
+	}
 }

@@ -11,6 +11,12 @@ namespace Flame
 			m_Meshes[i].Draw(transform, shader, entityID);
 	}
 
+	void Model::Draw()
+	{
+		for (unsigned int i = 0; i < m_Meshes.size(); ++i)
+			m_Meshes[i].Draw();
+	}
+
 	void Model::LoadModel(const std::string& path)
 	{
 		Assimp::Importer importer;

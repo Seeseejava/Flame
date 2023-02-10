@@ -22,6 +22,8 @@ namespace Flame
 
 		void Draw(const glm::mat4& transform, Ref<Shader>& shader, int entityID);
 
+		void Draw();
+
 	private:
 		std::vector<StaticMesh> m_Meshes;
 		std::string m_directory;

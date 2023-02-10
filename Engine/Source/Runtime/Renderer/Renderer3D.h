@@ -21,5 +21,7 @@ namespace Flame
 
 		static Ref<CubeMapTexture> GetSkyBox();
 		static Ref<CubeMapTexture> GetDefaultSkyBox();
+
+		static void DrawSkyBox(const EditorCamera& camera);
 	};
 }

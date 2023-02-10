@@ -35,6 +35,26 @@ namespace Flame {
 		RenderCommand::DrawIndexed(m_VertexArray, m_IndexBuffer->GetCount());
 	}
 
+	void StaticMesh::Draw()
+	{
+		//SetupMesh(EntityID);
+		static bool bInit = true;
+		if (bInit)
+		{
+			bInit = false;
+
+			m_VertexArray->Bind();
+
+			m_VertexBuffer->SetData(m_Vertices.data(), sizeof(Vertex) * m_Vertices.size());
+			m_IndexBuffer->SetData(m_Indices.data(), m_Indices.size());
+
+			m_VertexArray->Unbind();
+		}
+		m_VertexArray->Bind();
+		RenderCommand::DrawIndexed(m_VertexArray, m_IndexBuffer->GetCount());
+		m_VertexArray->Unbind();
+	}
+
 	void StaticMesh::SetupMesh(int entityID)
 	{
 		if (m_EntityID == -1)
