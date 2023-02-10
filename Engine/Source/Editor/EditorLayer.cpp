@@ -41,7 +41,8 @@ namespace Flame {
 	static bool bShowSceneHierachy = true;
 	static bool bShowProperties = true;
 	static bool bShowStats = false;
-	static bool bShowSettings = true;
+	static bool bShowEngineSettings = true;
+	static bool bShowSceneSettings = true;
 
 
 	// Help
@@ -335,7 +336,8 @@ namespace Flame {
 				ImGui::MenuItem("Scene Hierachy", NULL, &bShowSceneHierachy);
 				ImGui::MenuItem("Properties", NULL, &bShowProperties);
 				ImGui::MenuItem("Stats", NULL, &bShowStats);
-				ImGui::MenuItem("Settings", NULL, &bShowSettings);
+				ImGui::MenuItem("Engine Settings", NULL, &bShowEngineSettings);
+				ImGui::MenuItem("Environment Settings", NULL, &bShowSceneSettings);
 
 				if (ImGui::MenuItem("Load Default Layout"))
 					LoadDefaultEditorConfig();
@@ -385,9 +387,9 @@ namespace Flame {
 			ImGui::End();
 		}
 
-		if (bShowSettings)
+		if (bShowEngineSettings)
 		{
-			ImGui::Begin("Settings");
+			ImGui::Begin("Engine Setting", &bShowEngineSettings);
 			ImGui::Checkbox("Show physics colliders", &m_ShowPhysicsColliders);
 
 			const char* modes[] = { "2D", "3D" };
@@ -399,6 +401,13 @@ namespace Flame {
 					bChangeDim = true;
 				}
 			}
+
+			ImGui::End();
+		}
+
+		if (bShowSceneSettings)
+		{
+			ImGui::Begin("Scene Settings", &bShowSceneSettings);
 
 			ImGui::End();
 		}
@@ -554,7 +563,8 @@ namespace Flame {
 		bShowSceneHierachy = true;
 		bShowProperties = true;
 		bShowStats = true;
-		bShowSettings = true;
+		bShowEngineSettings = true;
+		bShowSceneSettings = true;
 
 		// seems imgui docking branch has some bugs with load ini file?
 
