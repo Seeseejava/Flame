@@ -43,7 +43,7 @@ namespace Flame {
 		static bool init = true;
 		if (init)
 		{
-			ImGui::SetColumnWidth(0, 200.0f);
+			ImGui::SetColumnWidth(0, 240.0f);
 			init = false;
 		}
 
@@ -92,12 +92,18 @@ namespace Flame {
 			bNeedOpen = false;
 		}
 
-		bool nodeOpen = ImGui::TreeNodeEx(currentPath.filename().string().c_str(), nodeFlags);
+		std::string label = "##" + currentPath.filename().string();
+		bool nodeOpen = ImGui::TreeNodeEx(label.c_str(), nodeFlags);
 
 		if (ImGui::IsItemClicked())
 		{
 			m_SelectedDirectory = currentPath;
 		}
+
+		ImGui::SameLine();
+		ImGui::Image((ImTextureID)m_DirectoryIcon->GetRendererID(), { 20.0f, 20.0f }, { 0, 1 }, { 1, 0 });
+		ImGui::SameLine();
+		ImGui::Text(currentPath.filename().string().c_str());
 
 		if (nodeOpen && bNeedOpen)
 		{
