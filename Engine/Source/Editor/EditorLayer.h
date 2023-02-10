@@ -5,6 +5,7 @@
 
 #include "Panels/SceneHierarchyPanel.h"
 #include "Panels/ContentBrowserPanel.h"
+#include "Panels/SceneSettingsPanel.h"
 
 #include "Runtime/Camera/EditorCamera.h"
 #include "Runtime/Renderer/RenderPass.h"
@@ -91,6 +92,7 @@ namespace Flame {
 		// Panels
 		SceneHierarchyPanel m_SceneHierarchyPanel;
 		ContentBrowserPanel m_ContentBrowserPanel;
+		SceneSettingsPanel m_SceneSettingsPanel;
 
 		// Editor resources
 		Ref<Texture2D> m_PlayIcon, m_StopIcon;

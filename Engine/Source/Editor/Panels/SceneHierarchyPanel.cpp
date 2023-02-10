@@ -3,6 +3,9 @@
 #include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>
 
+#include "Editor/Panels/SceneHierarchyPanel.h"
+#include "Editor/IconManager/IconManager.h"
+
 #include <glm/gtc/type_ptr.hpp>
 
 #include <filesystem>
@@ -211,7 +214,7 @@ namespace Flame {
 			ImGui::PopStyleVar(
 			);
 			ImGui::SameLine(contentRegionAvailable.x - lineHeight * 0.5f);
-			if (ImGui::Button("+", ImVec2{ lineHeight, lineHeight }))
+			if (ImGui::ImageButton((ImTextureID)IconManager::GetInstance().GetSettingIcon()->GetRendererID(), ImVec2{ lineHeight - 7.0f, lineHeight - 7.0f }))
 			{
 				// 这里的Popup通过OpenPopup、BeginPopup和EndPopup一起生效, 输入的string为id
 				ImGui::OpenPopup("ComponentSettings");

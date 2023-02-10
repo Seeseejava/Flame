@@ -2,6 +2,7 @@
 #include "ContentBrowserPanel.h"
 #include "Runtime/Resource/AssetManager/AssetManager.h"
 #include "Runtime/Resource/ConfigManager/ConfigManager.h"
+#include "Editor/IconManager/IconManager.h"
 #include <imgui/imgui.h>
 
 namespace Flame {
@@ -9,22 +10,31 @@ namespace Flame {
 	namespace Utils
 	{
 
-	static bool HaveDirectoryMember(std::filesystem::path currentPath)
-	{
-		for (auto& directoryEntry : std::filesystem::directory_iterator(currentPath))
+		static bool HaveDirectoryMember(std::filesystem::path currentPath)
 		{
-			if (directoryEntry.is_directory())
-				return true;
+			for (auto& directoryEntry : std::filesystem::directory_iterator(currentPath))
+			{
+				if (directoryEntry.is_directory())
+					return true;
+			}
+			return false;
 		}
-		return false;
-	}
+
+		static bool IsImageFormat(std::string filePath)
+		{
+			std::string extension = filePath.substr(filePath.find_last_of(".") + 1);
+			if (extension == "png" || extension == "jpg" || extension == "bmp")
+			{
+				return true;
+			}
+			return false;
+		}
+
 	}
 
 	ContentBrowserPanel::ContentBrowserPanel()
 		: m_CurrentDirectory(ConfigManager::GetInstance().GetAssetsFolder())
 	{
-		m_DirectoryIcon = Texture2D::Create(AssetManager::GetInstance().GetFullPath("Resources/ContentBrowser/DirectoryIcon.png").string());
-		m_FileIcon = Texture2D::Create(AssetManager::GetInstance().GetFullPath("Resources/ContentBrowser/FileIcon.png").string());
 	}
 
 	void ContentBrowserPanel::OnImGuiRender(bool* pOpen)
@@ -101,7 +111,7 @@ namespace Flame {
 		}
 
 		ImGui::SameLine();
-		ImGui::Image((ImTextureID)m_DirectoryIcon->GetRendererID(), { 20.0f, 20.0f }, { 0, 1 }, { 1, 0 });
+		ImGui::Image((ImTextureID)IconManager::GetInstance().GetDirectoryIcon()->GetRendererID(), { 20.0f, 20.0f }, { 0, 1 }, { 1, 0 });
 		ImGui::SameLine();
 		ImGui::Text(currentPath.filename().string().c_str());
 
@@ -141,18 +151,44 @@ namespace Flame {
 
 		ImGui::Columns(columnCount, 0, false);
 
+		std::vector<std::filesystem::path> sortedDirectory;
+		int directoryEndIndex = -1;
+
 		for (auto& directoryEntry : std::filesystem::directory_iterator(m_CurrentDirectory))
+		{
+			if (!directoryEntry.is_directory())
+			{
+				sortedDirectory.push_back(directoryEntry.path());
+			}
+			else
+			{
+				sortedDirectory.insert(sortedDirectory.begin(), directoryEntry.path());
+				directoryEndIndex++;
+			}
+		}
+
+		for (int i = 0; i < sortedDirectory.size(); i++)
 		{
 			ImGui::BeginGroup();
 
-			const auto& path = directoryEntry.path();
+			const auto& path = sortedDirectory[i];
 			auto relativePath = std::filesystem::relative(path, ConfigManager::GetInstance().GetAssetsFolder());
 			std::string filenameString = relativePath.filename().string();   //去掉filename就是相对路径的整个路径了
 
 			ImGui::PushID(filenameString.c_str());
-			Ref<Texture2D> icon = directoryEntry.is_directory() ? m_DirectoryIcon : m_FileIcon;
+			Ref<Texture2D> icon = i <= directoryEndIndex ? IconManager::GetInstance().GetDirectoryIcon() : IconManager::GetInstance().GetFileIcon();
 			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
-			ImGui::ImageButton((ImTextureID)icon->GetRendererID(), { thumbnailSize, thumbnailSize }, { 0, 1 }, { 1, 0 });
+
+			if (Utils::IsImageFormat(path.string()))
+			{
+				std::string texturePath = "Assets\\" + relativePath.string();
+				Ref<Texture2D> img = IconManager::GetInstance().LoadOrFindTexture(texturePath);
+				ImGui::ImageButton((ImTextureID)img->GetRendererID(), { thumbnailSize, thumbnailSize }, { 0, 1 }, { 1, 0 });
+			}
+			else
+			{
+				ImGui::ImageButton((ImTextureID)icon->GetRendererID(), { thumbnailSize, thumbnailSize }, { 0, 1 }, { 1, 0 });
+			}
 
 			if (ImGui::BeginDragDropSource())
 			{
@@ -165,7 +201,7 @@ namespace Flame {
 
 			if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
 			{
-				if (directoryEntry.is_directory())
+				if (i <= directoryEndIndex)
 				{
 					m_CurrentDirectory /= path.filename();
 					m_SelectedDirectory = m_CurrentDirectory;

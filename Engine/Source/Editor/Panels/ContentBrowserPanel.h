@@ -2,8 +2,6 @@
 
 #include <filesystem>
 
-#include "Runtime/Renderer/Texture.h"
-
 namespace Flame {
 
 	class ContentBrowserPanel
@@ -20,8 +18,6 @@ namespace Flame {
 		std::filesystem::path m_CurrentDirectory;
 		std::optional<std::filesystem::path> m_SelectedDirectory;
 
-		Ref<Texture2D> m_DirectoryIcon;
-		Ref<Texture2D> m_FileIcon;
 	};
 
 }

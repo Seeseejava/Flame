@@ -10,7 +10,7 @@ namespace Flame {
 	{
 	public:
 		OpenGLTexture2D(uint32_t width, uint32_t height);
-		OpenGLTexture2D(const std::string& path);
+		OpenGLTexture2D(const std::filesystem::path& path);
 		virtual ~OpenGLTexture2D();
 
 		virtual uint32_t GetWidth() const override { return m_Width; }
@@ -27,7 +27,7 @@ namespace Flame {
 			return m_RendererID == ((OpenGLTexture2D&)other).m_RendererID;
 		}
 	private:
-		std::string m_Path;
+		std::filesystem::path m_Path;
 		uint32_t m_Width, m_Height;
 		uint32_t m_RendererID;
 		GLenum m_InternalFormat, m_DataFormat;
@@ -42,6 +42,8 @@ namespace Flame {
 		virtual uint32_t GetWidth() const override { return m_Width; };
 		virtual uint32_t GetHeight() const override { return m_Height; };
 		virtual uint32_t GetRendererID() const override { return m_RendererID; }
+
+		virtual void SetFace(FaceTarget faceIndex, const std::string& path) override;
 
 		virtual void Bind(uint32_t slot = 0) const override;
 		virtual void UnBind() const override;

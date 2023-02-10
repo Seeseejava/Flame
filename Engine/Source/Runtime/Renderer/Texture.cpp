@@ -1,8 +1,9 @@
 #include "flamepch.h"
 #include "Texture.h"
+#include "Runtime/Resource/AssetManager/AssetManager.h"
 
-#include "Renderer.h"
 #include "Platform/OpenGL/OpenGLTexture.h"
+#include "Runtime/Renderer/Renderer.h"
 namespace Flame {
 
 	Ref<Texture2D> Texture2D::Create(uint32_t width, uint32_t height)
@@ -19,11 +20,6 @@ namespace Flame {
 
 	Ref<Texture2D> Texture2D::Create(const std::filesystem::path& path)
 	{
-		return Create(path.string());
-	}
-
-	Ref<Texture2D> Texture2D::Create(const std::string& path)
-	{
 		switch (Renderer::GetAPI())
 		{
 		case RendererAPI::API::None:    FLAME_CORE_ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;
@@ -32,6 +28,11 @@ namespace Flame {
 
 		FLAME_CORE_ASSERT(false, "Unknown RendererAPI!");
 		return nullptr;
+	}
+
+	Ref<Texture2D> Texture2D::Create(const std::string& path)
+	{
+		return Create(AssetManager::GetInstance().GetFullPath(path));
 	}
 
 	Ref<CubeMapTexture> CubeMapTexture::Create(std::vector<std::string>& paths)

@@ -407,6 +407,8 @@ namespace Flame {
 
 		if (bShowSceneSettings)
 		{
+			m_SceneSettingsPanel.OnImGuiRender(&bShowSceneSettings);
+
 			ImGui::Begin("Scene Settings", &bShowSceneSettings);
 
 			ImGui::End();

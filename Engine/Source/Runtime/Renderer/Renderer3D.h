@@ -19,9 +19,11 @@ namespace Flame
 
 		static void DrawModel(const glm::mat4& transform, StaticMeshComponent& MeshComponent, int EntityID);
 
+		// give to Editor SceneSettingsPanel to use
 		static Ref<CubeMapTexture> GetSkyBox();
 		static Ref<CubeMapTexture> GetDefaultSkyBox();
 
+		// TODO: Move to Environment System
 		static void DrawSkyBox(const EditorCamera& camera);
 	};
 }

@@ -1,7 +1,7 @@
 
 
-file(GLOB EditorHeaderFiles CONFIGUE_DEPENDS "*.h" "Panels/*.h")
-file(GLOB EditorSourceFiles CONFIGUE_DEPENDS "*.cpp" "Panels/*.cpp")
+file(GLOB EditorHeaderFiles CONFIGUE_DEPENDS "*.h" "Panels/*.h" "IconManager/*.h")
+file(GLOB EditorSourceFiles CONFIGUE_DEPENDS "*.cpp" "Panels/*.cpp" "IconManager/*.cpp")
 
 source_group(TREE ${EngineEditorDir} FILES ${EditorHeaderFiles} ${EditorSourceFiles})
 

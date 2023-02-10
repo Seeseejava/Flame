@@ -30,7 +30,7 @@ namespace Flame {
 		glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	}
 
-	OpenGLTexture2D::OpenGLTexture2D(const std::string& path)
+	OpenGLTexture2D::OpenGLTexture2D(const std::filesystem::path& path)
 		:m_Path(path)
 	{
 		FLAME_PROFILE_FUNCTION();
@@ -40,7 +40,7 @@ namespace Flame {
 		stbi_uc* data = nullptr;
 		{
 			FLAME_PROFILE_SCOPE("stbi_load - OpenGLTexture2D::OpenGLTexture2D(const std:string&)");
-			data = stbi_load(AssetManager::GetInstance().GetFullPath(path).string().c_str(), &width, &height, &channels, 0);//stbi_uc*是unsigned char,这里为什么期待的通道数是0
+			data = stbi_load(path.string().c_str(), &width, &height, &channels, 0);//stbi_uc*是unsigned char,这里为什么期待的通道数是0
 		}
 		FLAME_CORE_ASSERT(data, "Failed to load image!");
 
@@ -96,6 +96,11 @@ namespace Flame {
 		FLAME_CORE_ASSERT(size == m_Width * m_Height * bpp, "Data must be entire texture!");
 		//可以通过glTextureSubImage2D这个API，为Texture手动提供数据，创建这个WhiteTexture
 		glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Width, m_Height, m_DataFormat, GL_UNSIGNED_BYTE, data);
+	}
+
+	void OpenGLCubeMapTexture::SetFace(FaceTarget faceIndex, const std::string& path)
+	{
+		m_Paths[(uint32_t)faceIndex] = path;
 	}
 
 	void OpenGLTexture2D::Bind(uint32_t slot) const 
