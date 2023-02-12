@@ -8,6 +8,12 @@ namespace Flame
     ShaderLibrary::ShaderLibrary()
     {
         Add("Common", AssetManager::GetFullPath("Shaders/Common.glsl"));
+        Add("BasePBR", AssetManager::GetFullPath("Shaders/BasePBR.glsl"));
+    }
+
+    Ref<Shader> ShaderLibrary::GetDefaultShader()
+    {
+        return ShaderLibrary::GetInstance().Get("BasePBR");
     }
 
     void ShaderLibrary::Add(const std::string& name, const Ref<Shader>& shader)
