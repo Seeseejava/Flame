@@ -36,7 +36,7 @@ namespace Flame
 
 	private:
 
-		std::vector<Texture2D> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
+		std::optional<std::vector<MaterialTexture>> loadMaterialTextures(aiMaterial* mat, aiTextureType type);
 
 		void LoadModel(const std::string& path);
 		void ProcessNode(aiNode* node, const aiScene* scene);
@@ -44,7 +44,7 @@ namespace Flame
 
 	private:
 		std::vector<StaticMesh> m_Meshes;
-		std::string m_directory;
+		std::string m_Directory;
 		Ref<Material> m_Material = CreateRef<Material>();
 
 	};

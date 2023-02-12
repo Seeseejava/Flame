@@ -3,10 +3,33 @@
 #include "Runtime/Renderer/StaticMesh.h"
 #include "Runtime/Renderer/RenderCommand.h"
 
+#include <Glad/glad.h>
+
 namespace Flame {
 
 	StaticMesh::StaticMesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t> indices)
 		: m_Vertices(vertices), m_Indices(indices)
+	{
+		m_VertexArray = VertexArray::Create();
+
+		m_VertexBuffer = VertexBuffer::Create(sizeof(Vertex) * vertices.size());
+		m_VertexBuffer->SetLayout({
+					{ ShaderDataType::Float3, "a_Pos"},
+					{ ShaderDataType::Float3, "a_Normal"},
+					{ ShaderDataType::Float3, "a_Tangent"},
+					{ ShaderDataType::Float2, "a_TexCoord"},
+					{ ShaderDataType::Int,	  "a_EntityID"},
+			});
+
+		m_VertexArray->AddVertexBuffer(m_VertexBuffer);
+
+		m_IndexBuffer = IndexBuffer::Create(indices.size());
+
+		m_VertexArray->SetIndexBuffer(m_IndexBuffer);
+	}
+
+	StaticMesh::StaticMesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t> indices, const std::vector<MaterialTexture>& textures)
+		: m_Vertices(vertices), m_Indices(indices), m_Textures(textures)
 	{
 		m_VertexArray = VertexArray::Create();
 
@@ -32,6 +55,12 @@ namespace Flame {
 		shader->Bind();
 		shader->SetMat4("u_Model", (transform));
 		m_VertexArray->Bind();
+
+		// Temp
+		if (!m_Textures.empty())
+			m_Textures[0].texture2d->Bind();
+		shader->SetInt("texture_diffuse", 0);
+
 		RenderCommand::DrawIndexed(m_VertexArray, m_IndexBuffer->GetCount());
 	}
 

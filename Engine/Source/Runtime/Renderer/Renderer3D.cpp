@@ -82,12 +82,13 @@ namespace Flame
 
 	Ref<CubeMapTexture> Renderer3D::GetSkyBox()
 	{
-		return Ref<CubeMapTexture>();
+		return m_SkyBox;
 	}
 
 	Ref<CubeMapTexture> Renderer3D::GetDefaultSkyBox()
 	{
-		return Ref<CubeMapTexture>();
+		m_SkyBox = CubeMapTexture::Create(m_Paths);
+		return m_SkyBox;
 	}
 	
 	void Renderer3D::DrawSkyBox(const EditorCamera& camera)

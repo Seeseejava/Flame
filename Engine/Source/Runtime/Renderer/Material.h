@@ -30,6 +30,14 @@ namespace Flame
         Emission = 7,
     };
 
+    struct MaterialTexture
+    {
+        Ref<Texture2D> texture2d = nullptr;
+        TextureType type;
+        std::string path;
+    };
+
+
     class Material
     {
     public:
@@ -46,6 +54,8 @@ namespace Flame
         }
 
         [[nodiscard]] Ref<Texture2D> GetTexture(TextureType type) { return m_TexMap[type]; }
+    public:
+        std::vector<MaterialTexture> m_Textures;
     private:
         Ref<Shader> m_Shader;
         std::unordered_map<TextureType, Ref<Texture2D>, EnumClassHash> m_TexMap;

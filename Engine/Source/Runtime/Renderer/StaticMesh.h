@@ -4,6 +4,7 @@
 #include "Runtime/Renderer/VertexBuffer.h"
 #include "Runtime/Renderer/IndexBuffer.h"
 #include "Runtime/Renderer/Shader.h"
+#include "Runtime/Renderer/Material.h"
 
 namespace Flame
 {
@@ -22,6 +23,7 @@ namespace Flame
 	{
 	public:
 		StaticMesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t> indices);
+		StaticMesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t> indices, const std::vector<MaterialTexture>& textures);
 
 		void Draw(const glm::mat4& transform, const Ref<Shader>& shader, int entityID);
 
@@ -31,6 +33,7 @@ namespace Flame
 	private:
 		std::vector<Vertex> m_Vertices;
 		std::vector<uint32_t> m_Indices;
+		std::vector<MaterialTexture> m_Textures;
 
 		Ref<VertexArray> m_VertexArray;
 		Ref<VertexBuffer> m_VertexBuffer;
