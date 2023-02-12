@@ -38,12 +38,12 @@ namespace Flame
 
 	enum class FaceTarget : uint32_t
 	{
-		Right = 0,
-		Left,
-		Top,
-		Bottom,
-		Back,
-		Front
+		Right   = 0,
+		Left    = 1,
+		Top     = 2,
+		Bottom  = 3,
+		Back    = 4,
+		Front   = 5
 	};
 
 	class CubeMapTexture : public Texture
@@ -51,6 +51,10 @@ namespace Flame
 	public:
 		virtual void SetFace(FaceTarget faceIndex, const std::string& path) = 0;
 		static Ref<CubeMapTexture> Create(std::vector<std::string>& paths);
+
+		virtual void Generate() = 0;
+
+		[[nodiscard]] virtual std::vector<std::string> GetPaths() = 0;
 	};
 	
 }

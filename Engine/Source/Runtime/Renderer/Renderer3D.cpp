@@ -101,7 +101,7 @@ namespace Flame
 		RenderCommand::DepthFunc(DepthComp::LEQUAL);
 		m_SkyBoxShader->Bind();
 
-		m_SkyBox->Bind(1);
+		m_SkyBox->Bind(0);
 		m_SkyBoxShader->SetInt("SkyBox", 0);
 		m_Box.Draw();
 

@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <functional>
 #include <thread>
+#include <regex>
 
 #include <string>
 #include <array>

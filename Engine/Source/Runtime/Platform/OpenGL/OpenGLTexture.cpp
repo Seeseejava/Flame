@@ -98,10 +98,6 @@ namespace Flame {
 		glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Width, m_Height, m_DataFormat, GL_UNSIGNED_BYTE, data);
 	}
 
-	void OpenGLCubeMapTexture::SetFace(FaceTarget faceIndex, const std::string& path)
-	{
-		m_Paths[(uint32_t)faceIndex] = path;
-	}
 
 	void OpenGLTexture2D::Bind(uint32_t slot) const 
 	{
@@ -119,41 +115,18 @@ namespace Flame {
 	OpenGLCubeMapTexture::OpenGLCubeMapTexture(std::vector<std::string>& paths)
 		: m_Paths(paths)
 	{
-		glDeleteTextures(1, &m_RendererID);
 		glGenTextures(1, &m_RendererID);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, m_RendererID);
-
-		int width, height, nrChannels;
-		for (unsigned int i = 0; i < paths.size(); i++)
-		{
-			unsigned char* data = stbi_load(paths[i].c_str(), &width, &height, &nrChannels, 0);
-			if (data)
-			{
-				glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
-					0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data
-				);
-				stbi_image_free(data);
-			}
-			else
-			{
-				FLAME_CORE_ERROR("Cubemap don't loaded correctly!");
-				stbi_image_free(data);
-			}
-		}
-
-		m_Width = width;
-		m_Height = height;
-
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+		OpenGLCubeMapTexture::Generate();
 	}
 
 	OpenGLCubeMapTexture::~OpenGLCubeMapTexture()
 	{
 		glDeleteTextures(1, &m_RendererID);
+	}
+
+	void OpenGLCubeMapTexture::SetFace(FaceTarget faceIndex, const std::string& path)
+	{
+		m_Paths[(uint32_t)faceIndex] = path;
 	}
 
 	void OpenGLCubeMapTexture::Bind(uint32_t slot) const
@@ -165,5 +138,35 @@ namespace Flame {
 	void OpenGLCubeMapTexture::UnBind() const
 	{
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+	}
+
+	void OpenGLCubeMapTexture::Generate()
+	{
+		glBindTexture(GL_TEXTURE_CUBE_MAP, m_RendererID);
+
+		int width, height, nrChannels;
+			for (unsigned int i = 0; i < m_Paths.size(); i++)
+			{
+				unsigned char* data = stbi_load(AssetManager::GetInstance().GetFullPath(m_Paths[i]).string().c_str(), &width, &height, &nrChannels, 0);
+				if (data)
+				{
+					glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+						0, GL_RGB8, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data
+					);
+					stbi_image_free(data);
+				}
+				else
+				{
+					FLAME_CORE_ERROR("Cubemap don't loaded correctly!");
+					stbi_image_free(data);
+				}
+			}
+		m_Width = width;
+		m_Height = height;
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 	}
 }
