@@ -12,17 +12,11 @@ namespace Flame
 		StaticMeshComponent() = default;
 		StaticMeshComponent(const StaticMeshComponent&) = default;
 		StaticMeshComponent(const std::string& path)
-			: Path(path)
+			: Path(path), Mesh(path)
 		{
 		}
-
-		StaticMeshComponent(const std::filesystem::path& path)
-			: Path(path)
-		{
-		}
-
 
 		Model Mesh;
-		std::filesystem::path Path;
+		std::string Path;
 	};
 }

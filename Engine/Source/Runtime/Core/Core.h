@@ -54,9 +54,19 @@ namespace Flame
 
 	template<typename T>
 	using Scope = std::unique_ptr<T>;
+	template<typename T, typename ... Args>
+	constexpr Scope<T> CreateScope(Args&& ... args)
+	{
+		return std::make_unique<T>(std::forward<Args>(args)...);
+	}
 
 	template<typename T>
 	using Ref = std::shared_ptr<T>;
+	template<typename T, typename ... Args>
+	constexpr Ref<T> CreateRef(Args&& ... args)
+	{
+		return std::make_shared<T>(std::forward<Args>(args)...);
+	}
 	//为什么用 shared_ptr 而不是 unique_ptr:
 	//因为我们的循环中要有这些东西的强引用，不能被销毁，否则直接crash；而 shared_ptr 通过它的引用计数做到了这一点。
 }

@@ -6,6 +6,7 @@
 #include "Runtime/Renderer/Shader.h"
 #include "Runtime/Renderer/RenderCommand.h"
 #include "Runtime/Renderer/UniformBuffer.h"
+#include "Runtime/Renderer/ShaderLibrary.h"
 
 #include "Runtime/Resource/AssetManager/AssetManager.h"
 
@@ -32,26 +33,25 @@ namespace Flame
 	static Model m_Box;
 
 	std::vector<std::string> m_Paths{
-		"Assets/textures/Skybox/right.jpg",
-		"Assets/textures/Skybox/left.jpg",
-		"Assets/textures/Skybox/top.jpg",
-		"Assets/textures/Skybox/bottom.jpg",
-		"Assets/textures/Skybox/front.jpg",
-		"Assets/textures/Skybox/back.jpg"
+		"Assets/texture/Skybox/right.jpg",
+		"Assets/texture/Skybox/left.jpg",
+		"Assets/texture/Skybox/top.jpg",
+		"Assets/texture/Skybox/bottom.jpg",
+		"Assets/texture/Skybox/front.jpg",
+		"Assets/texture/Skybox/back.jpg"
 	};
 
 
 	void Renderer3D::Init()
 	{
 		//Shader
-		m_Shader = Shader::Create(AssetManager::GetInstance().GetFullPath("Shaders/Common.glsl"));
 
 		s_Data.CameraUniformBuffer = UniformBuffer::Create(sizeof(Renderer3DData::CameraData), 1);
 
-		m_SkyBoxShader = Shader::Create(AssetManager::GetInstance().GetFullPath("Shaders/SkyBox.glsl"));
+		m_SkyBoxShader = Shader::Create(AssetManager::GetFullPath("Shaders/SkyBox.glsl"));
 		m_SkyBox = CubeMapTexture::Create(m_Paths);
 
-		m_Box = Model(AssetManager::GetInstance().GetFullPath("Assets/Models/Box.obj").string());
+		m_Box = Model(AssetManager::GetFullPath("Assets/Models/Box.obj").string());
 	}
 
 	void Renderer3D::Shutdown()
@@ -60,7 +60,7 @@ namespace Flame
 
 	void Renderer3D::DrawModel(const glm::mat4& transform, StaticMeshComponent& MeshComponent, int EntityID)
 	{
-		MeshComponent.Mesh.Draw(transform, m_Shader, EntityID);
+		MeshComponent.Mesh.Draw(transform, EntityID);
 	}
 
 
@@ -78,7 +78,6 @@ namespace Flame
 
 	void Renderer3D::EndScene()
 	{
-		m_Shader->Unbind();
 	}
 
 	Ref<CubeMapTexture> Renderer3D::GetSkyBox()

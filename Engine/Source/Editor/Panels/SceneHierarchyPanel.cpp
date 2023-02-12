@@ -500,7 +500,7 @@ namespace Flame {
 				ImGui::Text("Mesh Path");
 				ImGui::SameLine();
 
-				ImGui::Text(component.Path.string().c_str());
+				ImGui::Text(component.Path.c_str());
 
 				ImGui::SameLine();
 				if (ImGui::Button("..."))

@@ -74,45 +74,9 @@ namespace Flame {
 		return nullptr;
 	}
 
-	void ShaderLibrary::Add(const std::string& name, const Ref<Shader>& shader)
-	{
-		FLAME_CORE_ASSERT(!Exists(name), "Shader already exists!");
-		m_Shaders[name] = shader;
-	}
-
-	void ShaderLibrary::Add(const Ref<Shader>& shader)
-	{
-		auto& name = shader->GetName();
-		Add(name, shader);
-	}
-
-	Flame::Ref<Flame::Shader> ShaderLibrary::Load(const std::string& filepath)
-	{
-		auto shader = Shader::Create(filepath);
-		Add(shader);
-		return shader;
-	}
-
-	Flame::Ref<Flame::Shader> ShaderLibrary::Load(const std::string& name, const std::string& filepath)
-	{
-		auto shader = Shader::Create(filepath);
-		Add(name, shader);
-		return shader;
-	}
-
-	Flame::Ref<Flame::Shader> ShaderLibrary::Get(const std::string& name)
-	{
-		FLAME_CORE_ASSERT(Exists(name), "Shader not found!");
-		return m_Shaders[name];
-	}
-
-	bool ShaderLibrary::Exists(const std::string& name) const
-	{
-		return m_Shaders.find(name) != m_Shaders.end();
-	}
-
+	
 	ShaderUniform::ShaderUniform(const std::string& name, ShaderUniformType type, uint32_t size, uint32_t offset)
-		: mName(name), mType(type), mSize(size), mOffset(offset)
+		: m_Name(name), m_Type(type), m_Size(size), m_Offset(offset)
 	{
 	}
 	const std::string& ShaderUniform::UniformTypeToString(ShaderUniformType type)

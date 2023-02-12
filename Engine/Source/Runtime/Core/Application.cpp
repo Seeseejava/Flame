@@ -89,7 +89,6 @@ namespace Flame {
 	void Application::Init(const ApplicationProps& props)
 	{
 		Log::Init();
-		ConfigManager::GetInstance().Initialize();
 
 		m_Window = std::unique_ptr<Window>(Window::Create(WindowProps(props.Name)));
 

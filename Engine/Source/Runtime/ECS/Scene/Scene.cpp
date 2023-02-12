@@ -341,7 +341,6 @@ namespace Flame {
 	template<>
 	void Scene::OnComponentAdded<StaticMeshComponent>(Entity entity, StaticMeshComponent& component)
 	{
-		component.Mesh = Model(component.Path.string());
 	}
 
 	template<>

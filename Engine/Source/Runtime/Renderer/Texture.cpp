@@ -32,7 +32,7 @@ namespace Flame {
 
 	Ref<Texture2D> Texture2D::Create(const std::string& path)
 	{
-		return Create(AssetManager::GetInstance().GetFullPath(path));
+		return Create(AssetManager::GetFullPath(path));
 	}
 
 	Ref<CubeMapTexture> CubeMapTexture::Create(std::vector<std::string>& paths)

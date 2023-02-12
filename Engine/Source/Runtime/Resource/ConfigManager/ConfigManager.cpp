@@ -3,7 +3,7 @@
 
 namespace Flame
 {
-	void ConfigManager::Initialize()
+	ConfigManager::ConfigManager()
 	{
 		mRootFolder = { FLAME_XSTRING(ENGINE_ROOT_DIR) };
 		std::string s = mRootFolder.string();

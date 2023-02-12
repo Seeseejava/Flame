@@ -60,11 +60,11 @@ namespace Flame {
 	{
 		FLAME_PROFILE_FUNCTION();
 
-		m_CheckerboardTexture = Texture2D::Create(AssetManager::GetInstance().GetFullPath("Assets/texture/Checkerboard.png"));
-		m_SpriteSheet = Texture2D::Create(AssetManager::GetInstance().GetFullPath("Assets/RPGGame/texture/RPGpack_sheet_2X.png"));
+		m_CheckerboardTexture = Texture2D::Create(AssetManager::GetFullPath("Assets/texture/Checkerboard.png"));
+		m_SpriteSheet = Texture2D::Create(AssetManager::GetFullPath("Assets/RPGGame/texture/RPGpack_sheet_2X.png"));
 
-		m_PlayIcon = Texture2D::Create(AssetManager::GetInstance().GetFullPath("Resources/ToolBar/PlayButton.png"));
-		m_StopIcon = Texture2D::Create(AssetManager::GetInstance().GetFullPath("Resources/ToolBar/StopButton.png"));
+		m_PlayIcon = Texture2D::Create(AssetManager::GetFullPath("Resources/ToolBar/PlayButton.png"));
+		m_StopIcon = Texture2D::Create(AssetManager::GetFullPath("Resources/ToolBar/StopButton.png"));
 
 		FramebufferSpecification fbSpec;
 		fbSpec.Attachments = { FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::RED_INTEGER, FramebufferTextureFormat::Depth };
@@ -551,8 +551,8 @@ namespace Flame {
 
 	void EditorLayer::LoadDefaultEditorConfig()
 	{
-		const std::filesystem::path CurrentEditorConfigPath{ AssetManager::GetInstance().GetFullPath("imgui.ini") };
-		const std::filesystem::path DefaultEditorConfigPath{ AssetManager::GetInstance().GetFullPath("Assets/Config/imgui.ini") };
+		const std::filesystem::path CurrentEditorConfigPath{ AssetManager::GetFullPath("imgui.ini") };
+		const std::filesystem::path DefaultEditorConfigPath{ AssetManager::GetFullPath("Assets/Config/imgui.ini") };
 		FLAME_CORE_ASSERT(std::filesystem::exists(DefaultEditorConfigPath), "No imgui.ini");
 		if (std::filesystem::exists(CurrentEditorConfigPath))
 			std::filesystem::remove(CurrentEditorConfigPath);

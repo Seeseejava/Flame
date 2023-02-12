@@ -16,16 +16,16 @@ namespace Flame {
 	public:
 		ShaderUniform() = default;
 		ShaderUniform(const std::string& name, ShaderUniformType type, uint32_t size, uint32_t offset);
-		const std::string& GetName() const { return mName; }
-		ShaderUniformType GetType() const { return mType; }
-		uint32_t GetSize() const { return mSize; }
-		uint32_t GetOffset() const { return mOffset; }
+		const std::string& GetName() const { return m_Name; }
+		ShaderUniformType GetType() const { return m_Type; }
+		uint32_t GetSize() const { return m_Size; }
+		uint32_t GetOffset() const { return m_Offset; }
 		static const std::string& UniformTypeToString(ShaderUniformType type);
 	private:
-		std::string mName;
-		ShaderUniformType mType = ShaderUniformType::None;
-		uint32_t mSize = 0;
-		uint32_t mOffset = 0;
+		std::string m_Name;
+		ShaderUniformType m_Type = ShaderUniformType::None;
+		uint32_t m_Size = 0;
+		uint32_t m_Offset = 0;
 	};
 	struct ShaderUniformBuffer
 	{
@@ -72,23 +72,6 @@ namespace Flame {
 		static Ref<Shader> CreateNative(const std::string& filepath);
 		static Ref<Shader> CreateNative(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc);
 
-	};
-
-
-	/*其实就是把Shader的读取和存储位置都分配到ShaderLibrary类里
-	ShaderLibrary本质就是个哈希map，key是shader的名字，value是shader的内容*/
-	class ShaderLibrary
-	{
-	public:
-		void Add(const std::string& name, const Ref<Shader>& shader);
-		void Add(const Ref<Shader>& shader);
-		Ref<Shader> Load(const std::string& filepath);
-		Ref<Shader> Load(const std::string& name, const std::string& filepath);
-
-		Ref<Shader> Get(const std::string& name);
-		bool Exists(const std::string& name) const;
-	private:
-		std::unordered_map<std::string, Ref<Shader>> m_Shaders;
 	};
 
 }

@@ -11,12 +11,11 @@ namespace Flame
 		//friend class PublicSingleton<ConfigManager>;
 
 	public:
+		ConfigManager();
 		ConfigManager(const ConfigManager&) = delete;
 		ConfigManager& operator=(const ConfigManager&) = delete;
-		ConfigManager() = default;
 
 	public:
-		void Initialize();
 
 		void Clear();
 

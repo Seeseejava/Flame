@@ -9,6 +9,6 @@ namespace Flame
 	class AssetManager : public PublicSingleton<AssetManager>
 	{
 	public:
-		std::filesystem::path GetFullPath(const std::string& RelativePath) const;
+		static std::filesystem::path GetFullPath(const std::string& RelativePath);
 	};
 }

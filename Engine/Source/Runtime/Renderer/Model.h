@@ -4,6 +4,8 @@
 
 #include "Runtime/Renderer/Shader.h"
 #include "Runtime/Renderer/StaticMesh.h"
+#include "Runtime/Renderer/Texture.h"
+#include "Runtime/Renderer/Material.h"
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -16,20 +18,34 @@ namespace Flame
 	public:
 		Model() = default;
 		Model(const std::string& path)
+			: m_Material(CreateRef<Material>(ShaderLibrary::GetDefaultShader()))
 		{
 			LoadModel(path);
 		}
 
-		void Draw(const glm::mat4& transform, Ref<Shader>& shader, int entityID);
+		Model(const std::string& path, Ref<Shader> shader)
+			: m_Material(CreateRef<Material>(shader))
+		{
+			LoadModel(path);
+		}
 
+		void SetShader(Ref<Shader> shader) { m_Material->SetShader(shader); };
+		void Draw(const glm::mat4& transform, int entityID);
+		void Draw(const glm::mat4& transform, Ref<Shader> shader, int entityID);
 		void Draw();
 
 	private:
-		std::vector<StaticMesh> m_Meshes;
-		std::string m_directory;
+
+		std::vector<Texture2D> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
 
 		void LoadModel(const std::string& path);
 		void ProcessNode(aiNode* node, const aiScene* scene);
 		StaticMesh ProcessMesh(aiMesh* mesh, const aiScene* scene);
+
+	private:
+		std::vector<StaticMesh> m_Meshes;
+		std::string m_directory;
+		Ref<Material> m_Material = CreateRef<Material>();
+
 	};
 }

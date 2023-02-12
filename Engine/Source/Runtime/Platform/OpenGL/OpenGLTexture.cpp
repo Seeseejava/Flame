@@ -147,7 +147,7 @@ namespace Flame {
 		int width, height, nrChannels;
 			for (unsigned int i = 0; i < m_Paths.size(); i++)
 			{
-				unsigned char* data = stbi_load(AssetManager::GetInstance().GetFullPath(m_Paths[i]).string().c_str(), &width, &height, &nrChannels, 0);
+				unsigned char* data = stbi_load(AssetManager::GetFullPath(m_Paths[i]).string().c_str(), &width, &height, &nrChannels, 0);
 				if (data)
 				{
 					glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
