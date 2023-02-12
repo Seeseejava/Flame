@@ -6,16 +6,16 @@
 #include "optional"
 namespace Flame
 {
-	void Model::Draw(const glm::mat4& transform, int entityID)
+	void Model::Draw(const glm::mat4& transform, const glm::vec3& cameraPos, int entityID)
 	{
 		for (unsigned int i = 0; i < m_Meshes.size(); ++i)
-			m_Meshes[i].Draw(transform, m_Material->GetShader(), entityID);
+			m_Meshes[i].Draw(transform, cameraPos, m_Material->GetShader(), entityID);
 	}
 
-	void Model::Draw(const glm::mat4& transform, Ref<Shader> shader, int entityID)
+	void Model::Draw(const glm::mat4& transform, const glm::vec3& cameraPos, Ref<Shader> shader, int entityID)
 	{
 		for (unsigned int i = 0; i < m_Meshes.size(); ++i)
-			m_Meshes[i].Draw(transform, shader, entityID);
+			m_Meshes[i].Draw(transform, cameraPos, shader, entityID);
 	};
 
 	void Model::Draw()

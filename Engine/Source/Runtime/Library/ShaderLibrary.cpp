@@ -1,6 +1,6 @@
 #include "flamepch.h"
 
-#include "Runtime/Renderer/ShaderLibrary.h"
+#include "Runtime/Library/ShaderLibrary.h"
 #include "Runtime/Resource/AssetManager/AssetManager.h"
 
 namespace Flame

@@ -2,7 +2,7 @@
 
 #include "Runtime/Renderer/Texture.h"
 #include "Runtime/Renderer/Shader.h"
-#include "Runtime/Renderer/ShaderLibrary.h"
+#include "Runtime/Library/ShaderLibrary.h"
 
 #include <unordered_map>
 

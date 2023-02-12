@@ -12,6 +12,7 @@ namespace Flame
 	{
 		Camera* mainCamera = nullptr;
 		glm::mat4 cameraTransform;
+		glm::vec3 cameraPos;
 		{
 			auto view = m_Scene->m_Registry.view<TransformComponent, CameraComponent>();
 			for (auto entity : view)
@@ -22,6 +23,7 @@ namespace Flame
 				{
 					mainCamera = &camera.Camera;
 					cameraTransform = transform.GetTransform();
+					cameraPos = transform.GetTranslation();
 					break;
 				}
 			}
@@ -38,7 +40,7 @@ namespace Flame
 				{
 					auto [transform, mesh] = view.get<TransformComponent, StaticMeshComponent>(entity);
 
-					Renderer3D::DrawModel(transform.GetTransform(), mesh, (int)entity);
+					Renderer3D::DrawModel(transform.GetTransform(),cameraPos, mesh, (int)entity);
 				}
 			}
 
@@ -56,7 +58,7 @@ namespace Flame
 		{
 			auto [transform, mesh] = group.get<TransformComponent, StaticMeshComponent>(entity);
 
-			Renderer3D::DrawModel(transform.GetTransform(), mesh, (int)entity);
+			Renderer3D::DrawModel(transform.GetTransform(), camera.GetPosition(), mesh, (int)entity);
 		}
 
 		Renderer3D::EndScene();

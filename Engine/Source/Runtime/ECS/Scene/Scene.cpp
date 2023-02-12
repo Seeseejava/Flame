@@ -227,18 +227,18 @@ namespace Flame {
 			system->OnUpdateEditor(ts, camera);
 		}
 
-		Renderer3D::BeginScene(camera);
+		//Renderer3D::BeginScene(camera);
 
-		auto group = m_Registry.group<TransformComponent>(entt::get<StaticMeshComponent>);
+		//auto group = m_Registry.group<TransformComponent>(entt::get<StaticMeshComponent>);
 
-		for (auto entity : group)
-		{
-			auto [transform, mesh] = group.get<TransformComponent, StaticMeshComponent>(entity);
+		//for (auto entity : group)
+		//{
+		//	auto [transform, mesh] = group.get<TransformComponent, StaticMeshComponent>(entity);
 
-			Renderer3D::DrawModel(transform.GetTransform(), mesh, (int)entity);
-		}
+		//	Renderer3D::DrawModel(transform.GetTransform(), camera.GetPosition(), mesh, (int)entity);
+		//}
 
-		Renderer3D::EndScene();
+		//Renderer3D::EndScene();
 	}
 
 	void Scene::OnViewportResize(uint32_t width, uint32_t height)

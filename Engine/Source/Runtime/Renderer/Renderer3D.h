@@ -17,7 +17,7 @@ namespace Flame
 		static void BeginScene(const EditorCamera& camera);
 		static void EndScene();
 
-		static void DrawModel(const glm::mat4& transform, StaticMeshComponent& MeshComponent, int EntityID);
+		static void DrawModel(const glm::mat4& transform, const glm::vec3& cameraPos, StaticMeshComponent& MeshComponent, int EntityID);
 
 		// give to Editor SceneSettingsPanel to use
 		static Ref<CubeMapTexture> GetSkyBox();

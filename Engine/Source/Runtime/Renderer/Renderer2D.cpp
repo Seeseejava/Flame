@@ -5,7 +5,7 @@
 #include "Shader.h"
 #include "Runtime/Renderer/UniformBuffer.h"
 #include "RenderCommand.h"
-
+#include "Runtime/Library/TextureLibrary.h"
 #include "Runtime/Resource/AssetManager/AssetManager.h"
 
 #include <glm/gtc/matrix_transform.hpp>
@@ -56,7 +56,6 @@ namespace Flame
         Ref<VertexArray> QuadVertexArray;
         Ref<VertexBuffer> QuadVertexBuffer;
         Ref<Shader> QuadShader;
-        Ref<Texture2D> WhiteTexture;
 
         Ref<VertexArray> CircleVertexArray;
         Ref<VertexBuffer> CircleVertexBuffer;
@@ -163,9 +162,6 @@ namespace Flame
         s_Data.LineVertexBufferBase = new LineVertex[s_Data.MaxVertices];
         //------Lines------
 
-        s_Data.WhiteTexture = Texture2D::Create(1, 1);
-        uint32_t whiteTextureData = 0xffffffff;
-        s_Data.WhiteTexture->SetData(&whiteTextureData, sizeof(uint32_t));
 
         int32_t samplers[s_Data.MaxTextureSlots];
         for (uint32_t i = 0; i < s_Data.MaxTextureSlots; i++)
@@ -179,7 +175,7 @@ namespace Flame
         s_Data.QuadShader->SetIntArray("u_Textures", samplers, s_Data.MaxTextureSlots);
 
         // Set all texture slots to 0
-        s_Data.TextureSlots[0] = s_Data.WhiteTexture;
+        s_Data.TextureSlots[0] = TextureLibrary::GetInstance().GetTexture("WhiteTexture");
 
         s_Data.QuadVertexPositions[0] = { -0.5f, -0.5f, 0.0f, 1.0f };
         s_Data.QuadVertexPositions[1] = { 0.5f, -0.5f, 0.0f, 1.0f };
