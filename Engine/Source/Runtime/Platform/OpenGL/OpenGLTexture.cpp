@@ -102,13 +102,34 @@ namespace Flame {
 	void OpenGLTexture2D::Bind(uint32_t slot) const 
 	{
 		FLAME_PROFILE_FUNCTION();
-
+		glActiveTexture(GL_TEXTURE0 + slot);
 		glBindTextureUnit(slot, m_RendererID);//(unit, texture)
 	}
 
 	void OpenGLTexture2D::UnBind() const
 	{
 		glBindTexture(GL_TEXTURE, 0);
+	}
+
+	OpenGLCubeMapTexture::OpenGLCubeMapTexture()
+	{
+		glGenTextures(1, &m_RendererID);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, m_RendererID);
+
+		m_Width = 512;
+		m_Height = 512;
+
+		for (unsigned int i = 0; i < 6; ++i)
+		{
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB16F, 512, 512, 0, GL_RGB, GL_FLOAT, nullptr);
+		}
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR); // enable pre-filter mipmap sampling (combatting visible dots artifact)
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 	}
 
 	// refer to https://learnopengl-cn.github.io/04%20Advanced%20OpenGL/06%20Cubemaps/
@@ -144,8 +165,9 @@ namespace Flame {
 	{
 		glBindTexture(GL_TEXTURE_CUBE_MAP, m_RendererID);
 
-		int width, height, nrChannels;
+		int width = 0, height = 0, nrChannels = 0;
 		stbi_set_flip_vertically_on_load(false);
+
 		for (unsigned int i = 0; i < m_Paths.size(); i++)
 		{
 			unsigned char* data = stbi_load(AssetManager::GetFullPath(m_Paths[i]).string().c_str(), &width, &height, &nrChannels, 0);

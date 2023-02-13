@@ -15,11 +15,11 @@ namespace Flame
         std::vector<std::string> m_Paths;
 
         //Visualization
-        Ref<Texture> m_Right;
-        Ref<Texture> m_Left;
-        Ref<Texture> m_Top;
-        Ref<Texture> m_Bottom;
-        Ref<Texture> m_Front;
-        Ref<Texture> m_Back;
+        Ref<Texture2D> m_Right;
+        Ref<Texture2D> m_Left;
+        Ref<Texture2D> m_Top;
+        Ref<Texture2D> m_Bottom;
+        Ref<Texture2D> m_Front;
+        Ref<Texture2D> m_Back;
     };
 }

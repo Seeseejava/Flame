@@ -74,7 +74,12 @@ namespace Flame {
 
 	void SceneHierarchyPanel::DrawEntityNode(Entity entity)
 	{
-		auto& tag = entity.GetComponent<TagComponent>().Tag;
+		const char* tag = "Unnamed Entity";
+		if (entity.HasComponent<TagComponent>())
+		{
+			tag = entity.GetComponent<TagComponent>().Tag.c_str();
+		}
+
 
 		// 每个node都自带OpenOnArrow的flag, 如果当前entity正好是被选择的go, 那么还会多一个selected flag
 		ImGuiTreeNodeFlags flags = ((m_SelectionContext == entity) ? ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnArrow;
@@ -82,7 +87,8 @@ namespace Flame {
 		// 这里的TreeNodeEx会让ImGui基于输入的HashCode(GUID), 绘制一个TreeNode, 由于这里需要一个
 		// void*指针, 这里直接把entity的id转成void*给它即可
 		// ex应该是expanded的意思, 用于判断go对应的Node是否处于展开状态
-		bool opened = ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t)entity, flags, tag.c_str()); //这里因为指针是64位的，为了出现问题，先转换成64位
+		std::string label = std::string("##") + std::string(tag);
+		bool opened = ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t)entity, flags, ""); //这里因为指针是64位的，为了出现问题，先转换成64位
 
 		// 如果鼠标悬浮在item上, 且点击了鼠标左键, 则返回true
 		if (ImGui::IsItemClicked())
@@ -99,14 +105,18 @@ namespace Flame {
 			ImGui::EndPopup();
 		}
 
+		float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
+		ImGui::SameLine();
+		ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor(1.0f, 1.0f, 1.0f, 0.0f));
+		ImGui::Image((ImTextureID)IconManager::GetInstance().Get("EntityIcon")->GetRendererID(), ImVec2{ lineHeight - 5.0f, lineHeight - 5.0f }, { 0, 1 }, { 1, 0 });
+		ImGui::PopStyleColor(1);
+		ImGui::SameLine();
+		ImGui::Text(tag);
+
 		// 如果此节点是expanded状态, 那么需要继续loop到里面去
 		// 由于目前没有链式entity, 所以这里把展开的对象再绘制一个相同的子节点
 		if (opened)
 		{
-			ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
-			bool opened = ImGui::TreeNodeEx((void*)9817239, flags, tag.c_str());
-			if (opened)
-				ImGui::TreePop();
 			// TreePop貌似是个结束的操作, 好像每个节点绘制结束时要调用此函数
 			ImGui::TreePop();
 		}

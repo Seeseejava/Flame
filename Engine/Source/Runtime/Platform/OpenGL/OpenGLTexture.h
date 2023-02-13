@@ -37,6 +37,7 @@ namespace Flame {
 	class OpenGLCubeMapTexture : public CubeMapTexture
 	{
 	public:
+		OpenGLCubeMapTexture();
 		OpenGLCubeMapTexture(std::vector<std::string>& paths);
 		virtual ~OpenGLCubeMapTexture();
 

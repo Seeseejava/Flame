@@ -5,16 +5,17 @@
 #include "Runtime/Resource/ConfigManager/ConfigManager.h"
 #include "Runtime/Resource/AssetManager/AssetManager.h"
 #include "Runtime/Renderer/Renderer3D.h"
-#include "Runtime/Library/Library.h"
+#include "Runtime/Library/TextureLibrary.h"
 
 #include <imgui/imgui.h>
 #include <regex>
+#include <filesystem>
 
 namespace Flame 
 {
     SceneSettingsPanel::SceneSettingsPanel()
     {
-		Ref<Texture> m_DefaultTexture = IconManager::GetInstance().GetNullTexture();
+		Ref<Texture2D> m_DefaultTexture = IconManager::GetInstance().GetNullTexture();
 
         m_Paths = std::vector<std::string>(6);
         m_Right  = m_DefaultTexture;
@@ -25,13 +26,13 @@ namespace Flame
         m_Back   = m_DefaultTexture;
     }
 
-    void SceneSettingsPanel::OnImGuiRender(bool* pOpen)
-    {
-        if (!ImGui::Begin("Scene Settings", pOpen))
-        {
-            ImGui::End();
-            return;
-        }
+	void SceneSettingsPanel::OnImGuiRender(bool* pOpen)
+	{
+		if (!ImGui::Begin("Scene Settings", pOpen))
+		{
+			ImGui::End();
+			return;
+		}
 
 		const char* modes[] = { "None", "Environment Hdr", "Sky Box" };
 		ImGui::Text("Mode");
@@ -41,9 +42,9 @@ namespace Flame
 
 		}
 
-        // Still some bugs (top bottom inverse?), see https://stackoverflow.com/questions/55558241/opengl-cubemap-face-order-sampling-issue
+		// Still some bugs (top bottom inverse?), see https://stackoverflow.com/questions/55558241/opengl-cubemap-face-order-sampling-issue
 
-		const auto& SkyBoxTreeNode = [&m_Paths = m_Paths](const char* nodeName, Ref<Texture>& tex, uint32_t pathIndex) {
+		const auto& SkyBoxTreeNode = [&m_Paths = m_Paths](const char* nodeName, Ref<Texture2D>& tex, uint32_t pathIndex) {
 			if (ImGui::TreeNode(nodeName))
 			{
 				ImGui::Image((ImTextureID)tex->GetRendererID(), ImVec2(64, 64), ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
@@ -66,23 +67,50 @@ namespace Flame
 		};
 
 		//Sky Box
-		if (ImGuiWrapper::TreeNodeExStyle1((void*)"SkyBox", "SkyBox"))
+		if (ModeManager::m_SceneMode == SceneMode::SkyBox)
 		{
-			if (ImGui::Button("Update"))
+			if (ImGuiWrapper::TreeNodeExStyle1((void*)"SkyBox", "SkyBox"))
 			{
-				Library<CubeMapTexture>::GetInstance().Get("SkyBoxTexture")->Generate();
+				if (ImGui::Button("Update"))
+				{
+					Library<CubeMapTexture>::GetInstance().Get("SkyBoxTexture")->Generate();
+				}
+
+				SkyBoxTreeNode("Right +X", m_Right, 0);
+				SkyBoxTreeNode("Left -X", m_Left, 1);
+				SkyBoxTreeNode("Top +Y", m_Top, 2);
+				SkyBoxTreeNode("Bottom -Y", m_Bottom, 3);
+				SkyBoxTreeNode("Front +Z", m_Front, 4);
+				SkyBoxTreeNode("Back -Z", m_Back, 5);
+
+				ImGui::TreePop();
 			}
-
-			SkyBoxTreeNode("Right +X", m_Right, 0);
-			SkyBoxTreeNode("Left -X", m_Left, 1);
-			SkyBoxTreeNode("Top +Y", m_Top, 2);
-			SkyBoxTreeNode("Bottom -Y", m_Bottom, 3);
-			SkyBoxTreeNode("Front +Z", m_Front, 4);
-			SkyBoxTreeNode("Back -Z", m_Back, 5);
-
-			ImGui::TreePop();
 		}
-		
-		ImGui::End();
-    }
+		else if (ModeManager::m_SceneMode == SceneMode::EnvironmentHdr)
+		{
+			if (ImGuiWrapper::TreeNodeExStyle1((void*)"Environment Hdr", "Environment Hdr"))
+			{
+				ImGui::Image((ImTextureID)Library<Texture2D>::GetInstance().Get("DefaultHdr")->GetRendererID(), ImVec2(64, 64), ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+				if (ImGui::BeginDragDropTarget())
+				{
+					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+					{
+						auto path = (const wchar_t*)payload->Data;
+						std::string relativePath = (std::filesystem::path("Assets") / path).string();
+						std::filesystem::path texturePath = ConfigManager::GetInstance().GetAssetsFolder() / path;
+						relativePath = std::regex_replace(relativePath, std::regex("\\\\"), "/");
+						Library<Texture2D>::GetInstance().Set("DefaultHdr", IconManager::GetInstance().LoadOrFindTexture(relativePath));
+					}
+					ImGui::EndDragDropTarget();
+				}
+
+				ImGui::SameLine();
+				ImGui::Checkbox("Use", &ModeManager::bHdrUse);
+
+				ImGui::TreePop();
+			}
+		}
+			ImGui::End();
+	}
+	
 }

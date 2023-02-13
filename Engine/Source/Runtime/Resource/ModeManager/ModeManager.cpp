@@ -5,6 +5,7 @@ namespace Flame
 {
 	bool ModeManager::bEditState = true;
 	int ModeManager::b3DMode = 1;
-	SceneMode ModeManager::m_SceneMode = SceneMode::None;
+	bool ModeManager::bHdrUse = false;
+	SceneMode ModeManager::m_SceneMode = SceneMode::SkyBox;
 	EditMode ModeManager::m_EditMode = EditMode::Select;
 }

@@ -21,6 +21,12 @@ namespace Flame
             return m_Library[name];
         }
 
+        void Set(const std::string& name, const Ref<LibType>& mem)
+        {
+            FLAME_CORE_ASSERT(m_Library.find(name) != m_Library.end(),  "Can't find this member in Library!");
+            m_Library[name] = mem;
+        }
+
     protected:
         std::unordered_map<std::string, Ref<LibType>> m_Library;
     };

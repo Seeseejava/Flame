@@ -31,5 +31,7 @@ namespace Flame
             "Assets/texture/Skybox/back.jpg",
         };
         Add("SkyBoxTexture", CubeMapTexture::Create(Paths));
+
+        Add("EnvironmentHdr", CubeMapTexture::Create());
     }
 }
