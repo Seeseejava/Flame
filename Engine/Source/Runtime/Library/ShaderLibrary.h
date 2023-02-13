@@ -16,6 +16,7 @@ namespace Flame
         Library();
 
         [[nodiscard]] Ref<Shader> GetDefaultShader();
+        [[nodiscard]] Ref<Shader> GetSkyBoxShader();
 
     };
 }
