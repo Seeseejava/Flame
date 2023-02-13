@@ -1,4 +1,5 @@
 #include "EditorLayer.h"
+#include "ImGuiWrapper.h"
 #include "imgui/imgui.h"
 #include <imgui/imgui_internal.h>
 
@@ -404,12 +405,7 @@ namespace Flame {
 				}
 			}
 
-			const ImGuiTreeNodeFlags treeNodeFlags = ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding;
-			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{ 4.0f, 4.0f });
-			float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
-			ImGui::Separator();
-			bool open = ImGui::TreeNodeEx((void*)"Physics Settings", treeNodeFlags, "Physics Settings");
-			ImGui::PopStyleVar();
+			bool open = ImGuiWrapper::TreeNodeExStyle1((void*)"Physics Settings", "Physics Settings");
 
 			if (open)
 			{

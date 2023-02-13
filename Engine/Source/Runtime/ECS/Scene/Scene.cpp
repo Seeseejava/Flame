@@ -86,6 +86,7 @@ namespace Flame {
 			m_Systems.clear();
 			m_Systems.emplace_back(std::make_unique<RenderSystem3D>(this));
 			m_Systems.emplace_back(std::make_unique<PhysicsSystem3D>(this));
+			m_Systems.emplace_back(CreateScope<EnvironmentSystem>(this));
 		}
 		else
 		{
@@ -93,6 +94,7 @@ namespace Flame {
 			m_Systems.emplace_back(std::make_unique<PhysicsSystem2D>(this));
 			m_Systems.emplace_back(std::make_unique<NativeScriptSystem>(this));
 			m_Systems.emplace_back(std::make_unique<RenderSystem2D>(this));
+			m_Systems.emplace_back(CreateScope<EnvironmentSystem>(this));
 		}
 	}
 
@@ -164,6 +166,7 @@ namespace Flame {
 			m_Systems.clear();
 			m_Systems.emplace_back(std::make_unique<RenderSystem3D>(this));
 			m_Systems.emplace_back(std::make_unique<PhysicsSystem3D>(this));
+			m_Systems.emplace_back(CreateScope<EnvironmentSystem>(this));
 		}
 		else
 		{
@@ -171,6 +174,7 @@ namespace Flame {
 			m_Systems.emplace_back(std::make_unique<PhysicsSystem2D>(this));
 			m_Systems.emplace_back(std::make_unique<NativeScriptSystem>(this));
 			m_Systems.emplace_back(std::make_unique<RenderSystem2D>(this));
+			m_Systems.emplace_back(CreateScope<EnvironmentSystem>(this));
 		}
 	}
 

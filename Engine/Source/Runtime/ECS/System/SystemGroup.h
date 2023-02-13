@@ -7,3 +7,4 @@
 
 #include "Runtime/ECS/System/Render/RenderSystem2D.h"
 #include "Runtime/ECS/System/Render/RenderSystem3D.h"
+#include "Runtime/ECS/System/Render/EnvironmentSystem.h"

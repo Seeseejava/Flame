@@ -63,6 +63,5 @@ namespace Flame
 
 		Renderer3D::EndScene();
 
-		Renderer3D::DrawSkyBox(camera);
 	}
 }

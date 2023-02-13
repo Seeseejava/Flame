@@ -15,6 +15,14 @@ namespace Flame
 		MeshPaint = 4
 	};
 
+	enum class SceneMode
+	{
+		None = 0,
+		EnvironmentHdr = 1,
+		SkyBox = 2,
+	};
+
+
 	class ModeManager final : public PublicSingleton<ModeManager>
 	{
 	public:
@@ -22,8 +30,9 @@ namespace Flame
 		static void ChangeState() { ModeManager::GetInstance().bEditState = !ModeManager::GetInstance().bEditState; }
 	public:
 		static int b3DMode;  // 0 for 2D, 1 for 3D
+		static SceneMode m_SceneMode;
 	private:
 		static bool bEditState;
-		static EditMode mEditMode;
+		static EditMode m_EditMode;
 	};
 }

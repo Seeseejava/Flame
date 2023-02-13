@@ -1,5 +1,7 @@
 #include "Editor/Panels/SceneSettingsPanel.h"
 #include "Editor/IconManager/IconManager.h"
+#include "Editor/ImGuiWrapper.h"
+#include "Runtime/Resource/ModeManager/ModeManager.h"
 #include "Runtime/Resource/ConfigManager/ConfigManager.h"
 #include "Runtime/Resource/AssetManager/AssetManager.h"
 #include "Runtime/Renderer/Renderer3D.h"
@@ -30,6 +32,14 @@ namespace Flame
             return;
         }
 
+		const char* modes[] = { "None", "Environment Hdr", "Sky Box" };
+		ImGui::Text("Mode");
+		ImGui::SameLine();
+		if (ImGui::Combo("##Mode", (int*)(&ModeManager::m_SceneMode), modes, IM_ARRAYSIZE(modes)))
+		{
+
+		}
+
         // Still some bugs (top bottom inverse?), see https://stackoverflow.com/questions/55558241/opengl-cubemap-face-order-sampling-issue
 
 		const auto& SkyBoxTreeNode = [&m_Paths = m_Paths](const char* nodeName, Ref<Texture>& tex, uint32_t pathIndex) {
@@ -55,7 +65,7 @@ namespace Flame
 		};
 
 		//Sky Box
-		if (ImGui::TreeNode("SkyBox"))
+		if (ImGuiWrapper::TreeNodeExStyle1((void*)"SkyBox", "SkyBox"))
 		{
 			if (ImGui::Button("Update"))
 			{

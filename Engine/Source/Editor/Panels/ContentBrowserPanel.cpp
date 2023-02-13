@@ -23,7 +23,7 @@ namespace Flame {
 		static bool IsImageFormat(std::string filePath)
 		{
 			std::string extension = filePath.substr(filePath.find_last_of(".") + 1);
-			if (extension == "png" || extension == "jpg" || extension == "bmp")
+			if (extension == "png" || extension == "jpg" || extension == "bmp" || extension == "hdr")
 			{
 				return true;
 			}
