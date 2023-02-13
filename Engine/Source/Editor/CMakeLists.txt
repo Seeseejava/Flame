@@ -28,3 +28,9 @@ if(MSVC)
 	Flame-Editor PROPERTIES
 	VS_DEBUGGER_WORKING_DIRECTORY "${EngineEditorDir}")
 endif()
+
+add_custom_command(TARGET Flame-Editor POST_BUILD
+				   COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIG>/"
+                   COMMAND "${CMAKE_COMMAND}" -E copy_if_different "${EngineConfigDir}/imgui.ini" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}"
+                   COMMAND "${CMAKE_COMMAND}" -E copy_if_different "${EngineConfigDir}/imgui.ini" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIG>/"
+)
