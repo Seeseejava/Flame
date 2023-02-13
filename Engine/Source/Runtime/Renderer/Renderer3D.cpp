@@ -8,6 +8,7 @@
 #include "Runtime/Renderer/UniformBuffer.h"
 #include "Runtime/Library/ShaderLibrary.h"
 #include "Runtime/Library/UniformBufferLibrary.h"
+#include "Runtime/Library/Library.h"
 
 #include "Runtime/Resource/AssetManager/AssetManager.h"
 
@@ -53,14 +54,14 @@ namespace Flame
 
 	void Renderer3D::BeginScene(const Camera& camera, const glm::mat4& transform)
 	{
-		Ref<UniformBuffer> cameraUniform = UniformBufferLibrary::GetInstance().GetCameraUniformBuffer();
+		Ref<UniformBuffer> cameraUniform = Library<UniformBuffer>::GetInstance().GetCameraUniformBuffer();
 		glm::mat4 ViewProjection = camera.GetProjection() * glm::inverse(transform);
 		cameraUniform->SetData(&ViewProjection, sizeof(ViewProjection));
 	}
 
 	void Renderer3D::BeginScene(const EditorCamera& camera)
 	{
-		Ref<UniformBuffer> cameraUniform = UniformBufferLibrary::GetInstance().GetCameraUniformBuffer();
+		Ref<UniformBuffer> cameraUniform = Library<UniformBuffer>::GetInstance().GetCameraUniformBuffer();
 		glm::mat4 ViewProjection = camera.GetViewProjection();
 		cameraUniform->SetData(&ViewProjection, sizeof(ViewProjection));
 	}
@@ -82,7 +83,7 @@ namespace Flame
 	
 	void Renderer3D::DrawSkyBox(const EditorCamera& camera)
 	{
-		Ref<UniformBuffer> cameraUniform = UniformBufferLibrary::GetInstance().GetCameraUniformBuffer();
+		Ref<UniformBuffer> cameraUniform = Library<UniformBuffer>::GetInstance().GetCameraUniformBuffer();
 		glm::mat4 ViewProjection = camera.GetProjection() * glm::mat4(glm::mat3(camera.GetViewMatrix()));
 		cameraUniform->SetData(&ViewProjection, sizeof(ViewProjection));
 
@@ -93,7 +94,7 @@ namespace Flame
 
 		m_SkyBox->Bind(0);
 		m_SkyBoxShader->SetInt("SkyBox", 0);
-		m_Box.Draw();
+		Library<Model>::GetInstance().Get("Box")->Draw();
 
 		RenderCommand::DepthFunc(DepthComp::LESS);
 	}

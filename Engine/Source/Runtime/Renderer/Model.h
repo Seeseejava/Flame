@@ -18,7 +18,7 @@ namespace Flame
 	public:
 		Model() = default;
 		Model(const std::string& path)
-			: m_Material(CreateRef<Material>(ShaderLibrary::GetDefaultShader()))
+			: m_Material(CreateRef<Material>(Library<Shader>::GetInstance().GetDefaultShader()))
 		{
 			LoadModel(path);
 		}

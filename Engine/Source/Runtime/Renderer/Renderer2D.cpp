@@ -170,7 +170,7 @@ namespace Flame
         s_Data.QuadShader->SetIntArray("u_Textures", samplers, s_Data.MaxTextureSlots);
 
         // Set all texture slots to 0
-        s_Data.TextureSlots[0] = TextureLibrary::GetInstance().GetTexture("WhiteTexture");
+        s_Data.TextureSlots[0] = Library<Texture2D>::GetInstance().Get("WhiteTexture");
 
         s_Data.QuadVertexPositions[0] = { -0.5f, -0.5f, 0.0f, 1.0f };
         s_Data.QuadVertexPositions[1] = { 0.5f, -0.5f, 0.0f, 1.0f };
@@ -186,7 +186,7 @@ namespace Flame
 
     void Renderer2D::BeginScene(const Camera& camera, const glm::mat4& transform)
     {
-        Ref<UniformBuffer> cameraUniform = UniformBufferLibrary::GetInstance().GetCameraUniformBuffer();
+        Ref<UniformBuffer> cameraUniform = Library<UniformBuffer>::GetInstance().GetCameraUniformBuffer();
         glm::mat4 ViewProjection = camera.GetProjection() * glm::inverse(transform);
         cameraUniform->SetData(&ViewProjection, sizeof(ViewProjection));
 
@@ -195,7 +195,7 @@ namespace Flame
 
     void Renderer2D::BeginScene(const EditorCamera& camera)
     {
-        Ref<UniformBuffer> cameraUniform = UniformBufferLibrary::GetInstance().GetCameraUniformBuffer();
+        Ref<UniformBuffer> cameraUniform = Library<UniformBuffer>::GetInstance().GetCameraUniformBuffer();
         glm::mat4 ViewProjection = camera.GetViewProjection();
         cameraUniform->SetData(&ViewProjection, sizeof(ViewProjection));
 

@@ -5,27 +5,22 @@
 
 namespace Flame
 {
-    TextureLibrary::TextureLibrary()
+    Library<Texture2D>::Library()
     {
-        LoadOrFindTexture("DefaultTexture", "Assets/texture/checkerboard.png");
-        LoadOrFindTexture("DefaultNormal", "Assets/texture/DefaultNormal.png");
-        LoadOrFindTexture("DefaultMetallicRoughness", "Assets/texture/DefaultMetallicRoughness.png");
+        Add("DefaultTexture", Texture2D::Create(std::string("Assets/texture/checkerboard.png")));
+        Add("DefaultNormal", Texture2D::Create(std::string("Assets/texture/DefaultNormal.png")));
+        Add("DefaultMetallicRoughness", Texture2D::Create(std::string("Assets/texture/DefaultMetallicRoughness.png")));
 
         Ref<Texture2D> whiteTexture = Texture2D::Create(1, 1);
         uint32_t whiteTextureData = 0xffffffff;
         whiteTexture->SetData(&whiteTextureData, sizeof(uint32_t));
-        AddTexture("WhiteTexture", whiteTexture);
+        Add("WhiteTexture", whiteTexture);
     }
 
-    void TextureLibrary::AddTexture(const std::string& name, const Ref<Texture2D>& texture)
-    {
-        FLAME_CORE_ASSERT(m_TextureLibrary.find(name) == m_TextureLibrary.end(), "No such texture!");
-        m_TextureLibrary[name] = texture;
-    }
 
-    Ref<Texture2D> TextureLibrary::GetTexture(const std::string& name)
+
+    Ref<Texture2D> Library<Texture2D>::GetDefaultTexture()
     {
-        FLAME_CORE_ASSERT(m_TextureLibrary.find(name) != m_TextureLibrary.end(), "No such texture!");
-        return m_TextureLibrary[name];
+        return m_Library["DefaultTexture"];
     }
 }
