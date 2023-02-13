@@ -61,16 +61,16 @@ namespace Flame
 	{
 		switch (ModeManager::m_SceneMode)
 		{
-		case SceneMode::None:
-			break;
-		case SceneMode::EnvironmentHdr:
-			DrawEnvironmentHdr(camera.GetViewMatrix(), camera.GetProjection());
-			break;
-		case SceneMode::SkyBox:
-			DrawSkyBox(camera.GetViewMatrix(), camera.GetProjection());
-			break;
-		default:
-			break;
+			case SceneMode::None:
+				break;
+			case SceneMode::EnvironmentHdr:
+				DrawEnvironmentHdr(camera.GetViewMatrix(), camera.GetProjection());
+				break;
+			case SceneMode::SkyBox:
+				DrawSkyBox(camera.GetViewMatrix(), camera.GetProjection());
+				break;
+			default:
+				break;
 		}
 	}
 
