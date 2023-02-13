@@ -390,16 +390,31 @@ namespace Flame {
 		if (bShowEngineSettings)
 		{
 			ImGui::Begin("Engine Setting", &bShowEngineSettings);
-			ImGui::Checkbox("Show physics colliders", &m_ShowPhysicsColliders);
+
 
 			const char* modes[] = { "2D", "3D" };
 			int lastMode = ModeManager::b3DMode;
-			if (ImGui::Combo("Mode", &ModeManager::b3DMode, modes, IM_ARRAYSIZE(modes)))
+			ImGui::Text("Mode");
+			ImGui::SameLine();
+			if (ImGui::Combo("##Mode", &ModeManager::b3DMode, modes, IM_ARRAYSIZE(modes)))
 			{
 				if (lastMode != ModeManager::b3DMode)
 				{
 					bChangeDim = true;
 				}
+			}
+
+			const ImGuiTreeNodeFlags treeNodeFlags = ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding;
+			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{ 4.0f, 4.0f });
+			float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
+			ImGui::Separator();
+			bool open = ImGui::TreeNodeEx((void*)"Physics Settings", treeNodeFlags, "Physics Settings");
+			ImGui::PopStyleVar();
+
+			if (open)
+			{
+				ImGui::Checkbox("Show physics colliders", &m_ShowPhysicsColliders);
+				ImGui::TreePop();
 			}
 
 			ImGui::End();
