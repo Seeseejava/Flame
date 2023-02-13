@@ -134,13 +134,13 @@ namespace Flame {
 		// Resize
 		// 改变Viewport窗口大小，竖直方向的区域会随着缩放，但竖直方向的视野不变；水平方向的区域也会缩放，但水平方向的区域视野也会变化
 		FramebufferSpecification spec = m_Framebuffer->GetSpecification();
-		if (m_ViewportSize.x > 0.0f && m_ViewportSize.y > 0.0f && // zero sized framebuffer is invalid
-			(spec.Width != m_ViewportSize.x || spec.Height != m_ViewportSize.y))
+		if (ConfigManager::m_ViewportSize.x > 0.0f && ConfigManager::m_ViewportSize.y > 0.0f && // zero sized framebuffer is invalid
+			(spec.Width != ConfigManager::m_ViewportSize.x || spec.Height != ConfigManager::m_ViewportSize.y))
 		{
-			m_Framebuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+			m_Framebuffer->Resize((uint32_t)ConfigManager::m_ViewportSize.x, (uint32_t)ConfigManager::m_ViewportSize.y);
 
-			m_EditorCamera.SetViewportSize(m_ViewportSize.x, m_ViewportSize.y);
-			m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+			m_EditorCamera.SetViewportSize(ConfigManager::m_ViewportSize.x, ConfigManager::m_ViewportSize.y);
+			m_ActiveScene->OnViewportResize((uint32_t)ConfigManager::m_ViewportSize.x, (uint32_t)ConfigManager::m_ViewportSize.y);
 		}
 
 
@@ -434,7 +434,8 @@ namespace Flame {
 			auto viewportOffset = ImGui::GetCursorPos(); // Includes tab bar (获得viewport有无bar后显示区域的坐标）：无bar（0，0），有bar(0.24) //注意于与ImGui::GetMousePos()的区别
 
 			ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();// viewport显示区域大小，不包括tab bar
-			m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y }; // 没有这句viewport会是黑的 -> 说明图片大小必须和viewport大小相同才不会是黑的
+			//m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y }; // 没有这句viewport会是黑的 -> 说明图片大小必须和viewport大小相同才不会是黑的
+			ConfigManager::m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y };
 
 			m_ViewportFocused = ImGui::IsWindowFocused();
 			m_ViewportHovered = ImGui::IsWindowHovered();
@@ -447,7 +448,7 @@ namespace Flame {
 
 			uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID(0); // 按索引显示哪一个colorbuffer
 			textureID = m_RenderPass->ExcuteAndReturnFinalTex();
-			ImGui::Image((void*)textureID, ImVec2{ m_ViewportSize.x, m_ViewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+			ImGui::Image((void*)(intptr_t)textureID, ImVec2{ ConfigManager::m_ViewportSize.x, ConfigManager::m_ViewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
 
 			auto windowSize = ImGui::GetWindowSize(); // 整个viewport大小，包括tab bar
 			ImVec2 minBound = ImGui::GetWindowPos(); // 整个viewport相对于屏幕左上角的位置
@@ -457,7 +458,7 @@ namespace Flame {
 			minBound.x += viewportOffset.x;
 			minBound.y += viewportOffset.y;// 绘制区域在屏幕上的坐标
 
-			ImVec2 maxBound = { minBound.x + m_ViewportSize.x, minBound.y + m_ViewportSize.y };
+			ImVec2 maxBound = { minBound.x + ConfigManager::m_ViewportSize.x, minBound.y + ConfigManager::m_ViewportSize.y };
 			m_ViewportBounds[0] = { minBound.x, minBound.y };
 			m_ViewportBounds[1] = { maxBound.x, maxBound.y };
 
@@ -755,7 +756,7 @@ namespace Flame {
 	void EditorLayer::NewScene()
 	{
 		m_ActiveScene = std::make_shared<Scene>();
-		m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+		m_ActiveScene->OnViewportResize((uint32_t)ConfigManager::m_ViewportSize.x, (uint32_t)ConfigManager::m_ViewportSize.y);
 		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
 
 		m_EditorScenePath = std::filesystem::path();
@@ -786,12 +787,12 @@ namespace Flame {
 		}
 
 		Ref<Scene> newScene = std::make_shared<Scene>();
-		newScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y); //至关重要，hazelnut里面没有
+		newScene->OnViewportResize((uint32_t)ConfigManager::m_ViewportSize.x, (uint32_t)ConfigManager::m_ViewportSize.y); //至关重要，hazelnut里面没有
 		SceneSerializer serializer(newScene);
 		if (serializer.Deserialize(path.string()))
 		{
 			m_EditorScene = newScene;
-			m_EditorScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+			m_EditorScene->OnViewportResize((uint32_t)ConfigManager::m_ViewportSize.x, (uint32_t)ConfigManager::m_ViewportSize.y);
 			m_SceneHierarchyPanel.SetContext(m_EditorScene);
 
 			m_ActiveScene = m_EditorScene;

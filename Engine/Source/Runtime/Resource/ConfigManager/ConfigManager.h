@@ -3,6 +3,7 @@
 #include "Runtime/Core/PublicSingleton.h"
 
 #include <filesystem>
+#include <glm/glm.hpp>
 
 namespace Flame
 {
@@ -24,6 +25,7 @@ namespace Flame
 		const std::filesystem::path& GetShadersFolder() const;
 		const std::filesystem::path& GetResourcesFolder() const;
 
+		static glm::vec2 m_ViewportSize;
 	private:
 		std::filesystem::path mRootFolder;
 		std::filesystem::path mAssetsFolder;

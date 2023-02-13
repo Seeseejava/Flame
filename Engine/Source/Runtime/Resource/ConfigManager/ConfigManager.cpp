@@ -3,6 +3,8 @@
 
 namespace Flame
 {
+	glm::vec2 ConfigManager::m_ViewportSize = { 0.0f, 0.0f };
+
 	ConfigManager::ConfigManager()
 	{
 		mRootFolder = { FLAME_XSTRING(ENGINE_ROOT_DIR) };
