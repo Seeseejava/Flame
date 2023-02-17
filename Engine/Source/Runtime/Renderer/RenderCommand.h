@@ -102,6 +102,18 @@ namespace Flame {
 		{
 			s_RendererAPI->CullFrontOrBack(Bit);
 		}
+
+		// framebuffer
+		inline static int GetDrawFrameBuffer()
+		{
+			return s_RendererAPI->GetDrawFrameBuffer();
+		}
+
+		inline static void BindFrameBuffer(uint32_t framebufferID)
+		{
+			s_RendererAPI->BindFrameBuffer(framebufferID);
+		}
+
 	private:
 		static RendererAPI* s_RendererAPI;
 	};

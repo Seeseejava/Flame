@@ -27,6 +27,8 @@ namespace Flame {
 		virtual uint32_t GetColorAttachmentRendererID(uint32_t index = 0) const override;// { FLAME_CORE_ASSERT(index < m_ColorAttachments.size(), "Index Error"); return m_ColorAttachments[index]; }
 
 		virtual const FramebufferSpecification& GetSpecification() const override { return m_Specification; }
+
+		virtual void FramebufferTexture2D(uint32_t cubemapIndex, uint32_t cubemapID, uint32_t slot = 0) override;
 	private:
 		uint32_t m_RendererID = 0;
 		FramebufferSpecification m_Specification;

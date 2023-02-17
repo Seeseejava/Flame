@@ -38,6 +38,10 @@ namespace Flame {
 		virtual void SetFrontOrBackStencilOp(int32_t FrontOrBack, StencilOp stencilFail, StencilOp depthFail, StencilOp depthSuccess) override;
 
 		virtual void DepthFunc(DepthComp comp) override;
+
+		virtual int GetDrawFrameBuffer() override;
+
+		virtual void BindFrameBuffer(uint32_t framebufferID) override;
 	};
 
 

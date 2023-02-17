@@ -177,4 +177,16 @@ namespace Flame {
 		glActiveTexture(GL_TEXTURE0 + slot);
 		glBindTexture(GL_TEXTURE_2D, textureID);
 	}
+
+	int OpenGLRendererAPI::GetDrawFrameBuffer()
+	{
+		int framebufferID = 0;
+		glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING, &framebufferID);
+		return framebufferID;
+	}
+
+	void OpenGLRendererAPI::BindFrameBuffer(uint32_t framebufferID)
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, framebufferID);
+	}
 }
