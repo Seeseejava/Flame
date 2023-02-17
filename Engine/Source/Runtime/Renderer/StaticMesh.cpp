@@ -83,7 +83,7 @@ namespace Flame {
 		else
 		{
 			shader->Bind();
-			shader->SetMat4("u_Model.Transform", (transform));
+			shader->SetMat4("u_Model_transform", (transform));
 			m_VertexArray->Bind();
 
 			model->m_AlbedoMap->Bind(0);

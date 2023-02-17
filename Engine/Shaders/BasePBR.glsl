@@ -12,7 +12,7 @@ layout(std140, binding = 0) uniform Camera
 	mat4 u_ViewProjection;
 };
 
-uniform mat4 u_Model;
+uniform mat4 u_Model_transform;
 
 struct VertexOutput
 {
@@ -26,7 +26,7 @@ layout (location = 3) out flat int v_EntityID;
 
 void main()
 {
-	vec4 WorldPos = u_Model * vec4(a_Pos, 1.0);
+	vec4 WorldPos = u_Model_transform * vec4(a_Pos, 1.0);
 	Output.WorldPos = WorldPos.xyz;
 	Output.Normal = a_Normal;
 	Output.TexCoord = a_TexCoord;
