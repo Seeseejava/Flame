@@ -3,6 +3,7 @@
 #include "Runtime/Renderer/StaticMesh.h"
 #include "Runtime/Renderer/RenderCommand.h"
 #include "Runtime/Library/TextureLibrary.h"
+#include "Runtime/Renderer/Model.h"
 
 #include <Glad/glad.h>
 
@@ -50,50 +51,18 @@ namespace Flame {
 		m_VertexArray->SetIndexBuffer(m_IndexBuffer);
 	}
 
-	void StaticMesh::Draw(const glm::mat4& transform, const glm::vec3& cameraPos, const Ref<Shader>& shader, int entityID)
+	void StaticMesh::Draw(const glm::mat4& transform, const glm::vec3& cameraPos, const Ref<Shader>& shader, int entityID, Model* model)
 	{
 		SetupMesh(entityID);
 		shader->Bind();
 		shader->SetMat4("u_Model", (transform));
 		m_VertexArray->Bind();
 
-		std::vector<TextureType> textureNeeded = { TextureType::Albedo, TextureType::Normal, TextureType::Metalness, TextureType::Roughness, TextureType::AmbientOcclusion };
-		for (size_t i = 0; i < textureNeeded.size(); i++)
-		{
-			bool bFindInTextures = false;
-			for (auto& materialTexture : m_Textures)
-			{
-				if (materialTexture.type == textureNeeded[i])
-				{
-					materialTexture.texture2d->Bind(i);
-					bFindInTextures = true;
-					break;
-				}
-			}
-			if (!bFindInTextures)
-			{
-				switch (textureNeeded[i])
-				{
-				case TextureType::Albedo:
-					Library<Texture2D>::GetInstance().GetDefaultTexture()->Bind(i);
-					break;
-				case TextureType::Normal:
-					Library<Texture2D>::GetInstance().Get("DefaultNormal")->Bind(i);
-					break;
-				case TextureType::Metalness:
-					Library<Texture2D>::GetInstance().Get("DefaultMetallicRoughness")->Bind(i);
-					break;
-				case TextureType::Roughness:
-					Library<Texture2D>::GetInstance().Get("DefaultMetallicRoughness")->Bind(i);
-					break;
-				case TextureType::AmbientOcclusion:
-					Library<Texture2D>::GetInstance().Get("WhiteTexture")->Bind(i);
-					break;
-				default:
-					break;
-				}
-			}
-		}
+		model->m_AlbedoMap->Bind(0);
+		model->m_NormalMap->Bind(1);
+		model->m_MetallicMap->Bind(2);
+		model->m_RoughnessMap->Bind(3);
+		model->m_AoMap->Bind(4);
 
 		shader->SetInt("albedoMap", 0);
 		shader->SetInt("normalMap", 1);

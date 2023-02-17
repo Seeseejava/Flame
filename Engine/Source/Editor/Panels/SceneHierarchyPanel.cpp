@@ -528,6 +528,65 @@ namespace Flame {
 						component.Path = filepath;
 					}
 				}
+
+				if (ImGui::TreeNode((void*)"Material", "Material"))
+				{
+					const auto& materialNode = [](const char* name, Ref<Texture2D>& tex, void(*func)()) {
+						if (ImGui::TreeNode((void*)name, name))
+						{
+							ImGui::Image((ImTextureID)tex->GetRendererID(), ImVec2(64, 64), ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+							static bool use = false;
+							if (ImGui::BeginDragDropTarget())
+							{
+								if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+								{
+									auto path = (const wchar_t*)payload->Data;
+									std::string relativePath = (std::filesystem::path("Assets") / path).string();
+									std::filesystem::path texturePath = ConfigManager::GetInstance().GetAssetsFolder() / path;
+									relativePath = std::regex_replace(relativePath, std::regex("\\\\"), "/");
+									tex = IconManager::GetInstance().LoadOrFindTexture(relativePath);
+								}
+								ImGui::EndDragDropTarget();
+							}
+
+							func();
+
+							ImGui::TreePop();
+						}
+					};
+
+					materialNode("Albedo", component.Mesh.m_AlbedoMap, []() {
+						static bool use = false;
+					ImGui::SameLine();
+					ImGui::Checkbox("Use", &use);
+						});
+
+					materialNode("Normal", component.Mesh.m_NormalMap, []() {
+						static bool use = false;
+					ImGui::SameLine();
+					ImGui::Checkbox("Use", &use);
+						});
+
+					materialNode("Metallic", component.Mesh.m_MetallicMap, []() {
+						static bool use = false;
+					ImGui::SameLine();
+					ImGui::Checkbox("Use", &use);
+						});
+
+					materialNode("Roughness", component.Mesh.m_RoughnessMap, []() {
+						static bool use = false;
+					ImGui::SameLine();
+					ImGui::Checkbox("Use", &use);
+						});
+
+					materialNode("Ambient Occlusion", component.Mesh.m_AoMap, []() {
+						static bool use = false;
+					ImGui::SameLine();
+					ImGui::Checkbox("Use", &use);
+						});
+
+					ImGui::TreePop();
+				}
 			});
 
 		DrawComponent<Rigidbody3DComponent>("Rigidbody 3D", entity, [](auto& component)

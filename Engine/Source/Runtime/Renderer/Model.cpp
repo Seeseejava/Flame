@@ -2,6 +2,7 @@
 
 #include "Runtime/Resource/AssetManager/AssetManager.h"
 #include "Runtime/Renderer/Model.h"
+#include "Runtime/Renderer/StaticMesh.h"
 
 #include <regex>
 #include "optional"
@@ -10,13 +11,13 @@ namespace Flame
 	void Model::Draw(const glm::mat4& transform, const glm::vec3& cameraPos, int entityID)
 	{
 		for (unsigned int i = 0; i < m_Meshes.size(); ++i)
-			m_Meshes[i].Draw(transform, cameraPos, m_Material->GetShader(), entityID);
+			m_Meshes[i].Draw(transform, cameraPos, m_Material->GetShader(), entityID, this);
 	}
 
 	void Model::Draw(const glm::mat4& transform, const glm::vec3& cameraPos, Ref<Shader> shader, int entityID)
 	{
 		for (unsigned int i = 0; i < m_Meshes.size(); ++i)
-			m_Meshes[i].Draw(transform, cameraPos, shader, entityID);
+			m_Meshes[i].Draw(transform, cameraPos, shader, entityID, this);
 	};
 
 	void Model::Draw()
@@ -176,6 +177,7 @@ namespace Flame
 				{
 				case aiTextureType_DIFFUSE:
 					texture.type = TextureType::Albedo;
+					m_AlbedoMap = texture.texture2d;
 					break;
 				case aiTextureType_SPECULAR:
 					texture.type = TextureType::Specular;
@@ -185,24 +187,30 @@ namespace Flame
 					break;
 				case aiTextureType_AMBIENT:
 					texture.type = TextureType::AmbientOcclusion;
+					m_AoMap = texture.texture2d;
 					break;
 				case aiTextureType_BASE_COLOR:
 					texture.type = TextureType::Albedo;
+					m_AlbedoMap = texture.texture2d;
 					break;
 				case aiTextureType_NORMAL_CAMERA:
 					texture.type = TextureType::Normal;
+					m_NormalMap = texture.texture2d;
 					break;
 				case aiTextureType_EMISSION_COLOR:
 					texture.type = TextureType::Emission;
 					break;
 				case aiTextureType_METALNESS:
 					texture.type = TextureType::Metalness;
+					m_MetallicMap = texture.texture2d;
 					break;
 				case aiTextureType_DIFFUSE_ROUGHNESS:
 					texture.type = TextureType::Roughness;
+					m_RoughnessMap = texture.texture2d;
 					break;
 				case aiTextureType_AMBIENT_OCCLUSION:
 					texture.type = TextureType::AmbientOcclusion;
+					m_AoMap = texture.texture2d;
 					break;
 				}
 				texture.path = str.C_Str();

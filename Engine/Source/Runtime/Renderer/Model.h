@@ -6,6 +6,7 @@
 #include "Runtime/Renderer/StaticMesh.h"
 #include "Runtime/Renderer/Texture.h"
 #include "Runtime/Renderer/Material.h"
+#include "Runtime/Library/TextureLibrary.h"
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -42,6 +43,12 @@ namespace Flame
 		void ProcessNode(aiNode* node, const aiScene* scene);
 		StaticMesh ProcessMesh(aiMesh* mesh, const aiScene* scene);
 
+	public:
+		Ref<Texture2D> m_AlbedoMap = Library<Texture2D>::GetInstance().GetDefaultTexture();
+		Ref<Texture2D> m_NormalMap = Library<Texture2D>::GetInstance().Get("DefaultNormal");
+		Ref<Texture2D> m_MetallicMap = Library<Texture2D>::GetInstance().Get("DefaultMetallicRoughness");
+		Ref<Texture2D> m_RoughnessMap = Library<Texture2D>::GetInstance().Get("DefaultMetallicRoughness");
+		Ref<Texture2D> m_AoMap = Library<Texture2D>::GetInstance().Get("WhiteTexture");
 	private:
 		std::vector<StaticMesh> m_Meshes;
 		std::string m_Directory;
