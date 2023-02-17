@@ -58,6 +58,11 @@ namespace Flame {
 			internalFormat = GL_RGB8;
 			dataFormat = GL_RGB;
 		}
+		else if (channels == 1)
+		{
+			internalFormat = GL_RGB;
+			dataFormat = GL_UNSIGNED_BYTE;
+		}
 
 		m_InternalFormat = internalFormat;
 		m_DataFormat = dataFormat;
