@@ -5,6 +5,7 @@
 #include "Runtime/ECS/Entity/Entity.h"
 
 #include "Runtime/Renderer/Renderer3D.h"
+#include "Runtime/Library/ShaderLibrary.h"
 
 namespace Flame
 {
@@ -33,6 +34,11 @@ namespace Flame
 		{
 			Renderer3D::BeginScene(*mainCamera, cameraTransform);
 
+			// Get the Light 
+			{
+
+			}
+
 			// Draw model
 			{
 				auto view = m_Scene->m_Registry.view<TransformComponent, StaticMeshComponent>();
@@ -52,8 +58,34 @@ namespace Flame
 	{
 		Renderer3D::BeginScene(camera);
 
-		auto view = m_Scene->m_Registry.view<TransformComponent, StaticMeshComponent>();
 
+		// Get the Light (bugs)
+		{
+			auto view = m_Scene->m_Registry.view<TransformComponent, LightComponent>();
+			int i = 0;
+			for (auto entity : view)
+			{
+				auto [transform, light] = view.get<TransformComponent, LightComponent>(entity);
+
+				glm::vec3 lightPos = transform.GetTranslation();
+				glm::vec3 lightColor = light.LightColor;
+
+				Ref<Shader> iblPbr = Library<Shader>::GetInstance().Get("IBL_pbr");
+				Ref<Shader> defaultPbr = Library<Shader>::GetInstance().GetDefaultShader();
+
+				iblPbr->Bind();
+				iblPbr->SetFloat3("lightPositions[" + std::to_string(i) + "]", lightPos);
+				iblPbr->SetFloat3("lightColors[" + std::to_string(i) + "]", lightColor);
+
+				defaultPbr->Bind();
+				defaultPbr->SetFloat3("lightPositions[" + std::to_string(i) + "]", lightPos);
+				defaultPbr->SetFloat3("lightColors[" + std::to_string(i) + "]", lightColor);
+
+				i++;
+			}
+		}
+
+		auto view = m_Scene->m_Registry.view<TransformComponent, StaticMeshComponent>();
 		for (auto e : view)
 		{
 			Entity entity = { e, m_Scene };

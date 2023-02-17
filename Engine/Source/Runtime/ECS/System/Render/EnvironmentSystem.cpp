@@ -323,8 +323,11 @@ namespace Flame
 		RenderCommand::SetViewport(0, 0, ConfigManager::m_ViewportSize.x, ConfigManager::m_ViewportSize.y);
 
 		RenderCommand::DepthFunc(DepthComp::LEQUAL);
-		Library<Shader>::GetInstance().GetSkyBoxShader()->Bind();
-		Library<Shader>::GetInstance().GetSkyBoxShader()->SetInt("SkyBox", 0);
+
+		Ref<Shader> backgroundShader = Library<Shader>::GetInstance().Get("IBL_background");
+		backgroundShader->Bind();
+
+		backgroundShader->SetInt("environmentMap", 0);
 		Library<Model>::GetInstance().Get("Box")->Draw();
 		RenderCommand::DepthFunc(DepthComp::LESS);
 	}

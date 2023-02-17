@@ -51,6 +51,13 @@ namespace Flame {
 					if (ImGui::MenuItem("Create Empty Entity"))
 						m_Context->CreateEntity("Empty Entity");
 
+					if (ImGui::MenuItem("Create Point Light"))
+					{
+						auto entity = m_Context->CreateEntity("Light");
+						entity.AddComponent<LightComponent>();
+						SetSelectedEntity(entity);
+					}
+
 					ImGui::EndPopup();
 				}
 			}
@@ -352,6 +359,15 @@ namespace Flame {
 				}
 			}
 
+			if (!m_SelectionContext.HasComponent<LightComponent>())
+			{
+				if (ImGui::MenuItem("Point Light"))
+				{
+					m_SelectionContext.AddComponent<LightComponent>();
+					ImGui::CloseCurrentPopup();
+				}
+			}
+
 			ImGui::EndPopup();
 		}
 		ImGui::PopItemWidth();
@@ -615,6 +631,13 @@ namespace Flame {
 		DrawComponent<BoxCollider3DComponent>("Box Collider 3D", entity, [](auto& component)
 			{
 
+			});
+
+		DrawComponent<LightComponent>("Point Light", entity, [](auto& component)
+			{
+				ImGui::Text("Light Color");
+				ImGui::SameLine();
+				ImGui::DragFloat3("##Light Color", (float*)&component.LightColor, 2.0f, 0.0f, 10000.0f, "%.1f");
 			});
 
 

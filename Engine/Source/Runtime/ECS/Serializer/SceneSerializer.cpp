@@ -271,6 +271,16 @@ namespace Flame {
 			out << YAML::EndMap; //StaticMeshComponent
 		}
 
+		if (entity.HasComponent<LightComponent>())
+		{
+			out << YAML::Key << "LightComponent";
+			out << YAML::BeginMap;
+
+			auto& lightComponent = entity.GetComponent<LightComponent>();
+			out << YAML::Key << "Color" << YAML::Value << lightComponent.LightColor;
+
+			out << YAML::EndMap;
+		}
 		out << YAML::EndMap; // Entity
 	}
 
@@ -413,6 +423,13 @@ namespace Flame {
 				{
 					std::string str = staticMeshComponent["Path"].as<std::string>();
 					auto& src = deserializedEntity.AddComponent<StaticMeshComponent>(str);
+				}
+
+				auto lightComponent = entity["LightComponent"];
+				if (lightComponent)
+				{
+					glm::vec3 color = lightComponent["Color"].as<glm::vec3>();
+					auto& src = deserializedEntity.AddComponent<LightComponent>(color);
 				}
 			}
 		}
