@@ -53,6 +53,7 @@ namespace Flame
 		virtual void GenerateMipmap() = 0;
 		static Ref<CubeMapTexture> Create(std::vector<std::string>& paths);
 		static Ref<CubeMapTexture> Create();
+		static Ref<CubeMapTexture> Create(uint32_t width, uint32_t height);
 
 		virtual void Generate() = 0;
 

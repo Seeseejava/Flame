@@ -54,13 +54,14 @@ namespace Flame
 
 		auto group = m_Scene->m_Registry.group<TransformComponent>(entt::get<StaticMeshComponent>);
 
-		for (auto entity : group)
+		for (auto e : group)
 		{
-			auto [transform, mesh] = group.get<TransformComponent, StaticMeshComponent>(entity);
+			Entity entity = { e, m_Scene };
 
-			Renderer3D::DrawModel(transform.GetTransform(), camera.GetPosition(), mesh, (int)entity);
+			auto transform = entity.GetComponent<TransformComponent>();
+			auto mesh = entity.GetComponent<StaticMeshComponent>();
+			Renderer3D::DrawModel(transform.GetTransform(), camera.GetPosition(), mesh, (int)e);
 		}
-
 		Renderer3D::EndScene();
 
 	}

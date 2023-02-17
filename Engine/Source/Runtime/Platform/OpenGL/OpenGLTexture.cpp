@@ -103,7 +103,8 @@ namespace Flame {
 	{
 		FLAME_PROFILE_FUNCTION();
 		glActiveTexture(GL_TEXTURE0 + slot);
-		glBindTextureUnit(slot, m_RendererID);//(unit, texture)
+		glBindTexture(GL_TEXTURE_2D, m_RendererID);
+		//glBindTextureUnit(slot, m_RendererID);//(unit, texture)
 	}
 
 	void OpenGLTexture2D::UnBind() const
@@ -132,6 +133,24 @@ namespace Flame {
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 	}
 
+	OpenGLCubeMapTexture::OpenGLCubeMapTexture(uint32_t width, uint32_t height)
+		: m_Width(width), m_Height(height)
+	{
+		glGenTextures(1, &m_RendererID);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, m_RendererID);
+
+		for (unsigned int i = 0; i < 6; ++i)
+		{
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB16F, m_Width, m_Height, 0, GL_RGB, GL_FLOAT, nullptr);
+		}
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR); // enable pre-filter mipmap sampling (combatting visible dots artifact)
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+	}
 	// refer to https://learnopengl-cn.github.io/04%20Advanced%20OpenGL/06%20Cubemaps/
 	OpenGLCubeMapTexture::OpenGLCubeMapTexture(std::vector<std::string>& paths)
 		: m_Paths(paths)

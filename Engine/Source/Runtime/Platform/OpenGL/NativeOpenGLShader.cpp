@@ -88,6 +88,7 @@ namespace Flame
 	void NativeOpenGLShader::UploadUniformInt(const std::string& name, int value)
 	{
 		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
+		FLAME_CORE_ASSERT(location != -1, "No such name!");
 		glUniform1i(location, value);
 	}
 
