@@ -21,6 +21,7 @@ namespace Flame
 {
 	static uint32_t id = 0;
 	static uint32_t oldId = 0;
+	EnvironmentHdrSettings EnvironmentSystem::environmentSettings;
 
 	void EnvironmentSystem::OnUpdateRuntime(Timestep ts)
 	{
@@ -156,25 +157,7 @@ namespace Flame
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 			// End temp
 
-			//FramebufferSpecification fbSpec;
-			//fbSpec.Attachments = { FramebufferTextureFormat::DEPTH24STENCIL8 };
-			//fbSpec.Width = 512;
-			//fbSpec.Height = 512;
-			//static Ref<Framebuffer> captureFBO = Framebuffer::Create(fbSpec);
 
-			//hdrTex->Bind();
-			//captureFBO->Bind();
-			//captureFBO->BindDrawFramebuffer();
-			//RenderCommand::SetViewport(0, 0, envCubemap->GetWidth(), envCubemap->GetHeight());
-			//for (unsigned int i = 0; i < 6; ++i)
-			//{
-			//	equirectangularToCubemapShader->SetMat4("view", captureViews[i]);
-			//	captureFBO->FramebufferTexture2D(i, envCubemap->GetRendererID());
-			//	RenderCommand::Clear();
-
-			//	Library<Model>::GetInstance().Get("Box")->Draw();
-			//}
-			//captureFBO->Unbind();
 
 			envCubemap->Bind(0);
 			envCubemap->GenerateMipmap();
@@ -225,27 +208,7 @@ namespace Flame
 			//end temp
 
 
-			//captureFBO->Bind();
-			//glBindRenderbuffer(GL_RENDERBUFFER, captureFBO->GetDepthAttachmentRendererID());
-			//glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 32, 32);
-
-			//irradianceShader->Bind();
-			//irradianceShader->SetInt("environmentMap", 0);
-			//irradianceShader->SetMat4("projection", captureProjection);
-			//envCubemap->Bind(0);
-
-			//RenderCommand::SetViewport(0, 0, 32, 32); // don't forget to configure the viewport to the capture dimensions.
-			//captureFBO->Bind();
-			//for (unsigned int i = 0; i < 6; ++i)
-			//{
-			//	irradianceShader->SetMat4("view", captureViews[i]);
-			//	captureFBO->FramebufferTexture2D(i, irradianceMap->GetRendererID());
-			//	RenderCommand::Clear();
-
-			//	//glDrawBuffer(GL_COLOR_ATTACHMENT0);
-			//	Library<Model>::GetInstance().Get("Box")->Draw();
-			//}
-			//captureFBO->Unbind();
+			
 			Library<CubeMapTexture>::GetInstance().Set("EnvironmentIrradiance", irradianceMap);
 
 			// prefilter map
@@ -286,34 +249,6 @@ namespace Flame
 			// End temp
 
 
-			//prefilterShader->Bind();
-			//prefilterShader->SetInt("environmentMap", 0);
-			//prefilterShader->SetMat4("projection", captureProjection);
-			//envCubemap->Bind(0);
-			//captureFBO->Bind();
-			//unsigned int maxMipLevels = 5;
-			//for (unsigned int mip = 0; mip < maxMipLevels; ++mip)
-			//{
-			//	// reisze framebuffer according to mip-level size.
-			//	unsigned int mipWidth = static_cast<unsigned int>(128 * std::pow(0.5, mip));
-			//	unsigned int mipHeight = static_cast<unsigned int>(128 * std::pow(0.5, mip));
-			//	
-			//	glBindRenderbuffer(GL_RENDERBUFFER, captureFBO->GetDepthAttachmentRendererID());
-			//	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, mipWidth, mipHeight);
-			//	RenderCommand::SetViewport(0, 0, mipWidth, mipHeight);
-
-			//	float roughness = (float)mip / (float)(maxMipLevels - 1);
-			//	prefilterShader->SetFloat("roughness", roughness);
-			//	for (unsigned int i = 0; i < 6; ++i)
-			//	{
-			//		prefilterShader->SetMat4("view", captureViews[i]);
-			//		captureFBO->FramebufferTexture2D(i, prefilterMap->GetRendererID());
-
-			//		RenderCommand::Clear();
-			//		Library<Model>::GetInstance().Get("Box")->Draw();
-			//	}
-			//}
-			//captureFBO->Unbind();
 			Library<CubeMapTexture>::GetInstance().Set("EnvironmentPrefilter", prefilterMap);
 
 			RenderCommand::BindFrameBuffer(framebufferOld);
@@ -324,10 +259,14 @@ namespace Flame
 
 		RenderCommand::DepthFunc(DepthComp::LEQUAL);
 
+		Library<Shader>::GetInstance().Get("IBL_pbr")->SetFloat("exposure", environmentSettings.exposure);
+
 		Ref<Shader> backgroundShader = Library<Shader>::GetInstance().Get("IBL_background");
 		backgroundShader->Bind();
 
 		backgroundShader->SetInt("environmentMap", 0);
+		backgroundShader->SetFloat("SkyBoxLod", environmentSettings.SkyBoxLod);
+		backgroundShader->SetFloat("exposure", environmentSettings.exposure);
 		Library<Model>::GetInstance().Get("Box")->Draw();
 		RenderCommand::DepthFunc(DepthComp::LESS);
 	}

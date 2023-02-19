@@ -6,6 +6,7 @@
 #include "Runtime/Resource/AssetManager/AssetManager.h"
 #include "Runtime/Renderer/Renderer3D.h"
 #include "Runtime/Library/TextureLibrary.h"
+#include "Runtime/ECS/System/Render/EnvironmentSystem.h"
 
 #include <imgui/imgui.h>
 #include <regex>
@@ -106,6 +107,21 @@ namespace Flame
 
 				ImGui::SameLine();
 				ImGui::Checkbox("Use", &ModeManager::bHdrUse);
+
+				ImGui::Columns(2, nullptr, false);
+				ImGui::SetColumnWidth(0, 100.0f);
+				ImGui::Text("SkyBox Lod");
+				ImGui::NextColumn();
+				ImGui::DragFloat("##SkyBox Lod", &EnvironmentSystem::environmentSettings.SkyBoxLod, 0.1f, 0.0f, 10.0f);
+				ImGui::EndColumns();
+
+				ImGui::Columns(2, nullptr, false);
+				ImGui::SetColumnWidth(0, 100.0f);
+				ImGui::Text("Exposure");
+				ImGui::NextColumn();
+				ImGui::DragFloat("##Exposure", &EnvironmentSystem::environmentSettings.exposure, 0.01f, 0.0f, 10.0f, "%.2f");
+				ImGui::EndColumns();
+
 
 				ImGui::TreePop();
 			}
