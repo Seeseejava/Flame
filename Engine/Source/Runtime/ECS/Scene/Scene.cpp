@@ -2,6 +2,7 @@
 #include "Scene.h"
 
 #include "Runtime/Resource/ModeManager/ModeManager.h"
+#include "Runtime/Resource/ConfigManager/ConfigManager.h"
 #include "Runtime/Core/Core.h"
 #include "Runtime/ECS/Component/ComponentGroup.h"
 #include "Runtime/ECS/System/SystemGroup.h"
@@ -129,9 +130,6 @@ namespace Flame {
 	{
 		Ref<Scene> newScene = std::make_shared<Scene>();
 
-		newScene->m_ViewportWidth = other->m_ViewportWidth;
-		newScene->m_ViewportHeight = other->m_ViewportHeight;
-
 		auto& srcSceneRegistry = other->m_Registry;
 		auto& dstSceneRegistry = newScene->m_Registry;
 		std::unordered_map<UUID, entt::entity> enttMap;
@@ -247,8 +245,6 @@ namespace Flame {
 
 	void Scene::OnViewportResize(uint32_t width, uint32_t height)
 	{
-		m_ViewportWidth = width;
-		m_ViewportHeight = height;
 
 		// Resize our non-FixedAspectRatio cameras
 		auto view = m_Registry.view<CameraComponent>();
@@ -305,7 +301,8 @@ namespace Flame {
 	template<>
 	void Scene::OnComponentAdded<CameraComponent>(Entity entity, CameraComponent& component)
 	{
-		component.Camera.SetViewportSize(m_ViewportWidth, m_ViewportHeight);
+		if (ConfigManager::m_ViewportSize.x > 0 && ConfigManager::m_ViewportSize.y > 0)
+			component.Camera.SetViewportSize(ConfigManager::m_ViewportSize.x, ConfigManager::m_ViewportSize.y);
 	}
 
 	template<>

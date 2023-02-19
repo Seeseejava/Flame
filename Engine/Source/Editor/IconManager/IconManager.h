@@ -27,23 +27,19 @@ namespace Flame
             FLAME_CORE_ASSERT(iconLibrary.find(name) == iconLibrary.end(),  "Already have this member in Library!");
             iconLibrary[name] = mem;
         }
-
-        [[nodiscard]] Ref<Texture2D> Get(const std::string& name)
+        Ref<Texture2D> Get(const std::string& name)
         {
             FLAME_CORE_ASSERT(iconLibrary.find(name) != iconLibrary.end(),  "Can't find this member in Library!");
             return iconLibrary[name];
         }
 
-        [[nodiscard]] Ref<Texture2D> GetNullTexture() { return m_NullTexture; }
-        [[nodiscard]] Ref<Texture2D> GetDirectoryIcon() { return m_DirectoryIcon; }
-        [[nodiscard]] Ref<Texture2D> GetFileIcon() { return m_FileIcon; }
-        [[nodiscard]] Ref<Texture2D> GetSettingIcon() { return m_SettingIcon; }
+		Ref<Texture2D> GetNullTexture() { return Get("NullTextrue"); }
+		Ref<Texture2D> GetDirectoryIcon() { return Get("DirectoryIcon"); }
+		Ref<Texture2D> GetFileIcon() { return Get("FileIcon"); }
+		Ref<Texture2D> GetSettingIcon() { return Get("SettingIcon"); }
+		Ref<Texture2D> GetPlayIcon() { return Get("PlayIcon"); }
+		Ref<Texture2D> GetStopIcon() { return Get("StopIcon"); }
     private:
         std::unordered_map<std::string, Ref<Texture2D>> iconLibrary;
-
-        Ref<Texture2D> m_NullTexture;
-        Ref<Texture2D> m_DirectoryIcon;
-        Ref<Texture2D> m_FileIcon;
-        Ref<Texture2D> m_SettingIcon;
     };
 }

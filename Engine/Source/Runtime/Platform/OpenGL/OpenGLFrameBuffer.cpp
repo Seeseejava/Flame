@@ -159,11 +159,11 @@ namespace Flame {
 		if (m_RendererID)
 		{
 			glDeleteFramebuffers(1, &m_RendererID);
-			glDeleteTextures(m_ColorAttachments.size(), m_ColorAttachments.data());
-			glDeleteTextures(1, &m_DepthAttachment);
+			//glDeleteTextures(m_ColorAttachments.size(), m_ColorAttachments.data());
+			//glDeleteTextures(1, &m_DepthAttachment);
 
 			m_ColorAttachments.clear();
-			m_DepthAttachment = 0;
+			//m_DepthAttachment = 0;
 		}
 
 #if OLD_PATH
@@ -183,7 +183,7 @@ namespace Flame {
 		// 	GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, NULL);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, m_DepthAttachment, 0);
 #endif
-		glCreateFramebuffers(1, &m_RendererID);
+		glGenFramebuffers(1, &m_RendererID);
 		glBindFramebuffer(GL_FRAMEBUFFER, m_RendererID);
 
 		bool multisample = m_Specification.Samples > 1;

@@ -2,6 +2,7 @@
 #include "ImGuiWrapper.h"
 #include "imgui/imgui.h"
 #include <imgui/imgui_internal.h>
+#include "Editor/IconManager/IconManager.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -63,9 +64,6 @@ namespace Flame {
 
 		m_CheckerboardTexture = Texture2D::Create(AssetManager::GetFullPath("Assets/texture/Checkerboard.png"));
 		m_SpriteSheet = Texture2D::Create(AssetManager::GetFullPath("Assets/RPGGame/texture/RPGpack_sheet_2X.png"));
-
-		m_PlayIcon = Texture2D::Create(AssetManager::GetFullPath("Resources/ToolBar/PlayButton.png"));
-		m_StopIcon = Texture2D::Create(AssetManager::GetFullPath("Resources/ToolBar/StopButton.png"));
 
 		FramebufferSpecification fbSpec;
 		fbSpec.Attachments = { FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::RED_INTEGER, FramebufferTextureFormat::Depth };
@@ -602,7 +600,7 @@ namespace Flame {
 		ImGui::Begin("##toolbar", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
 		float size = ImGui::GetWindowHeight() - 4.0f;
-		Ref<Texture2D> icon = ModeManager::IsEditState() ? m_PlayIcon : m_StopIcon;
+		Ref<Texture2D> icon = ModeManager::IsEditState() ? IconManager::GetInstance().GetPlayIcon() : IconManager::GetInstance().GetStopIcon();
 		ImGui::SetCursorPosX((ImGui::GetWindowContentRegionMax().x * 0.5f) - (size * 0.5f));
 		if (ImGui::ImageButton((ImTextureID)icon->GetRendererID(), ImVec2(size, size), ImVec2(0, 0), ImVec2(1, 1), 0))
 		{

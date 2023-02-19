@@ -93,7 +93,5 @@ namespace Flame {
 		ContentBrowserPanel m_ContentBrowserPanel;
 		SceneSettingsPanel m_SceneSettingsPanel;
 
-		// Editor resources
-		Ref<Texture2D> m_PlayIcon, m_StopIcon;
 	};
 }

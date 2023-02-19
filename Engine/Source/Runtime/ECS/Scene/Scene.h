@@ -48,7 +48,6 @@ namespace Flame {
 	public:
 		entt::registry m_Registry;
 	private:
-		uint32_t m_ViewportWidth = 0, m_ViewportHeight = 0;
 
 		b2World* m_PhysicsWorld = nullptr;
 
