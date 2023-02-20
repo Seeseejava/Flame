@@ -378,6 +378,15 @@ namespace Flame {
 				}
 			}
 
+			if (!m_SelectionContext.HasComponent<PythonScriptComponent>())
+			{
+				if (ImGui::MenuItem("Python Script"))
+				{
+					m_SelectionContext.AddComponent<PythonScriptComponent>();
+					ImGui::CloseCurrentPopup();
+				}
+			}
+
 			ImGui::EndPopup();
 		}
 		ImGui::PopItemWidth();
@@ -741,6 +750,25 @@ namespace Flame {
 				ImGui::Text("Light Color");
 				ImGui::SameLine();
 				ImGui::DragFloat3("##Light Color", (float*)&component.LightColor, 2.0f, 0.0f, 10000.0f, "%.1f");
+			});
+
+		DrawComponent<PythonScriptComponent>("Python Script", entity, [](auto& component)
+			{
+				ImGui::Text("Python Script");
+		ImGui::SameLine();
+		ImGui::Text(component.Path.c_str());
+
+		ImGui::SameLine();
+		if (ImGui::Button("..."))
+		{
+			std::string filepath = FileDialogs::OpenFile("PythonScript (*.py)\0*.py\0");
+			if (!filepath.empty())
+			{
+				filepath = std::regex_replace(filepath, std::regex("\\\\"), "/");
+				filepath = filepath.substr(filepath.find_last_of("/") + 1, filepath.length());
+				component.Path = filepath;
+			}
+		}
 			});
 
 
