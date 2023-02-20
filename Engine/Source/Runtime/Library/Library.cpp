@@ -32,8 +32,13 @@ namespace Flame
         };
         Add("SkyBoxTexture", CubeMapTexture::Create(Paths));
 
-		Add("EnvironmentHdr", CubeMapTexture::Create(512, 512));
-		Add("EnvironmentIrradiance", CubeMapTexture::Create(32, 32));
-		Add("EnvironmentPrefilter", CubeMapTexture::Create(128, 128));
+        // 创建出来一坨漆黑
+		//Add("EnvironmentHdr", CubeMapTexture::Create(512, 512));
+		//Add("EnvironmentIrradiance", CubeMapTexture::Create(32, 32));
+		//Add("EnvironmentPrefilter", CubeMapTexture::Create(128, 128));
+
+		Add("EnvironmentHdr", CubeMapTexture::Create(Paths));
+		Add("EnvironmentIrradiance", CubeMapTexture::Create(Paths));
+		Add("EnvironmentPrefilter", CubeMapTexture::Create(Paths));
     }
 }
