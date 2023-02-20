@@ -8,9 +8,12 @@ namespace Flame
 	class PythonScriptSystem : public System
 	{
 	public:
-		PythonScriptSystem(Scene* scene) : System(scene) {}
+		PythonScriptSystem(Scene* scene);
 		virtual ~PythonScriptSystem() = default;
 	public:
 		void OnUpdateRuntime(Timestep ts) override;
+		void OnUpdateEditor(Timestep ts, EditorCamera& camera) override;
+	private:
+		bool bLoadPython = false;
 	};
 }
