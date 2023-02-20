@@ -45,6 +45,7 @@ namespace Flame
 
 	public:
 		bool bUseAlbedoMap = false;
+		float col[4] = { 1.0f, 1.0f, 1.0f, 1.0f }; // 0 ~ 1
 		Ref<Texture2D> albedoRGBA = Texture2D::Create(1, 1);
 		Ref<Texture2D> m_AlbedoMap = Library<Texture2D>::GetInstance().GetDefaultTexture();
 
@@ -52,10 +53,12 @@ namespace Flame
 		Ref<Texture2D> m_NormalMap = Library<Texture2D>::GetInstance().Get("DefaultNormal");
 
 		bool bUseMetallicMap = false;
+		float metallic = 0.1f;
 		Ref<Texture2D> metallicRGBA = Texture2D::Create(1, 1);
 		Ref<Texture2D> m_MetallicMap = Library<Texture2D>::GetInstance().Get("DefaultMetallicRoughness");
 
 		bool bUseRoughnessMap = false;
+		float roughness = 0.1f;
 		Ref<Texture2D> roughnessRGBA = Texture2D::Create(1, 1);
 		Ref<Texture2D> m_RoughnessMap = Library<Texture2D>::GetInstance().Get("DefaultMetallicRoughness");
 
