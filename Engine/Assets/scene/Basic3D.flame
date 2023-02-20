@@ -1,11 +1,19 @@
 Scene: Untitled
 Entities:
-  - Entity: 15794395185893427742
+  - Entity: 9026884950633959203
     TagComponent:
-      Tag: Model
+      Tag: Empty Entity
     TransformComponent:
-      Translation: [0.151058316, -0.312652558, -1.3620832]
-      Rotation: [1.56124902, 0.27932173, 0.0262777433]
-      Scale: [1.16000056, 1.16000021, 1.15999651]
+      Translation: [0, 0, 0]
+      Rotation: [0.00872664619, -0.54454273, -0.0261799395]
+      Scale: [1, 1, 1]
     StaticMeshComponent:
-      Path: Assets//Models//Box.obj
+      Path: Assets\Models\Box.obj
+      bUseAlbedoMap: true
+      col: [1, 1, 1, 1]
+      bUseNormalMap: true
+      bUseMetallicMap: true
+      metallic: 0.100000001
+      bUseRoughnessMap: true
+      roughness: 0.100000001
+      bUseAoMap: true

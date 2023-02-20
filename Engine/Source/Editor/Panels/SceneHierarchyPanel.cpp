@@ -586,7 +586,7 @@ namespace Flame {
 			ImGui::Checkbox("Use", &model.bUseAlbedoMap);
 
 			static float col[4]; // 0 ~ 1
-			if (ImGui::ColorEdit4("##albedo", model.col))
+			if (ImGui::ColorEdit4("##albedo", glm::value_ptr(model.col)))
 			{
 				if (!model.bUseAlbedoMap)
 				{
