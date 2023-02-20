@@ -8,6 +8,7 @@
 #include "Runtime/ECS/Component/Physics/2D/Rigidbody2DComponent.h"
 #include "Runtime/ECS/Component/Physics/3D/BoxCollider3DComponent.h"
 #include "Runtime/ECS/Component/Physics/3D/Rigidbody3DComponent.h"
+#include "Runtime/ECS/Component/Physics/3D/SphereCollider3DComponent.h"
 #include "Runtime/ECS/Component/Script/NativeScriptComponent.h"
 #include "Runtime/ECS/Component/Shape/CircleRendererComponent.h"
 #include "Runtime/ECS/Component/Shape/SpriteRendererComponent.h"
@@ -33,5 +34,5 @@ namespace Flame
 
 	using AllComponents = ComponentGroup<TransformComponent, CircleRendererComponent, SpriteRendererComponent,
 		CameraComponent, NativeScriptComponent,Rigidbody2DComponent, BoxCollider2DComponent, 
-		CircleCollider2DComponent, Rigidbody3DComponent, BoxCollider3DComponent, StaticMeshComponent, LightComponent>;
+		CircleCollider2DComponent, Rigidbody3DComponent, BoxCollider3DComponent, SphereCollider3DComponent, StaticMeshComponent, LightComponent>;
 }

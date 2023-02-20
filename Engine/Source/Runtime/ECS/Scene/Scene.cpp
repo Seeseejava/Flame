@@ -355,6 +355,11 @@ namespace Flame {
 	}
 
 	template<>
+	void Scene::OnComponentAdded<SphereCollider3DComponent>(Entity entity, SphereCollider3DComponent& component)
+	{
+	}
+
+	template<>
 	void Scene::OnComponentAdded<LightComponent>(Entity entity, LightComponent& component)
 	{
 	}
