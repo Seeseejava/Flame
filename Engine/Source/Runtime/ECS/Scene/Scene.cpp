@@ -88,6 +88,7 @@ namespace Flame {
 			m_Systems.emplace_back(std::make_unique<RenderSystem3D>(this));
 			m_Systems.emplace_back(std::make_unique<PhysicsSystem3D>(this));
 			m_Systems.emplace_back(CreateScope<EnvironmentSystem>(this));
+			m_Systems.emplace_back(CreateScope<PythonScriptSystem>(this));
 		}
 		else
 		{

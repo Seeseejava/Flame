@@ -44,7 +44,8 @@ target_link_libraries(Flame-Runtime
     PUBLIC Bullet3Collision 
     PUBLIC BulletCollision 
     PUBLIC Bullet3Common 
-    PUBLIC LinearMath 
+    PUBLIC LinearMath  # ？
+    PUBLIC pybind11::embed pybind11::module pybind11::pybind11
 )
 
 
