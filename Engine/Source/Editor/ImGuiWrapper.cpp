@@ -20,4 +20,15 @@ namespace Flame::ImGuiWrapper
         ImGui::PopStyleVar();
         return open;
     }
+
+	template<typename UIFunc1, typename UIFunc2>
+	void DrawTwoUI(float ColumnWidth, UIFunc1 func1, UIFunc2 func2)
+	{
+		ImGui::Columns(2, nullptr, false);
+		ImGui::SetColumnWidth(0, ColumnWidth);
+		func1();
+		ImGui::NextColumn();
+		func2();
+		ImGui::EndColumns();
+	}
 }

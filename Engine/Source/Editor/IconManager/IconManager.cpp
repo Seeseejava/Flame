@@ -12,5 +12,8 @@ namespace Flame
 		Add("FileIcon", Texture2D::Create(std::string(("Resources/ContentBrowser/FileIcon.png"))));
 		Add("PlayIcon", Texture2D::Create(std::string(("Resources/ToolBar/PlayButton.png"))));
 		Add("StopIcon", Texture2D::Create(std::string(("Resources/ToolBar/StopButton.png"))));
+		Add("TransIcon", Texture2D::Create(std::string(("Resources/Icon/Trans.png"))));
+		Add("RotateIcon", Texture2D::Create(std::string(("Resources/Icon/Rotate.png"))));
+		Add("ScaleIcon", Texture2D::Create(std::string(("Resources/Icon/Scale.png"))));
     }
 }
