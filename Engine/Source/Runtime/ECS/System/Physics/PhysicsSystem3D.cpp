@@ -137,16 +137,7 @@ namespace Flame
 
 	void PhysicsSystem3D::OnRuntimeStop()
 	{
-		auto view = m_Scene->m_Registry.view<Rigidbody3DComponent>();
-		for (auto e : view)
-		{
-			Entity entity = { e, m_Scene };
-			auto& rb3d = entity.GetComponent<Rigidbody3DComponent>();
-
-			// it seems when you delete the btRigidBody,
-			// the motion and the shape will also be deleted
-			delete (btRigidBody*)rb3d.RuntimeBody;
-		}
+		
 		delete mDynamicsWorld;
 		delete mSolver;
 		delete mDispatcher;
