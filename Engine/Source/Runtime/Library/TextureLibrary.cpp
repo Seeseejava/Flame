@@ -25,4 +25,9 @@ namespace Flame
     {
         return m_Library["DefaultTexture"];
     }
+
+	Ref<Texture2D> Library<Texture2D>::GetWhiteTexture()
+	{
+		return m_Library["WhiteTexture"];
+	}
 }

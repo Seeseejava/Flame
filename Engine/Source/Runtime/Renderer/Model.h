@@ -44,11 +44,23 @@ namespace Flame
 		StaticMesh ProcessMesh(aiMesh* mesh, const aiScene* scene);
 
 	public:
+		bool bUseAlbedoMap = false;
+		Ref<Texture2D> albedoRGBA = Texture2D::Create(1, 1);
 		Ref<Texture2D> m_AlbedoMap = Library<Texture2D>::GetInstance().GetDefaultTexture();
+
+		bool bUseNormalMap = false;
 		Ref<Texture2D> m_NormalMap = Library<Texture2D>::GetInstance().Get("DefaultNormal");
+
+		bool bUseMetallicMap = false;
+		Ref<Texture2D> metallicRGBA = Texture2D::Create(1, 1);
 		Ref<Texture2D> m_MetallicMap = Library<Texture2D>::GetInstance().Get("DefaultMetallicRoughness");
+
+		bool bUseRoughnessMap = false;
+		Ref<Texture2D> roughnessRGBA = Texture2D::Create(1, 1);
 		Ref<Texture2D> m_RoughnessMap = Library<Texture2D>::GetInstance().Get("DefaultMetallicRoughness");
-		Ref<Texture2D> m_AoMap = Library<Texture2D>::GetInstance().Get("WhiteTexture");
+
+		bool bUseAoMap = false;
+		Ref<Texture2D> m_AoMap = Library<Texture2D>::GetInstance().GetWhiteTexture();
 	private:
 		std::vector<StaticMesh> m_Meshes;
 		std::string m_Directory;

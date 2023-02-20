@@ -14,6 +14,7 @@ namespace Flame
     public:
         Library();
 
-        [[nodiscard]] Ref<Texture2D> GetDefaultTexture();
+        Ref<Texture2D> GetDefaultTexture();
+        Ref<Texture2D> GetWhiteTexture();
     };
 }

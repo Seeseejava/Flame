@@ -518,91 +518,152 @@ namespace Flame {
 				ImGui::DragFloat("Restitution Threshold", &component.RestitutionThreshold, 0.01f, 0.0f);
 			});
 
-		DrawComponent<StaticMeshComponent>("Static Mesh Renderer", entity, [](auto& component)
+		DrawComponent<StaticMeshComponent>("Static Mesh Renderer", entity, [](StaticMeshComponent& component)
 			{
 				ImGui::Text("Mesh Path");
-				ImGui::SameLine();
+		ImGui::SameLine();
 
-				ImGui::Text(component.Path.c_str());
+		ImGui::Text(component.Path.c_str());
 
-				ImGui::SameLine();
-				if (ImGui::Button("..."))
+		ImGui::SameLine();
+		if (ImGui::Button("..."))
+		{
+			std::string filepath = FileDialogs::OpenFile("Model (*.obj *.fbx)\0*.obj;*.fbx\0");
+			if (filepath.find("Assets") != std::string::npos)
+			{
+				filepath = filepath.substr(filepath.find("Assets"), filepath.length());
+			}
+			else
+			{
+				// TODO: Import Model
+				FLAME_CORE_ASSERT(false, "Flame Now Only support the model from Assets!");
+			}
+			if (!filepath.empty())
+			{
+				component.Mesh = Model(filepath);
+				component.Path = filepath;
+			}
+		}
+
+		if (ImGui::TreeNode((void*)"Material", "Material"))
+		{
+			const auto& materialNode = [&model = component.Mesh](const char* name, Ref<Texture2D>& tex, void(*func)(Model& model)) {
+				if (ImGui::TreeNode((void*)name, name))
 				{
-					std::string filepath = FileDialogs::OpenFile("Model (*.obj *.fbx)\0*.obj;*.fbx\0");
-					if (filepath.find("Assets") != std::string::npos)
+					ImGui::Image((ImTextureID)tex->GetRendererID(), ImVec2(64, 64), ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+					static bool use = false;
+					if (ImGui::BeginDragDropTarget())
 					{
-						filepath = filepath.substr(filepath.find("Assets"), filepath.length());
-					}
-					else
-					{
-						// TODO: Import Model
-						FLAME_CORE_ASSERT(false, "Flame Now Only support the model from Assets!");
-					}
-					if (!filepath.empty())
-					{
-						component.Mesh = Model(filepath);
-						component.Path = filepath;
-					}
-				}
-
-				if (ImGui::TreeNode((void*)"Material", "Material"))
-				{
-					const auto& materialNode = [](const char* name, Ref<Texture2D>& tex, void(*func)()) {
-						if (ImGui::TreeNode((void*)name, name))
+						if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
 						{
-							ImGui::Image((ImTextureID)tex->GetRendererID(), ImVec2(64, 64), ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
-							static bool use = false;
-							if (ImGui::BeginDragDropTarget())
-							{
-								if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
-								{
-									auto path = (const wchar_t*)payload->Data;
-									std::string relativePath = (std::filesystem::path("Assets") / path).string();
-									std::filesystem::path texturePath = ConfigManager::GetInstance().GetAssetsFolder() / path;
-									relativePath = std::regex_replace(relativePath, std::regex("\\\\"), "/");
-									tex = IconManager::GetInstance().LoadOrFindTexture(relativePath);
-								}
-								ImGui::EndDragDropTarget();
-							}
-
-							func();
-
-							ImGui::TreePop();
+							auto path = (const wchar_t*)payload->Data;
+							std::string relativePath = (std::filesystem::path("Assets") / path).string();
+							std::filesystem::path texturePath = ConfigManager::GetInstance().GetAssetsFolder() / path;
+							relativePath = std::regex_replace(relativePath, std::regex("\\\\"), "/");
+							tex = IconManager::GetInstance().LoadOrFindTexture(relativePath);
 						}
-					};
+						ImGui::EndDragDropTarget();
+					}
 
-					materialNode("Albedo", component.Mesh.m_AlbedoMap, []() {
-						static bool use = false;
-					ImGui::SameLine();
-					ImGui::Checkbox("Use", &use);
-						});
-
-					materialNode("Normal", component.Mesh.m_NormalMap, []() {
-						static bool use = false;
-					ImGui::SameLine();
-					ImGui::Checkbox("Use", &use);
-						});
-
-					materialNode("Metallic", component.Mesh.m_MetallicMap, []() {
-						static bool use = false;
-					ImGui::SameLine();
-					ImGui::Checkbox("Use", &use);
-						});
-
-					materialNode("Roughness", component.Mesh.m_RoughnessMap, []() {
-						static bool use = false;
-					ImGui::SameLine();
-					ImGui::Checkbox("Use", &use);
-						});
-
-					materialNode("Ambient Occlusion", component.Mesh.m_AoMap, []() {
-						static bool use = false;
-					ImGui::SameLine();
-					ImGui::Checkbox("Use", &use);
-						});
+					func(model);
 
 					ImGui::TreePop();
 				}
+			};
+
+			materialNode("Albedo", component.Mesh.m_AlbedoMap, [](Model& model) {
+				ImGui::SameLine();
+			ImGui::Checkbox("Use", &model.bUseAlbedoMap);
+
+			static float col[4]; // 0 ~ 1
+			if (ImGui::ColorEdit4("##albedo", col))
+			{
+				if (!model.bUseAlbedoMap)
+				{
+					unsigned char data[4];
+					for (size_t i = 0; i < 4; i++)
+					{
+						data[i] = (unsigned char)(col[i] * 255.0f);
+					}
+					model.albedoRGBA->SetData(data, sizeof(unsigned char) * 4);
+				}
+			}
+				});
+
+			materialNode("Normal", component.Mesh.m_NormalMap, [](Model& model) {
+				ImGui::SameLine();
+			ImGui::Checkbox("Use", &model.bUseNormalMap);
+				});
+
+			materialNode("Metallic", component.Mesh.m_MetallicMap, [](Model& model) {
+				ImGui::SameLine();
+
+			if (ImGui::BeginTable("Metallic", 1))
+			{
+				ImGui::TableNextRow();
+				ImGui::TableNextColumn();
+
+				ImGui::Checkbox("Use", &model.bUseMetallicMap);
+
+				ImGui::TableNextRow();
+				ImGui::TableNextColumn();
+				static float Metallic = 0.0f;
+				if (ImGui::SliderFloat("##Metallic", &Metallic, 0.0f, 1.0f))
+				{
+					if (!model.bUseMetallicMap)
+					{
+						unsigned char data[4];
+						for (size_t i = 0; i < 3; i++)
+						{
+							data[i] = (unsigned char)(Metallic * 255.0f);
+						}
+						data[4] = (unsigned char)255.0f;
+						model.metallicRGBA->SetData(data, sizeof(unsigned char) * 4);
+					}
+				}
+
+				ImGui::EndTable();
+			}
+				});
+
+			materialNode("Roughness", component.Mesh.m_RoughnessMap, [](Model& model) {
+				ImGui::SameLine();
+
+			if (ImGui::BeginTable("Roughness", 1))
+			{
+				ImGui::TableNextRow();
+				ImGui::TableNextColumn();
+
+				ImGui::Checkbox("Use", &model.bUseRoughnessMap);
+
+				ImGui::TableNextRow();
+				ImGui::TableNextColumn();
+				static float Roughness = 0.0f;
+				if (ImGui::SliderFloat("##Roughness", &Roughness, 0.0f, 1.0f))
+				{
+					if (!model.bUseRoughnessMap)
+					{
+						unsigned char data[4];
+						for (size_t i = 0; i < 3; i++)
+						{
+							data[i] = (unsigned char)(Roughness * 255.0f);
+						}
+						data[4] = (unsigned char)255.0f;
+						model.roughnessRGBA->SetData(data, sizeof(unsigned char) * 4);
+					}
+				}
+
+				ImGui::EndTable();
+			}
+				});
+
+			materialNode("Ambient Occlusion", component.Mesh.m_AoMap, [](Model& model) {
+				ImGui::SameLine();
+			ImGui::Checkbox("Use", &model.bUseAoMap);
+				});
+
+			ImGui::TreePop();
+		}
 			});
 
 		DrawComponent<Rigidbody3DComponent>("Rigidbody 3D", entity, [](auto& component)
