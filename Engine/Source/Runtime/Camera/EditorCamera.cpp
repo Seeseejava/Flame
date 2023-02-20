@@ -26,7 +26,7 @@ namespace Flame {
 
 	void EditorCamera::UpdateView()
 	{
-		// m_Yaw = m_Pitch = 0.0f; // Lock the camera's rotation
+		// m_Yaw = m_Pitch = 0.0f; // Lock tFLAME camera's rotation
 		m_Position = CalculatePosition();
 
 		glm::quat orientation = GetOrientation();
@@ -73,6 +73,41 @@ namespace Flame {
 				MouseRotate(delta);
 			else if (Input::IsMouseButtonPressed(FLAME_MOUSE_BUTTON_RIGHT))
 				MouseZoom(delta.y);
+		}
+		else if (Input::IsMouseButtonPressed(FLAME_MOUSE_BUTTON_RIGHT))
+		{
+			glm::vec2 deltaMove = { 0.0f, 0.0f };
+
+			if (Input::IsKeyPressed(FLAME_KEY_A))
+				deltaMove.x += m_CameraSpeed;
+			if (Input::IsKeyPressed(FLAME_KEY_D))
+				deltaMove.x -= m_CameraSpeed;
+			if (Input::IsKeyPressed(FLAME_KEY_W))
+				m_FocalPoint += GetForwardDirection() * m_CameraSpeed;
+			if (Input::IsKeyPressed(FLAME_KEY_S))
+				m_FocalPoint -= GetForwardDirection() * m_CameraSpeed;
+			if (Input::IsKeyPressed(FLAME_KEY_Q))
+				deltaMove.y -= m_CameraSpeed;
+			if (Input::IsKeyPressed(FLAME_KEY_E))
+				deltaMove.y += m_CameraSpeed;
+
+			MousePan(deltaMove);
+
+			const glm::vec2& mouse{ Input::GetMouseX(), Input::GetMouseY() };
+			glm::vec2 deltaRotate = (mouse - m_InitialMousePosition) * 0.003f;
+			if (bInit)
+				deltaRotate = { 0.0f, 0.0f };
+			m_InitialMousePosition = mouse;
+
+			if (Input::IsMouseButtonPressed(FLAME_MOUSE_BUTTON_RIGHT))
+			{
+				bInit = false;
+				MouseRotate(deltaRotate);
+			}
+		}
+		else if (Input::IsMouseButtonReleased(FLAME_MOUSE_BUTTON_RIGHT))
+		{
+			bInit = true;
 		}
 
 		UpdateView();

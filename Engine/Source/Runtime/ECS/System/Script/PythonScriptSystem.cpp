@@ -46,10 +46,12 @@ namespace Flame
 		{
 			return;
 		}
-		py::scoped_interpreter guard{};
+
 		auto view = m_Scene->m_Registry.view<TransformComponent, PythonScriptComponent>();
 		for (auto e : view)
 		{
+			py::scoped_interpreter guard{};
+
 			Entity entity = { e, m_Scene };
 			auto& transform = entity.GetComponent<TransformComponent>();
 			auto& script = entity.GetComponent<PythonScriptComponent>();
@@ -81,10 +83,12 @@ namespace Flame
 		{
 			return;
 		}
-		py::scoped_interpreter guard{};
+
 		auto view = m_Scene->m_Registry.view<TransformComponent, PythonScriptComponent>();
 		for (auto entity : view)
 		{
+			py::scoped_interpreter guard{};
+
 			auto [transform, script] = view.get<TransformComponent, PythonScriptComponent>(entity);
 
 			if (script.Path.empty())
