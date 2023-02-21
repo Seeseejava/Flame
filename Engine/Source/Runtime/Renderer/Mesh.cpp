@@ -1,6 +1,6 @@
 #include "flamepch.h"
 
-#include "Runtime/Renderer/StaticMesh.h"
+#include "Runtime/Renderer/Mesh.h"
 #include "Runtime/Renderer/RenderCommand.h"
 #include "Runtime/Library/TextureLibrary.h"
 #include "Runtime/Renderer/Model.h"
@@ -10,8 +10,8 @@
 
 namespace Flame {
 
-	StaticMesh::StaticMesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t> indices)
-		: m_Vertices(vertices), m_Indices(indices)
+	Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t> indices)
+		: m_StaticVertices(vertices), m_Indices(indices)
 	{
 		m_VertexArray = VertexArray::Create();
 
@@ -19,8 +19,9 @@ namespace Flame {
 		m_VertexBuffer->SetLayout({
 					{ ShaderDataType::Float3, "a_Pos"},
 					{ ShaderDataType::Float3, "a_Normal"},
-					{ ShaderDataType::Float3, "a_Tangent"},
 					{ ShaderDataType::Float2, "a_TexCoord"},
+					{ ShaderDataType::Float3, "a_Tangent"},
+					{ ShaderDataType::Float3, "a_Bitangent"},
 					{ ShaderDataType::Int,	  "a_EntityID"},
 			});
 
@@ -31,8 +32,8 @@ namespace Flame {
 		m_VertexArray->SetIndexBuffer(m_IndexBuffer);
 	}
 
-	StaticMesh::StaticMesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t> indices, const std::vector<MaterialTexture>& textures)
-		: m_Vertices(vertices), m_Indices(indices), m_Textures(textures)
+	Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t> indices, const std::vector<MaterialTexture>& textures)
+		: m_StaticVertices(vertices), m_Indices(indices), m_Textures(textures)
 	{
 		m_VertexArray = VertexArray::Create();
 
@@ -40,8 +41,9 @@ namespace Flame {
 		m_VertexBuffer->SetLayout({
 					{ ShaderDataType::Float3, "a_Pos"},
 					{ ShaderDataType::Float3, "a_Normal"},
-					{ ShaderDataType::Float3, "a_Tangent"},
 					{ ShaderDataType::Float2, "a_TexCoord"},
+					{ ShaderDataType::Float3, "a_Tangent"},
+					{ ShaderDataType::Float3, "a_Bitangent"},
 					{ ShaderDataType::Int,	  "a_EntityID"},
 			});
 
@@ -52,7 +54,7 @@ namespace Flame {
 		m_VertexArray->SetIndexBuffer(m_IndexBuffer);
 	}
 
-	void StaticMesh::Draw(const glm::mat4& transform, const glm::vec3& cameraPos, const Ref<Shader>& shader, int entityID, Model* model)
+	void Mesh::Draw(const glm::mat4& transform, const glm::vec3& cameraPos, const Ref<Shader>& shader, int entityID, Model* model)
 	{
 		SetupMesh(entityID);
 		if (ModeManager::bHdrUse)
@@ -140,7 +142,7 @@ namespace Flame {
 		RenderCommand::DrawIndexed(m_VertexArray, m_IndexBuffer->GetCount());
 	}
 
-	void StaticMesh::Draw()
+	void Mesh::Draw()
 	{
 		//SetupMesh(EntityID);
 		static bool bInit = true;
@@ -150,7 +152,7 @@ namespace Flame {
 
 			m_VertexArray->Bind();
 
-			m_VertexBuffer->SetData(m_Vertices.data(), sizeof(Vertex) * m_Vertices.size());
+			m_VertexBuffer->SetData(m_StaticVertices.data(), sizeof(Vertex) * m_StaticVertices.size());
 			m_IndexBuffer->SetData(m_Indices.data(), m_Indices.size());
 
 			m_VertexArray->Unbind();
@@ -160,19 +162,19 @@ namespace Flame {
 		m_VertexArray->Unbind();
 	}
 
-	void StaticMesh::SetupMesh(int entityID)
+	void Mesh::SetupMesh(int entityID)
 	{
 		if (m_EntityID == -1)
 		{
 			m_EntityID = entityID;
 			m_VertexArray->Bind();
 
-			for (int i = 0; i < m_Vertices.size(); ++i)
+			for (int i = 0; i < m_StaticVertices.size(); ++i)
 			{
-				m_Vertices[i].EntityID = entityID;
+				m_StaticVertices[i].EntityID = entityID;
 			}
 
-			m_VertexBuffer->SetData(m_Vertices.data(), sizeof(Vertex) * m_Vertices.size());
+			m_VertexBuffer->SetData(m_StaticVertices.data(), sizeof(Vertex) * m_StaticVertices.size());
 
 			m_IndexBuffer->SetData(m_Indices.data(), m_Indices.size());
 

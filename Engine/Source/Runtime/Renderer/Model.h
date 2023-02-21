@@ -3,7 +3,7 @@
 #include "Runtime/Core/Core.h"
 
 #include "Runtime/Renderer/Shader.h"
-#include "Runtime/Renderer/StaticMesh.h"
+#include "Runtime/Renderer/Mesh.h"
 #include "Runtime/Renderer/Texture.h"
 #include "Runtime/Renderer/Material.h"
 #include "Runtime/Library/TextureLibrary.h"
@@ -41,7 +41,7 @@ namespace Flame
 
 		void LoadModel(const std::string& path);
 		void ProcessNode(aiNode* node, const aiScene* scene);
-		StaticMesh ProcessMesh(aiMesh* mesh, const aiScene* scene);
+		Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene);
 
 	public:
 		bool bUseAlbedoMap = false;
@@ -65,7 +65,7 @@ namespace Flame
 		bool bUseAoMap = false;
 		Ref<Texture2D> m_AoMap = Library<Texture2D>::GetInstance().GetWhiteTexture();
 	private:
-		std::vector<StaticMesh> m_Meshes;
+		std::vector<Mesh> m_Meshes;
 		std::string m_Directory;
 		Ref<Material> m_Material = CreateRef<Material>();
 
