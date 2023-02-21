@@ -271,6 +271,10 @@ namespace Flame {
 		//m_ParticleSystem.OnUpdate(ts);
 		//m_ParticleSystem.OnRender(m_CameraController.GetCamera()); //目前粒子系统的鼠标位置有问题
 
+		Entity selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();
+		if (selectedEntity && Input::IsKeyPressed(FLAME_KEY_F))
+			m_EditorCamera.SetCenter(selectedEntity.GetComponent<TransformComponent>().Translation);
+
 		OnOverlayRender();
 
 		m_Framebuffer->Unbind(); 
@@ -712,6 +716,7 @@ namespace Flame {
 
 		bool control = Input::IsKeyPressed(FLAME_KEY_LEFT_CONTROL) || Input::IsKeyPressed(FLAME_KEY_RIGHT_CONTROL);
 		bool shift = Input::IsKeyPressed(FLAME_KEY_LEFT_SHIFT) || Input::IsKeyPressed(FLAME_KEY_RIGHT_SHIFT);
+		bool mouseRight = Input::IsMouseButtonPressed(FLAME_MOUSE_BUTTON_RIGHT);
 		switch (e.GetKeyCode())
 		{
 			case FLAME_KEY_N:
@@ -752,16 +757,20 @@ namespace Flame {
 			}
 			// Gizmos
 			case FLAME_KEY_Q:
-				m_GizmoType = -1;
+				if (!mouseRight)
+					m_GizmoType = -1;
 				break;
 			case FLAME_KEY_W:
-				m_GizmoType = ImGuizmo::OPERATION::TRANSLATE;
+				if (!mouseRight)
+					m_GizmoType = ImGuizmo::OPERATION::TRANSLATE;
 				break;
 			case FLAME_KEY_E:
-				m_GizmoType = ImGuizmo::OPERATION::ROTATE;
+				if (!mouseRight)
+					m_GizmoType = ImGuizmo::OPERATION::ROTATE;
 				break;
 			case FLAME_KEY_R:
-				m_GizmoType = ImGuizmo::OPERATION::SCALE;
+				if (!mouseRight)
+					m_GizmoType = ImGuizmo::OPERATION::SCALE;
 				break;
 		}		
 	}

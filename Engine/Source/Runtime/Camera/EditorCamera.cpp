@@ -18,6 +18,13 @@ namespace Flame {
 		UpdateView();
 	}
 
+	void EditorCamera::SetCenter(const glm::vec3& center)
+	{
+		m_FocalPoint = center;
+		m_Distance = 10.0f;
+		UpdateView();
+	}
+
 	void EditorCamera::UpdateProjection()
 	{
 		m_AspectRatio = m_ViewportWidth / m_ViewportHeight;
@@ -79,19 +86,17 @@ namespace Flame {
 			glm::vec2 deltaMove = { 0.0f, 0.0f };
 
 			if (Input::IsKeyPressed(FLAME_KEY_A))
-				deltaMove.x += m_CameraSpeed;
+				m_FocalPoint -= GetRightDirection() * m_CameraSpeed;
 			if (Input::IsKeyPressed(FLAME_KEY_D))
-				deltaMove.x -= m_CameraSpeed;
+				m_FocalPoint += GetRightDirection() * m_CameraSpeed;
 			if (Input::IsKeyPressed(FLAME_KEY_W))
 				m_FocalPoint += GetForwardDirection() * m_CameraSpeed;
 			if (Input::IsKeyPressed(FLAME_KEY_S))
 				m_FocalPoint -= GetForwardDirection() * m_CameraSpeed;
 			if (Input::IsKeyPressed(FLAME_KEY_Q))
-				deltaMove.y -= m_CameraSpeed;
+				m_FocalPoint -= GetUpDirection() * m_CameraSpeed;
 			if (Input::IsKeyPressed(FLAME_KEY_E))
-				deltaMove.y += m_CameraSpeed;
-
-			MousePan(deltaMove);
+				m_FocalPoint += GetUpDirection() * m_CameraSpeed;
 
 			const glm::vec2& mouse{ Input::GetMouseX(), Input::GetMouseY() };
 			glm::vec2 deltaRotate = (mouse - m_InitialMousePosition) * 0.003f;
