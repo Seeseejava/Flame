@@ -299,22 +299,22 @@ namespace Flame {
 			out << YAML::Key << "MeshComponent";
 			out << YAML::BeginMap;
 
-			auto& staticMeshComponent = entity.GetComponent<MeshComponent>();
-			out << YAML::Key << "Path" << YAML::Value << staticMeshComponent.Path.c_str();
+			auto& meshComponent = entity.GetComponent<MeshComponent>();
+			out << YAML::Key << "Path" << YAML::Value << meshComponent.Path.c_str();
 
 			// Material 
-			out << YAML::Key << "bUseAlbedoMap" << YAML::Value << staticMeshComponent.Mesh.bUseAlbedoMap;
-			out << YAML::Key << "col" << YAML::Value << staticMeshComponent.Mesh.col;
+			out << YAML::Key << "bUseAlbedoMap" << YAML::Value << meshComponent.m_Mesh->bUseAlbedoMap;
+			out << YAML::Key << "col" << YAML::Value << meshComponent.m_Mesh->col;
 
-			out << YAML::Key << "bUseNormalMap" << YAML::Value << staticMeshComponent.Mesh.bUseNormalMap;
+			out << YAML::Key << "bUseNormalMap" << YAML::Value << meshComponent.m_Mesh->bUseNormalMap;
 
-			out << YAML::Key << "bUseMetallicMap" << YAML::Value << staticMeshComponent.Mesh.bUseMetallicMap;
-			out << YAML::Key << "metallic" << YAML::Value << staticMeshComponent.Mesh.metallic;
+			out << YAML::Key << "bUseMetallicMap" << YAML::Value << meshComponent.m_Mesh->bUseMetallicMap;
+			out << YAML::Key << "metallic" << YAML::Value << meshComponent.m_Mesh->metallic;
 
-			out << YAML::Key << "bUseRoughnessMap" << YAML::Value << staticMeshComponent.Mesh.bUseRoughnessMap;
-			out << YAML::Key << "roughness" << YAML::Value << staticMeshComponent.Mesh.roughness;
+			out << YAML::Key << "bUseRoughnessMap" << YAML::Value << meshComponent.m_Mesh->bUseRoughnessMap;
+			out << YAML::Key << "roughness" << YAML::Value << meshComponent.m_Mesh->roughness;
 
-			out << YAML::Key << "bUseAoMap" << YAML::Value << staticMeshComponent.Mesh.bUseRoughnessMap;
+			out << YAML::Key << "bUseAoMap" << YAML::Value << meshComponent.m_Mesh->bUseRoughnessMap;
 			// End Material
 
 			out << YAML::EndMap; //StaticMeshComponent
@@ -486,21 +486,21 @@ namespace Flame {
 					auto& sc3d = deserializedEntity.AddComponent<SphereCollider3DComponent>();
 				}
 
-				auto staticMeshComponent = entity["MeshComponent"];
-				if (staticMeshComponent)
+				auto meshComponent = entity["MeshComponent"];
+				if (meshComponent)
 				{
-					std::string str = staticMeshComponent["Path"].as<std::string>();
+					std::string str = meshComponent["Path"].as<std::string>();
 					auto& sm = deserializedEntity.AddComponent<MeshComponent>(str);
 
 					// Material
-					sm.Mesh.bUseAlbedoMap = staticMeshComponent["bUseAlbedoMap"].as<bool>();
-					sm.Mesh.col = staticMeshComponent["col"].as<glm::vec4>();
-					sm.Mesh.bUseNormalMap = staticMeshComponent["bUseNormalMap"].as<bool>();
-					sm.Mesh.bUseMetallicMap = staticMeshComponent["bUseMetallicMap"].as<bool>();
-					sm.Mesh.metallic = staticMeshComponent["metallic"].as<float>();
-					sm.Mesh.bUseRoughnessMap = staticMeshComponent["bUseRoughnessMap"].as<bool>();
-					sm.Mesh.roughness = staticMeshComponent["roughness"].as<float>();
-					sm.Mesh.bUseAoMap = staticMeshComponent["bUseAoMap"].as<bool>();
+					sm.m_Mesh->bUseAlbedoMap = meshComponent["bUseAlbedoMap"].as<bool>();
+					sm.m_Mesh->col = meshComponent["col"].as<glm::vec4>();
+					sm.m_Mesh->bUseNormalMap = meshComponent["bUseNormalMap"].as<bool>();
+					sm.m_Mesh->bUseMetallicMap = meshComponent["bUseMetallicMap"].as<bool>();
+					sm.m_Mesh->metallic = meshComponent["metallic"].as<float>();
+					sm.m_Mesh->bUseRoughnessMap = meshComponent["bUseRoughnessMap"].as<bool>();
+					sm.m_Mesh->roughness = meshComponent["roughness"].as<float>();
+					sm.m_Mesh->bUseAoMap = meshComponent["bUseAoMap"].as<bool>();
 					// End Material
 				}
 
