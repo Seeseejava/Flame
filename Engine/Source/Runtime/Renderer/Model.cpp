@@ -40,6 +40,9 @@ namespace Flame
 		std::string standardPath = std::regex_replace(path, std::regex("\\\\"), "/");
 		m_Directory = standardPath.substr(0, standardPath.find_last_of('/'));
 
+		if (scene->HasAnimations())
+			bAnimated = true;
+
 		ProcessNode(scene->mRootNode, scene);
 	}
 
@@ -48,7 +51,11 @@ namespace Flame
 		for (uint32_t i = 0; i < node->mNumMeshes; ++i)
 		{
 			aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-			m_Meshes.push_back(ProcessMesh(mesh, scene));
+
+			if (bAnimated)
+				m_Meshes.push_back(ProcessMesh<SkinnedVertex>(mesh, scene));
+			else
+				m_Meshes.push_back(ProcessMesh<StaticVertex>(mesh, scene));
 		}
 
 		for (uint32_t i = 0; i < node->mNumChildren; ++i)
@@ -57,6 +64,8 @@ namespace Flame
 		}
 	}
 
+
+	template <typename Vertex>
 	Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
 	{
 		std::vector<Vertex> vertices;
@@ -82,12 +91,6 @@ namespace Flame
 				vector.z = mesh->mNormals[i].z;
 				vertex.Normal = vector;
 			}
-
-			//tangent
-			//vector.x = mesh->mTangents[i].x;
-			//vector.y = mesh->mTangents[i].y;
-			//vector.z = mesh->mTangents[i].z;
-			//vertex.Tangent = vector;
 
 			//tex coord
 			if (mesh->mTextureCoords[0])

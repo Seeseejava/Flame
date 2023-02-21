@@ -10,12 +10,12 @@
 
 namespace Flame {
 
-	Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t> indices)
+	Mesh::Mesh(const std::vector<StaticVertex>& vertices, const std::vector<uint32_t> indices)
 		: m_StaticVertices(vertices), m_Indices(indices)
 	{
 		m_VertexArray = VertexArray::Create();
 
-		m_VertexBuffer = VertexBuffer::Create(sizeof(Vertex) * vertices.size());
+		m_VertexBuffer = VertexBuffer::Create(sizeof(StaticVertex) * vertices.size());
 		m_VertexBuffer->SetLayout({
 					{ ShaderDataType::Float3, "a_Pos"},
 					{ ShaderDataType::Float3, "a_Normal"},
@@ -32,12 +32,12 @@ namespace Flame {
 		m_VertexArray->SetIndexBuffer(m_IndexBuffer);
 	}
 
-	Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t> indices, const std::vector<MaterialTexture>& textures)
+	Mesh::Mesh(const std::vector<StaticVertex>& vertices, const std::vector<uint32_t> indices, const std::vector<MaterialTexture>& textures)
 		: m_StaticVertices(vertices), m_Indices(indices), m_Textures(textures)
 	{
 		m_VertexArray = VertexArray::Create();
 
-		m_VertexBuffer = VertexBuffer::Create(sizeof(Vertex) * vertices.size());
+		m_VertexBuffer = VertexBuffer::Create(sizeof(StaticVertex) * vertices.size());
 		m_VertexBuffer->SetLayout({
 					{ ShaderDataType::Float3, "a_Pos"},
 					{ ShaderDataType::Float3, "a_Normal"},
@@ -51,6 +51,47 @@ namespace Flame {
 
 		m_IndexBuffer = IndexBuffer::Create(indices.size());
 
+		m_VertexArray->SetIndexBuffer(m_IndexBuffer);
+	}
+
+	Mesh::Mesh(const std::vector<SkinnedVertex>& vertices, const std::vector<uint32_t> indices)
+		: m_SkinnedVertices(vertices), m_Indices(indices)
+	{
+		m_VertexArray = VertexArray::Create();
+
+		m_VertexBuffer = VertexBuffer::Create(sizeof(SkinnedVertex) * vertices.size());
+		m_VertexBuffer->SetLayout({
+					{ ShaderDataType::Float3, "a_Pos"},
+					{ ShaderDataType::Float3, "a_Normal"},
+					{ ShaderDataType::Float2, "a_TexCoord"},
+					{ ShaderDataType::Float3, "a_Tangent"},
+					{ ShaderDataType::Float3, "a_Bitangent"},
+					{ ShaderDataType::Int,	  "a_EntityID"},
+			});
+
+		m_VertexArray->AddVertexBuffer(m_VertexBuffer);
+
+		m_IndexBuffer = IndexBuffer::Create(indices.size());
+
+		m_VertexArray->SetIndexBuffer(m_IndexBuffer);
+	}
+
+	Mesh::Mesh(const std::vector<SkinnedVertex>& vertices, const std::vector<uint32_t> indices, const std::vector<MaterialTexture>& textures)
+		: m_SkinnedVertices(vertices), m_Indices(indices), m_Textures(textures)
+	{
+		m_VertexArray = VertexArray::Create();
+
+		m_VertexBuffer = VertexBuffer::Create(sizeof(SkinnedVertex) * vertices.size());
+		m_VertexBuffer->SetLayout({
+					{ ShaderDataType::Float3, "a_Pos"},
+					{ ShaderDataType::Float3, "a_Normal"},
+					{ ShaderDataType::Float2, "a_TexCoord"},
+					{ ShaderDataType::Float3, "a_Tangent"},
+					{ ShaderDataType::Float3, "a_Bitangent"},
+					{ ShaderDataType::Int,	  "a_EntityID"},
+			});
+		m_VertexArray->AddVertexBuffer(m_VertexBuffer);
+		m_IndexBuffer = IndexBuffer::Create(indices.size());
 		m_VertexArray->SetIndexBuffer(m_IndexBuffer);
 	}
 
@@ -152,7 +193,7 @@ namespace Flame {
 
 			m_VertexArray->Bind();
 
-			m_VertexBuffer->SetData(m_StaticVertices.data(), sizeof(Vertex) * m_StaticVertices.size());
+			m_VertexBuffer->SetData(m_StaticVertices.data(), sizeof(StaticVertex) * m_StaticVertices.size());
 			m_IndexBuffer->SetData(m_Indices.data(), m_Indices.size());
 
 			m_VertexArray->Unbind();
@@ -174,7 +215,7 @@ namespace Flame {
 				m_StaticVertices[i].EntityID = entityID;
 			}
 
-			m_VertexBuffer->SetData(m_StaticVertices.data(), sizeof(Vertex) * m_StaticVertices.size());
+			m_VertexBuffer->SetData(m_StaticVertices.data(), sizeof(StaticVertex) * m_StaticVertices.size());
 
 			m_IndexBuffer->SetData(m_Indices.data(), m_Indices.size());
 

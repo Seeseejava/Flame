@@ -11,7 +11,7 @@
 namespace Flame
 {
 	class Model;
-	struct Vertex
+	struct StaticVertex
 	{
 		glm::vec3 Pos;
 		glm::vec3 Normal;
@@ -22,11 +22,11 @@ namespace Flame
 		int EntityID;
 	};
 
-	struct AnimatedVertex
+	struct SkinnedVertex
 	{
-		glm::vec3 Position;
+		glm::vec3 Pos;
 		glm::vec3 Normal;
-		glm::vec2 TexCoords;
+		glm::vec2 TexCoord;
 		glm::vec3 Tangent;
 		glm::vec3 Bitangent;
 		int m_BoneIDs[MAX_BONE_INFLUENCE];
@@ -38,8 +38,10 @@ namespace Flame
 	class Mesh
 	{
 	public:
-		Mesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t> indices);
-		Mesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t> indices, const std::vector<MaterialTexture>& textures);
+		Mesh(const std::vector<StaticVertex>& vertices, const std::vector<uint32_t> indices);
+		Mesh(const std::vector<SkinnedVertex>& vertices, const std::vector<uint32_t> indices);
+		Mesh(const std::vector<StaticVertex>& vertices, const std::vector<uint32_t> indices, const std::vector<MaterialTexture>& textures);
+		Mesh(const std::vector<SkinnedVertex>& vertices, const std::vector<uint32_t> indices, const std::vector<MaterialTexture>& textures);
 
 		void Draw(const glm::mat4& transform, const glm::vec3& cameraPos, const Ref<Shader>& shader, int entityID, Model* model);
 
@@ -47,8 +49,8 @@ namespace Flame
 	private:
 		void SetupMesh(int entityID);
 	private:
-		std::vector<Vertex> m_StaticVertices;
-		std::vector<AnimatedVertex> m_AnimatedVertices;
+		std::vector<StaticVertex> m_StaticVertices;
+		std::vector<SkinnedVertex> m_SkinnedVertices;
 
 		std::vector<uint32_t> m_Indices;
 		std::vector<MaterialTexture> m_Textures;

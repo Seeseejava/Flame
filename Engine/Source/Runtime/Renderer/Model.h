@@ -41,6 +41,8 @@ namespace Flame
 
 		void LoadModel(const std::string& path);
 		void ProcessNode(aiNode* node, const aiScene* scene);
+
+		template <typename Vertex>
 		Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene);
 
 	public:
@@ -68,6 +70,9 @@ namespace Flame
 		std::vector<Mesh> m_Meshes;
 		std::string m_Directory;
 		Ref<Material> m_Material = CreateRef<Material>();
+
+		// Animation
+		bool bAnimated = false;
 
 	};
 }
