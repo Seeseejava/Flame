@@ -547,7 +547,7 @@ namespace Flame {
 		ImGui::SameLine();
 		if (ImGui::Button("..."))
 		{
-			std::string filepath = FileDialogs::OpenFile("Model (*.obj *.fbx)\0*.obj;*.fbx\0");
+			std::string filepath = FileDialogs::OpenFile("Model (*.obj *.fbx *.dae)\0*.obj;*.fbx;*.dae\0");
 			if (filepath.find("Assets") != std::string::npos)
 			{
 				filepath = filepath.substr(filepath.find("Assets"), filepath.length());
@@ -555,7 +555,7 @@ namespace Flame {
 			else
 			{
 				// TODO: Import Model
-				FLAME_CORE_ASSERT(false, "Flame Now Only support the model from Assets!");
+				//FLAME_CORE_ASSERT(false, "Flame Now Only support the model from Assets!");
 			}
 			if (!filepath.empty())
 			{
@@ -635,7 +635,7 @@ namespace Flame {
 						{
 							data[i] = (unsigned char)(model.metallic * 255.0f);
 						}
-						data[4] = (unsigned char)255.0f;
+						data[3] = (unsigned char)255.0f;
 						model.metallicRGBA->SetData(data, sizeof(unsigned char) * 4);
 					}
 				}
@@ -665,7 +665,7 @@ namespace Flame {
 						{
 							data[i] = (unsigned char)(model.roughness * 255.0f);
 						}
-						data[4] = (unsigned char)255.0f;
+						data[3] = (unsigned char)255.0f;
 						model.roughnessRGBA->SetData(data, sizeof(unsigned char) * 4);
 					}
 				}

@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Runtime/Core/Core.h"
+#include "Runtime/Animation/animdata.h"
+#include "Runtime/Animation/animator.h"
 
 #include "Runtime/Renderer/Shader.h"
 #include "Runtime/Renderer/Mesh.h"
@@ -11,6 +13,9 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
+
+#include <optional>
+#include <map>
 
 namespace Flame
 {
@@ -34,6 +39,9 @@ namespace Flame
 		void Draw(const glm::mat4& transform, const glm::vec3& cameraPos, int entityID);
 		void Draw(const glm::mat4& transform, const glm::vec3& cameraPos, Ref<Shader> shader, int entityID);
 		void Draw();
+
+		auto& GetBoneInfoMap() { return m_BoneInfoMap; }
+		int& GetBoneCount() { return m_BoneCounter; }
 
 	private:
 
@@ -66,13 +74,20 @@ namespace Flame
 
 		bool bUseAoMap = false;
 		Ref<Texture2D> m_AoMap = Library<Texture2D>::GetInstance().GetWhiteTexture();
+
+		bool bAnimated = false;
+
+		Animation m_Animation;
+		Animator m_Animator;
+
 	private:
 		std::vector<Mesh> m_Meshes;
 		std::string m_Directory;
 		Ref<Material> m_Material = CreateRef<Material>();
 
 		// Animation
-		bool bAnimated = false;
+		int m_BoneCounter = 0;
+		std::map<std::string, BoneInfo> m_BoneInfoMap;
 
 	};
 }

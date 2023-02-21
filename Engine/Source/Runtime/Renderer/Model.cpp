@@ -8,6 +8,18 @@
 #include "optional"
 namespace Flame
 {
+	namespace Utils
+	{
+		static void SetVertexBoneDataToDefault(SkinnedVertex& vertex)
+		{
+			for (int i = 0; i < MAX_BONE_INFLUENCE; i++)
+			{
+				vertex.m_BoneIDs[i] = -1;
+				vertex.m_Weights[i] = 0.0f;
+			}
+		}
+	}
+
 	void Model::Draw(const glm::mat4& transform, const glm::vec3& cameraPos, int entityID)
 	{
 		for (unsigned int i = 0; i < m_Meshes.size(); ++i)
@@ -29,19 +41,28 @@ namespace Flame
 	void Model::LoadModel(const std::string& path)
 	{
 		Assimp::Importer importer;
-		const aiScene* scene = importer.ReadFile(AssetManager::GetFullPath(path).string(), aiProcess_Triangulate | aiProcess_FlipUVs);
+
+		std::string standardPath = std::regex_replace(path, std::regex("\\\\"), "/");
+		std::string standardFullPath = std::regex_replace(AssetManager::GetFullPath(path).string(), std::regex("\\\\"), "/");
+		const aiScene* scene = importer.ReadFile(standardFullPath, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_CalcTangentSpace);
 
 		if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 		{
-			FLAME_CORE_ASSERT("ERROR::ASSIMP::{0}", importer.GetErrorString());
+			FLAME_CORE_ERROR("ERROR::ASSIMP::{0}", importer.GetErrorString());
 			return;
 		}
 
-		std::string standardPath = std::regex_replace(path, std::regex("\\\\"), "/");
 		m_Directory = standardPath.substr(0, standardPath.find_last_of('/'));
 
 		if (scene->HasAnimations())
+		{
 			bAnimated = true;
+			ProcessNode(scene->mRootNode, scene);
+			m_Animation = Animation(standardFullPath, this);
+			m_Animator = Animator(&m_Animation);
+		}
+		else
+			ProcessNode(scene->mRootNode, scene);
 
 		ProcessNode(scene->mRootNode, scene);
 	}
@@ -75,6 +96,12 @@ namespace Flame
 		for (uint32_t i = 0; i < mesh->mNumVertices; ++i)
 		{
 			Vertex vertex;
+
+			if (bAnimated)
+			{
+				Utils::SetVertexBoneDataToDefault((*reinterpret_cast<SkinnedVertex*>(&vertex)));
+			}
+
 
 			//pos
 			glm::vec3 vector;
@@ -137,6 +164,48 @@ namespace Flame
 			}
 		}
 
+		// Bones
+		if (bAnimated)
+		{
+			for (size_t boneIndex = 0; boneIndex < mesh->mNumBones; ++boneIndex)
+			{
+				int boneID = -1;
+				std::string boneName = mesh->mBones[boneIndex]->mName.C_Str();
+				if (m_BoneInfoMap.find(boneName) == m_BoneInfoMap.end())
+				{
+					BoneInfo newBoneInfo;
+					newBoneInfo.id = m_BoneCounter;
+					newBoneInfo.offset = Utils::ConvertMatrixToGLMFormat(mesh->mBones[boneIndex]->mOffsetMatrix);
+					m_BoneInfoMap[boneName] = newBoneInfo;
+					boneID = m_BoneCounter;
+					m_BoneCounter++;
+				}
+				else
+				{
+					boneID = m_BoneInfoMap[boneName].id;
+				}
+				FLAME_CORE_ASSERT(boneID != -1, "ID Error!");
+				auto weights = mesh->mBones[boneIndex]->mWeights;
+				int numWeights = mesh->mBones[boneIndex]->mNumWeights;
+
+				for (int weightIndex = 0; weightIndex < numWeights; ++weightIndex)
+				{
+					int vertexId = weights[weightIndex].mVertexId;
+					float weight = weights[weightIndex].mWeight;
+					FLAME_CORE_ASSERT(vertexId <= vertices.size(), "Index Error!");
+					for (int i = 0; i < MAX_BONE_INFLUENCE; ++i)
+					{
+						if ((*reinterpret_cast<SkinnedVertex*>(&vertices[vertexId])).m_BoneIDs[i] < 0)
+						{
+							(*reinterpret_cast<SkinnedVertex*>(&vertices[vertexId])).m_Weights[i] = weight;
+							(*reinterpret_cast<SkinnedVertex*>(&vertices[vertexId])).m_BoneIDs[i] = boneID;
+							break;
+						}
+					}
+				}
+			}
+		}
+
 		// process materials
 		aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 		// we assume a convention for sampler names in the shaders. Each diffuse texture should be named
@@ -151,7 +220,7 @@ namespace Flame
 			if (maps) textures.insert(textures.end(), maps.value().begin(), maps.value().end());
 		};
 
-		for (uint32_t type = aiTextureType_NONE; type < aiTextureType_TRANSMISSION; type++)
+		for (uint32_t type = aiTextureType_NONE; type < aiTextureType_REFLECTION; type++)
 		{
 			loadTexture(static_cast<aiTextureType>(type));
 		}
@@ -212,7 +281,7 @@ namespace Flame
 					texture.type = TextureType::AmbientOcclusion;
 					m_AoMap = texture.texture2d;
 					break;
-				case aiTextureType_BASE_COLOR:
+			/*	case aiTextureType_BASE_COLOR:
 					texture.type = TextureType::Albedo;
 					m_AlbedoMap = texture.texture2d;
 					break;
@@ -234,7 +303,7 @@ namespace Flame
 				case aiTextureType_AMBIENT_OCCLUSION:
 					texture.type = TextureType::AmbientOcclusion;
 					m_AoMap = texture.texture2d;
-					break;
+					break;*/
 				}
 				texture.path = str.C_Str();
 				textures.push_back(texture);

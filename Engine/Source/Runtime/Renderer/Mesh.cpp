@@ -67,6 +67,8 @@ namespace Flame {
 					{ ShaderDataType::Float3, "a_Tangent"},
 					{ ShaderDataType::Float3, "a_Bitangent"},
 					{ ShaderDataType::Int,	  "a_EntityID"},
+					{ ShaderDataType::Int4,   "a_BoneIDs"},
+					{ ShaderDataType::Float4, "a_Weights"},
 			});
 
 		m_VertexArray->AddVertexBuffer(m_VertexBuffer);
@@ -89,6 +91,8 @@ namespace Flame {
 					{ ShaderDataType::Float3, "a_Tangent"},
 					{ ShaderDataType::Float3, "a_Bitangent"},
 					{ ShaderDataType::Int,	  "a_EntityID"},
+					{ ShaderDataType::Int4,   "a_BoneIDs"},
+					{ ShaderDataType::Float4, "a_Weights"},
 			});
 		m_VertexArray->AddVertexBuffer(m_VertexBuffer);
 		m_IndexBuffer = IndexBuffer::Create(indices.size());
@@ -132,6 +136,15 @@ namespace Flame {
 				model->m_AoMap->Bind(7);
 			else
 				Library<Texture2D>::GetInstance().GetWhiteTexture()->Bind(7);
+
+			if (model->bAnimated)
+			{
+				model->m_Animator.UpdateAnimation(0.01f);
+
+				auto transforms = model->m_Animator.GetFinalBoneMatrices();
+				for (int i = 0; i < transforms.size(); ++i)
+					shader->SetMat4("finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);
+			}
 
 			shader->SetInt("irradianceMap", 0);
 			shader->SetInt("prefilterMap", 1);
@@ -193,7 +206,11 @@ namespace Flame {
 
 			m_VertexArray->Bind();
 
-			m_VertexBuffer->SetData(m_StaticVertices.data(), sizeof(StaticVertex) * m_StaticVertices.size());
+			if (m_StaticVertices.empty())
+				m_VertexBuffer->SetData(m_SkinnedVertices.data(), sizeof(StaticVertex) * m_SkinnedVertices.size());
+			else
+				m_VertexBuffer->SetData(m_StaticVertices.data(), sizeof(StaticVertex) * m_StaticVertices.size());
+
 			m_IndexBuffer->SetData(m_Indices.data(), m_Indices.size());
 
 			m_VertexArray->Unbind();
@@ -210,13 +227,24 @@ namespace Flame {
 			m_EntityID = entityID;
 			m_VertexArray->Bind();
 
-			for (int i = 0; i < m_StaticVertices.size(); ++i)
+			if (m_StaticVertices.empty())
 			{
-				m_StaticVertices[i].EntityID = entityID;
+				for (int i = 0; i < m_SkinnedVertices.size(); ++i)
+				{
+					m_SkinnedVertices[i].EntityID = entityID;
+				}
+
+				m_VertexBuffer->SetData(m_SkinnedVertices.data(), sizeof(SkinnedVertex) * m_SkinnedVertices.size());
 			}
+			else
+			{
+				for (int i = 0; i < m_StaticVertices.size(); ++i)
+				{
+					m_StaticVertices[i].EntityID = entityID;
+				}
 
-			m_VertexBuffer->SetData(m_StaticVertices.data(), sizeof(StaticVertex) * m_StaticVertices.size());
-
+				m_VertexBuffer->SetData(m_StaticVertices.data(), sizeof(StaticVertex) * m_StaticVertices.size());
+			}
 			m_IndexBuffer->SetData(m_Indices.data(), m_Indices.size());
 
 			m_VertexArray->Unbind();
