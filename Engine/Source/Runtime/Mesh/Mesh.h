@@ -5,7 +5,7 @@
 #include "Runtime/Animation/animator.h"
 
 #include "Runtime/Renderer/Shader.h"
-#include "Runtime/Renderer/Mesh.h"
+#include "Runtime/Mesh/SubMesh.h"
 #include "Runtime/Renderer/Texture.h"
 #include "Runtime/Renderer/Material.h"
 #include "Runtime/Library/TextureLibrary.h"
@@ -19,17 +19,18 @@
 
 namespace Flame
 {
-	class Model
+	class Mesh
 	{
 	public:
-		Model() = default;
-		Model(const std::string& path)
+		Mesh() = default;
+		Mesh(const Mesh&) = default;
+		Mesh(const std::string& path)
 			: m_Material(CreateRef<Material>(Library<Shader>::GetInstance().GetDefaultShader()))
 		{
 			LoadModel(path);
 		}
 
-		Model(const std::string& path, Ref<Shader> shader)
+		Mesh(const std::string& path, Ref<Shader> shader)
 			: m_Material(CreateRef<Material>(shader))
 		{
 			LoadModel(path);
@@ -51,7 +52,7 @@ namespace Flame
 		void ProcessNode(aiNode* node, const aiScene* scene);
 
 		template <typename Vertex>
-		Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene);
+		SubMesh ProcessMesh(aiMesh* mesh, const aiScene* scene);
 
 	public:
 		bool bUseAlbedoMap = false;
@@ -81,7 +82,7 @@ namespace Flame
 		Animator m_Animator;
 
 	private:
-		std::vector<Mesh> m_Meshes;
+		std::vector<SubMesh> m_SubMeshes;
 		std::string m_Directory;
 		Ref<Material> m_Material = CreateRef<Material>();
 

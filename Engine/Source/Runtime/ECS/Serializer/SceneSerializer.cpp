@@ -294,12 +294,12 @@ namespace Flame {
 		}
 
 
-		if (entity.HasComponent<StaticMeshComponent>())
+		if (entity.HasComponent<MeshComponent>())
 		{
-			out << YAML::Key << "StaticMeshComponent";
+			out << YAML::Key << "MeshComponent";
 			out << YAML::BeginMap;
 
-			auto& staticMeshComponent = entity.GetComponent<StaticMeshComponent>();
+			auto& staticMeshComponent = entity.GetComponent<MeshComponent>();
 			out << YAML::Key << "Path" << YAML::Value << staticMeshComponent.Path.c_str();
 
 			// Material 
@@ -486,11 +486,11 @@ namespace Flame {
 					auto& sc3d = deserializedEntity.AddComponent<SphereCollider3DComponent>();
 				}
 
-				auto staticMeshComponent = entity["StaticMeshComponent"];
+				auto staticMeshComponent = entity["MeshComponent"];
 				if (staticMeshComponent)
 				{
 					std::string str = staticMeshComponent["Path"].as<std::string>();
-					auto& sm = deserializedEntity.AddComponent<StaticMeshComponent>(str);
+					auto& sm = deserializedEntity.AddComponent<MeshComponent>(str);
 
 					// Material
 					sm.Mesh.bUseAlbedoMap = staticMeshComponent["bUseAlbedoMap"].as<bool>();

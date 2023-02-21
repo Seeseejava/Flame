@@ -14,7 +14,7 @@
 #include "Runtime/ECS/Component/Shape/CircleRendererComponent.h"
 #include "Runtime/ECS/Component/Shape/SpriteRendererComponent.h"
 #include "Runtime/ECS/Component/Transform/TransformComponent.h" 
-#include "Runtime/ECS/Component/Mesh/StaticMeshComponent.h"
+#include "Runtime/ECS/Component/Mesh/MeshComponent.h"
 #include "Runtime/ECS/Component/Renderer/LightComponent.h"
 
 #include <concepts>
@@ -36,5 +36,5 @@ namespace Flame
 	using AllComponents = ComponentGroup<TransformComponent, CircleRendererComponent, SpriteRendererComponent,
 		CameraComponent, NativeScriptComponent, PythonScriptComponent, Rigidbody2DComponent, BoxCollider2DComponent,
 		CircleCollider2DComponent, Rigidbody3DComponent, BoxCollider3DComponent, SphereCollider3DComponent, 
-		StaticMeshComponent, LightComponent>;
+		MeshComponent, LightComponent>;
 }

@@ -332,11 +332,11 @@ namespace Flame {
 				}
 			}
 
-			if (!m_SelectionContext.HasComponent<StaticMeshComponent>())
+			if (!m_SelectionContext.HasComponent<MeshComponent>())
 			{
-				if (ImGui::MenuItem("Static Mesh Renderer"))
+				if (ImGui::MenuItem("Mesh Renderer"))
 				{
-					m_SelectionContext.AddComponent<StaticMeshComponent>();
+					m_SelectionContext.AddComponent<MeshComponent>();
 					ImGui::CloseCurrentPopup();
 				}
 			}
@@ -537,36 +537,36 @@ namespace Flame {
 				ImGui::DragFloat("Restitution Threshold", &component.RestitutionThreshold, 0.01f, 0.0f);
 			});
 
-		DrawComponent<StaticMeshComponent>("Static Mesh Renderer", entity, [](StaticMeshComponent& component)
+		DrawComponent<MeshComponent>("Static Mesh Renderer", entity, [](MeshComponent& component)
 			{
-				ImGui::Text("Mesh Path");
-		ImGui::SameLine();
+			ImGui::Text("Mesh Path");
+			ImGui::SameLine();
 
-		ImGui::Text(component.Path.c_str());
+			ImGui::Text(component.Path.c_str());
 
-		ImGui::SameLine();
-		if (ImGui::Button("..."))
-		{
-			std::string filepath = FileDialogs::OpenFile("Model (*.obj *.fbx *.dae)\0*.obj;*.fbx;*.dae\0");
-			if (filepath.find("Assets") != std::string::npos)
+			ImGui::SameLine();
+			if (ImGui::Button("..."))
 			{
-				filepath = filepath.substr(filepath.find("Assets"), filepath.length());
-			}
-			else
-			{
-				// TODO: Import Model
-				//FLAME_CORE_ASSERT(false, "Flame Now Only support the model from Assets!");
-			}
-			if (!filepath.empty())
-			{
-				component.Mesh = Model(filepath);
-				component.Path = filepath;
-			}
+				std::string filepath = FileDialogs::OpenFile("Model (*.obj *.fbx *.dae)\0*.obj;*.fbx;*.dae\0");
+				if (filepath.find("Assets") != std::string::npos)
+				{
+					filepath = filepath.substr(filepath.find("Assets"), filepath.length());
+				}
+				else
+				{
+					// TODO: Import Model
+					//FLAME_CORE_ASSERT(false, "Flame Now Only support the model from Assets!");
+				}
+				if (!filepath.empty())
+				{
+					component.Mesh = Mesh(filepath);
+					component.Path = filepath;
+				}
 		}
 
 		if (ImGui::TreeNode((void*)"Material", "Material"))
 		{
-			const auto& materialNode = [&model = component.Mesh](const char* name, Ref<Texture2D>& tex, void(*func)(Model& model)) {
+			const auto& materialNode = [&model = component.Mesh](const char* name, Ref<Texture2D>& tex, void(*func)(Mesh& model)) {
 				if (ImGui::TreeNode((void*)name, name))
 				{
 					ImGui::Image((ImTextureID)tex->GetRendererID(), ImVec2(64, 64), ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
@@ -590,7 +590,7 @@ namespace Flame {
 				}
 			};
 
-			materialNode("Albedo", component.Mesh.m_AlbedoMap, [](Model& model) {
+			materialNode("Albedo", component.Mesh.m_AlbedoMap, [](Mesh& model) {
 				ImGui::SameLine();
 			ImGui::Checkbox("Use", &model.bUseAlbedoMap);
 
@@ -609,12 +609,12 @@ namespace Flame {
 			}
 				});
 
-			materialNode("Normal", component.Mesh.m_NormalMap, [](Model& model) {
+			materialNode("Normal", component.Mesh.m_NormalMap, [](Mesh& model) {
 				ImGui::SameLine();
 			ImGui::Checkbox("Use", &model.bUseNormalMap);
 				});
 
-			materialNode("Metallic", component.Mesh.m_MetallicMap, [](Model& model) {
+			materialNode("Metallic", component.Mesh.m_MetallicMap, [](Mesh& model) {
 				ImGui::SameLine();
 
 			if (ImGui::BeginTable("Metallic", 1))
@@ -644,7 +644,7 @@ namespace Flame {
 			}
 				});
 
-			materialNode("Roughness", component.Mesh.m_RoughnessMap, [](Model& model) {
+			materialNode("Roughness", component.Mesh.m_RoughnessMap, [](Mesh& model) {
 				ImGui::SameLine();
 
 			if (ImGui::BeginTable("Roughness", 1))
@@ -674,7 +674,7 @@ namespace Flame {
 			}
 				});
 
-			materialNode("Ambient Occlusion", component.Mesh.m_AoMap, [](Model& model) {
+			materialNode("Ambient Occlusion", component.Mesh.m_AoMap, [](Mesh& model) {
 				ImGui::SameLine();
 			ImGui::Checkbox("Use", &model.bUseAoMap);
 				});

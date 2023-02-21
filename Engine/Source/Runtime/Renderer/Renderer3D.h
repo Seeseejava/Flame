@@ -2,7 +2,7 @@
 
 
 #include "Runtime/Camera/EditorCamera.h"
-#include "Runtime/ECS/Component/Mesh/StaticMeshComponent.h"
+#include "Runtime/ECS/Component/Mesh/MeshComponent.h"
 #include "Runtime/Renderer/Texture.h"
 
 namespace Flame
@@ -17,7 +17,7 @@ namespace Flame
 		static void BeginScene(const EditorCamera& camera);
 		static void EndScene();
 
-		static void DrawModel(const glm::mat4& transform, const glm::vec3& cameraPos, StaticMeshComponent& MeshComponent, int EntityID);
+		static void DrawModel(const glm::mat4& transform, const glm::vec3& cameraPos, MeshComponent& MeshComponent, int EntityID);
 
 	};
 }

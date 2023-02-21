@@ -1,16 +1,16 @@
 #include "flamepch.h"
 
-#include "Runtime/Renderer/Mesh.h"
+#include "Runtime/Mesh/Mesh.h"
 #include "Runtime/Renderer/RenderCommand.h"
 #include "Runtime/Library/TextureLibrary.h"
-#include "Runtime/Renderer/Model.h"
+#include "Runtime/Mesh/SubMesh.h"
 #include "Runtime/Resource/ModeManager/ModeManager.h"
 
 #include <Glad/glad.h>
 
 namespace Flame {
 
-	Mesh::Mesh(const std::vector<StaticVertex>& vertices, const std::vector<uint32_t> indices)
+	SubMesh::SubMesh(const std::vector<StaticVertex>& vertices, const std::vector<uint32_t> indices)
 		: m_StaticVertices(vertices), m_Indices(indices)
 	{
 		m_VertexArray = VertexArray::Create();
@@ -32,7 +32,7 @@ namespace Flame {
 		m_VertexArray->SetIndexBuffer(m_IndexBuffer);
 	}
 
-	Mesh::Mesh(const std::vector<StaticVertex>& vertices, const std::vector<uint32_t> indices, const std::vector<MaterialTexture>& textures)
+	SubMesh::SubMesh(const std::vector<StaticVertex>& vertices, const std::vector<uint32_t> indices, const std::vector<MaterialTexture>& textures)
 		: m_StaticVertices(vertices), m_Indices(indices), m_Textures(textures)
 	{
 		m_VertexArray = VertexArray::Create();
@@ -54,7 +54,7 @@ namespace Flame {
 		m_VertexArray->SetIndexBuffer(m_IndexBuffer);
 	}
 
-	Mesh::Mesh(const std::vector<SkinnedVertex>& vertices, const std::vector<uint32_t> indices)
+	SubMesh::SubMesh(const std::vector<SkinnedVertex>& vertices, const std::vector<uint32_t> indices)
 		: m_SkinnedVertices(vertices), m_Indices(indices)
 	{
 		m_VertexArray = VertexArray::Create();
@@ -78,7 +78,7 @@ namespace Flame {
 		m_VertexArray->SetIndexBuffer(m_IndexBuffer);
 	}
 
-	Mesh::Mesh(const std::vector<SkinnedVertex>& vertices, const std::vector<uint32_t> indices, const std::vector<MaterialTexture>& textures)
+	SubMesh::SubMesh(const std::vector<SkinnedVertex>& vertices, const std::vector<uint32_t> indices, const std::vector<MaterialTexture>& textures)
 		: m_SkinnedVertices(vertices), m_Indices(indices), m_Textures(textures)
 	{
 		m_VertexArray = VertexArray::Create();
@@ -99,7 +99,7 @@ namespace Flame {
 		m_VertexArray->SetIndexBuffer(m_IndexBuffer);
 	}
 
-	void Mesh::Draw(const glm::mat4& transform, const glm::vec3& cameraPos, const Ref<Shader>& shader, int entityID, Model* model)
+	void SubMesh::Draw(const glm::mat4& transform, const glm::vec3& cameraPos, const Ref<Shader>& shader, int entityID, Mesh* model)
 	{
 		SetupMesh(entityID);
 		if (ModeManager::bHdrUse)
@@ -196,7 +196,7 @@ namespace Flame {
 		RenderCommand::DrawIndexed(m_VertexArray, m_IndexBuffer->GetCount());
 	}
 
-	void Mesh::Draw()
+	void SubMesh::Draw()
 	{
 		//SetupMesh(EntityID);
 		static bool bInit = true;
@@ -220,7 +220,7 @@ namespace Flame {
 		m_VertexArray->Unbind();
 	}
 
-	void Mesh::SetupMesh(int entityID)
+	void SubMesh::SetupMesh(int entityID)
 	{
 		if (m_EntityID == -1)
 		{

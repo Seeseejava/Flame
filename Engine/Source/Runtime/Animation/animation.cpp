@@ -1,13 +1,13 @@
 #include "flamepch.h"
 
 #include "Runtime/Animation/animation.h"
-#include "Runtime/Renderer/Model.h"
+#include "Runtime/Mesh/Mesh.h"
 
 //#include <assimp/cimport.h>
 
 namespace Flame
 {
-	Animation::Animation(const std::string& animationPath, Model* model)
+	Animation::Animation(const std::string& animationPath, Mesh* model)
 	{
 		Assimp::Importer importer;
 		
@@ -41,12 +41,12 @@ namespace Flame
 		ReadMissingBones(animation, *model);
 	}
 	
-	void Animation::ReadMissingBones(const aiAnimation* animation, Model& model)
+	void Animation::ReadMissingBones(const aiAnimation* animation, Mesh& model)
 	{
 		int size = animation->mNumChannels;
 
-		auto& boneInfoMap = model.GetBoneInfoMap();//getting m_BoneInfoMap from Model class
-		int& boneCount = model.GetBoneCount(); //getting the m_BoneCounter from Model class
+		auto& boneInfoMap = model.GetBoneInfoMap();//getting m_BoneInfoMap from Mesh class
+		int& boneCount = model.GetBoneCount(); //getting the m_BoneCounter from Mesh class
 
 		//reading channels(bones engaged in an animation and their keyframes)
 		for (int i = 0; i < size; i++)

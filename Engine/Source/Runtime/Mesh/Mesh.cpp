@@ -1,8 +1,8 @@
 #include "flamepch.h"
 
 #include "Runtime/Resource/AssetManager/AssetManager.h"
-#include "Runtime/Renderer/Model.h"
-#include "Runtime/Renderer/Mesh.h"
+#include "Runtime/Mesh/Mesh.h"
+#include "Runtime/Mesh/SubMesh.h"
 
 #include <regex>
 #include "optional"
@@ -20,25 +20,25 @@ namespace Flame
 		}
 	}
 
-	void Model::Draw(const glm::mat4& transform, const glm::vec3& cameraPos, int entityID)
+	void Mesh::Draw(const glm::mat4& transform, const glm::vec3& cameraPos, int entityID)
 	{
-		for (unsigned int i = 0; i < m_Meshes.size(); ++i)
-			m_Meshes[i].Draw(transform, cameraPos, m_Material->GetShader(), entityID, this);
+		for (unsigned int i = 0; i < m_SubMeshes.size(); ++i)
+			m_SubMeshes[i].Draw(transform, cameraPos, m_Material->GetShader(), entityID, this);
 	}
 
-	void Model::Draw(const glm::mat4& transform, const glm::vec3& cameraPos, Ref<Shader> shader, int entityID)
+	void Mesh::Draw(const glm::mat4& transform, const glm::vec3& cameraPos, Ref<Shader> shader, int entityID)
 	{
-		for (unsigned int i = 0; i < m_Meshes.size(); ++i)
-			m_Meshes[i].Draw(transform, cameraPos, shader, entityID, this);
+		for (unsigned int i = 0; i < m_SubMeshes.size(); ++i)
+			m_SubMeshes[i].Draw(transform, cameraPos, shader, entityID, this);
 	};
 
-	void Model::Draw()
+	void Mesh::Draw()
 	{
-		for (unsigned int i = 0; i < m_Meshes.size(); ++i)
-			m_Meshes[i].Draw();
+		for (unsigned int i = 0; i < m_SubMeshes.size(); ++i)
+			m_SubMeshes[i].Draw();
 	}
 
-	void Model::LoadModel(const std::string& path)
+	void Mesh::LoadModel(const std::string& path)
 	{
 		Assimp::Importer importer;
 
@@ -67,16 +67,16 @@ namespace Flame
 		ProcessNode(scene->mRootNode, scene);
 	}
 
-	void Model::ProcessNode(aiNode* node, const aiScene* scene)
+	void Mesh::ProcessNode(aiNode* node, const aiScene* scene)
 	{
 		for (uint32_t i = 0; i < node->mNumMeshes; ++i)
 		{
 			aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
 
 			if (bAnimated)
-				m_Meshes.push_back(ProcessMesh<SkinnedVertex>(mesh, scene));
+				m_SubMeshes.push_back(ProcessMesh<SkinnedVertex>(mesh, scene));
 			else
-				m_Meshes.push_back(ProcessMesh<StaticVertex>(mesh, scene));
+				m_SubMeshes.push_back(ProcessMesh<StaticVertex>(mesh, scene));
 		}
 
 		for (uint32_t i = 0; i < node->mNumChildren; ++i)
@@ -87,7 +87,7 @@ namespace Flame
 
 
 	template <typename Vertex>
-	Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
+	SubMesh Mesh::ProcessMesh(aiMesh* mesh, const aiScene* scene)
 	{
 		std::vector<Vertex> vertices;
 		std::vector<uint32_t> indices;
@@ -226,10 +226,10 @@ namespace Flame
 		}
 
 
-		return Mesh(vertices, indices);
+		return SubMesh(vertices, indices);
 	}
 
-	std::optional<std::vector<MaterialTexture>> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType type)
+	std::optional<std::vector<MaterialTexture>> Mesh::loadMaterialTextures(aiMaterial* mat, aiTextureType type)
 	{
 		std::vector<MaterialTexture> textures;
 		for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)
@@ -281,16 +281,16 @@ namespace Flame
 					texture.type = TextureType::AmbientOcclusion;
 					m_AoMap = texture.texture2d;
 					break;
-			/*	case aiTextureType_BASE_COLOR:
-					texture.type = TextureType::Albedo;
-					m_AlbedoMap = texture.texture2d;
-					break;
-				case aiTextureType_NORMAL_CAMERA:
+				case aiTextureType_NORMALS:
 					texture.type = TextureType::Normal;
 					m_NormalMap = texture.texture2d;
 					break;
-				case aiTextureType_EMISSION_COLOR:
+				case aiTextureType_EMISSIVE:
 					texture.type = TextureType::Emission;
+					break;
+			/*	case aiTextureType_BASE_COLOR:
+					texture.type = TextureType::Albedo;
+					m_AlbedoMap = texture.texture2d;
 					break;
 				case aiTextureType_METALNESS:
 					texture.type = TextureType::Metalness;

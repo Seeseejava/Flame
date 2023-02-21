@@ -10,7 +10,7 @@
 
 namespace Flame
 {
-	class Model;
+	class Mesh;
 	struct StaticVertex
 	{
 		glm::vec3 Pos;
@@ -36,15 +36,15 @@ namespace Flame
 		float m_Weights[MAX_BONE_INFLUENCE];
 	};
 
-	class Mesh
+	class SubMesh
 	{
 	public:
-		Mesh(const std::vector<StaticVertex>& vertices, const std::vector<uint32_t> indices);
-		Mesh(const std::vector<SkinnedVertex>& vertices, const std::vector<uint32_t> indices);
-		Mesh(const std::vector<StaticVertex>& vertices, const std::vector<uint32_t> indices, const std::vector<MaterialTexture>& textures);
-		Mesh(const std::vector<SkinnedVertex>& vertices, const std::vector<uint32_t> indices, const std::vector<MaterialTexture>& textures);
+		SubMesh(const std::vector<StaticVertex>& vertices, const std::vector<uint32_t> indices);
+		SubMesh(const std::vector<SkinnedVertex>& vertices, const std::vector<uint32_t> indices);
+		SubMesh(const std::vector<StaticVertex>& vertices, const std::vector<uint32_t> indices, const std::vector<MaterialTexture>& textures);
+		SubMesh(const std::vector<SkinnedVertex>& vertices, const std::vector<uint32_t> indices, const std::vector<MaterialTexture>& textures);
 
-		void Draw(const glm::mat4& transform, const glm::vec3& cameraPos, const Ref<Shader>& shader, int entityID, Model* model);
+		void Draw(const glm::mat4& transform, const glm::vec3& cameraPos, const Ref<Shader>& shader, int entityID, Mesh* model);
 
 		void Draw();
 	private:

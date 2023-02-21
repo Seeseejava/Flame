@@ -91,7 +91,7 @@ namespace Flame
 		Library<Shader>::GetInstance().GetSkyBoxShader()->Bind();
 		Library<CubeMapTexture>::GetInstance().Get("SkyBoxTexture")->Bind(0);
 		Library<Shader>::GetInstance().GetSkyBoxShader()->SetInt("SkyBox", 0);
-		Library<Model>::GetInstance().Get("Box")->Draw();
+		Library<Mesh>::GetInstance().Get("Box")->Draw();
 
 		RenderCommand::DepthFunc(DepthComp::LESS);
 	}
@@ -152,7 +152,7 @@ namespace Flame
 				equirectangularToCubemapShader->SetMat4("view", captureViews[i]);
 				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, envCubemap->GetRendererID(), 0);
 				RenderCommand::Clear();
-				Library<Model>::GetInstance().Get("Box")->Draw();
+				Library<Mesh>::GetInstance().Get("Box")->Draw();
 			}
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 			// End temp
@@ -202,7 +202,7 @@ namespace Flame
 				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, irradianceMap->GetRendererID(), 0);
 				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-				Library<Model>::GetInstance().Get("Box")->Draw();
+				Library<Mesh>::GetInstance().Get("Box")->Draw();
 			}
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 			//end temp
@@ -226,7 +226,7 @@ namespace Flame
 			unsigned int maxMipLevels = 5;
 			for (unsigned int mip = 0; mip < maxMipLevels; ++mip)
 			{
-				// reisze framebuffer according to mip-level size.
+				// resize framebuffer according to mip-level size.
 				unsigned int mipWidth = static_cast<unsigned int>(128 * std::pow(0.5, mip));
 				unsigned int mipHeight = static_cast<unsigned int>(128 * std::pow(0.5, mip));
 				glBindRenderbuffer(GL_RENDERBUFFER, captureRBO);
@@ -241,7 +241,7 @@ namespace Flame
 					glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, prefilterMap->GetRendererID(), mip);
 
 					RenderCommand::Clear();
-					Library<Model>::GetInstance().Get("Box")->Draw();
+					Library<Mesh>::GetInstance().Get("Box")->Draw();
 				}
 			}
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -267,7 +267,7 @@ namespace Flame
 		backgroundShader->SetInt("environmentMap", 0);
 		backgroundShader->SetFloat("SkyBoxLod", environmentSettings.SkyBoxLod);
 		backgroundShader->SetFloat("exposure", environmentSettings.exposure);
-		Library<Model>::GetInstance().Get("Box")->Draw();
+		Library<Mesh>::GetInstance().Get("Box")->Draw();
 		RenderCommand::DepthFunc(DepthComp::LESS);
 	}
 }
