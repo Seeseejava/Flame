@@ -79,6 +79,7 @@ namespace Flame
 		// Animation
 		bool bAnimated = false;
 		bool bPlayAnim = false;
+		bool bStopAnim = false;
 
 		Animation m_Animation;
 		Animator m_Animator;

@@ -106,7 +106,8 @@ namespace Flame {
 		shader->Bind();
 		if (model->bPlayAnim)
 		{
-			model->m_Animator.UpdateAnimation(0.01f * model->m_AnimPlaySpeed);
+			if (!model->bStopAnim)
+				model->m_Animator.UpdateAnimation(0.01f * model->m_AnimPlaySpeed);
 
 			auto transforms = model->m_Animator.GetFinalBoneMatrices();
 			for (int i = 0; i < transforms.size(); ++i)

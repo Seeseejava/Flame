@@ -83,6 +83,11 @@ namespace Flame
 			return m_CurrentTime / m_CurrentAnimation->GetDuration();
 		}
 
+		void Reset()
+		{
+			m_CurrentTime = 0.0f;
+		}
+
 	private:
 		std::vector<glm::mat4> m_FinalBoneMatrices;
 		Animation* m_CurrentAnimation;

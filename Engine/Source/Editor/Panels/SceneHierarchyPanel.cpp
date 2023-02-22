@@ -702,19 +702,27 @@ namespace Flame {
 						label = "Play";
 				}
 					},
-					[]() { ImGui::Button("Pause"); },
-						200.0f
-					);
-				static float progress = 0.0f;
-				ImGui::ProgressBar(component.m_Mesh->m_Animator.GetProgress(), ImVec2(0.0f, 0.0f));
-
-				ImGuiWrapper::DrawTwoUI(
-					[]() { ImGui::Text("Speed"); },
 					[&mesh = component.m_Mesh]() {
-						ImGui::SliderFloat("##Speed", &mesh->m_AnimPlaySpeed, 0.1f, 10.0f);
-					},
-					100.0f
-						);
+						static std::string label = "Pause";
+					if (ImGui::Button(label.c_str()))
+					{
+						mesh->bStopAnim = !mesh->bStopAnim;
+						if (mesh->bStopAnim)
+							label = "Resume";
+						else
+							label = "Pause";
+					}
+				},
+					88.0f
+			);
+
+				ImGui::Columns(2, nullptr, false);
+				ImGui::Text("Speed");
+				ImGui::NextColumn();
+				ImGui::SliderFloat("##Speed", &component.m_Mesh->m_AnimPlaySpeed, 0.1f, 10.0f);
+				ImGui::EndColumns();
+
+				ImGui::ProgressBar(component.m_Mesh->m_Animator.GetProgress(), ImVec2(0.0f, 0.0f));
 
 				ImGui::TreePop();
 			}
