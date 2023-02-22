@@ -83,6 +83,8 @@ namespace Flame
 		Animation m_Animation;
 		Animator m_Animator;
 
+		float m_AnimPlaySpeed = 1.0f;
+
 	private:
 		std::vector<SubMesh> m_SubMeshes;
 		std::string m_Directory;

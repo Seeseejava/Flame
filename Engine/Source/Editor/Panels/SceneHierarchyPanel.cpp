@@ -708,6 +708,14 @@ namespace Flame {
 				static float progress = 0.0f;
 				ImGui::ProgressBar(component.m_Mesh->m_Animator.GetProgress(), ImVec2(0.0f, 0.0f));
 
+				ImGuiWrapper::DrawTwoUI(
+					[]() { ImGui::Text("Speed"); },
+					[&mesh = component.m_Mesh]() {
+						ImGui::SliderFloat("##Speed", &mesh->m_AnimPlaySpeed, 0.1f, 10.0f);
+					},
+					100.0f
+						);
+
 				ImGui::TreePop();
 			}
 		}
