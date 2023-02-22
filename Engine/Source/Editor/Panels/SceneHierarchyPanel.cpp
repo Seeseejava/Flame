@@ -699,7 +699,10 @@ namespace Flame {
 					if (mesh->bPlayAnim)
 						label = "Stop";
 					else
+					{
 						label = "Play";
+						mesh->m_Animator.Reset();
+					}
 				}
 					},
 					[&mesh = component.m_Mesh]() {
