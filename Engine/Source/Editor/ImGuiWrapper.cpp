@@ -21,14 +21,12 @@ namespace Flame::ImGuiWrapper
         return open;
     }
 
-	template<typename UIFunc1, typename UIFunc2>
-	void DrawTwoUI(float ColumnWidth, UIFunc1 func1, UIFunc2 func2)
+	// SubNode
+	bool TreeNodeExStyle2(const void* str_id, const std::string& name, ImGuiTreeNodeFlags flags)
 	{
-		ImGui::Columns(2, nullptr, false);
-		ImGui::SetColumnWidth(0, ColumnWidth);
-		func1();
-		ImGui::NextColumn();
-		func2();
-		ImGui::EndColumns();
+		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{ 2.0f, 2.0f });
+		bool open = ImGui::TreeNodeEx((void*)str_id, flags, name.c_str());
+		ImGui::PopStyleVar();
+		return open;
 	}
 }

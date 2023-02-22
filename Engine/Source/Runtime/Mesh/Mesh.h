@@ -76,7 +76,9 @@ namespace Flame
 		bool bUseAoMap = false;
 		Ref<Texture2D> m_AoMap = Library<Texture2D>::GetInstance().GetWhiteTexture();
 
+		// Animation
 		bool bAnimated = false;
+		bool bPlayAnim = false;
 
 		Animation m_Animation;
 		Animator m_Animator;

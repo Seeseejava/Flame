@@ -41,7 +41,7 @@ namespace Flame
 	{
 		if (ModeManager::bHdrUse)
 		{
-			if (MeshComponent.m_Mesh->bAnimated)
+			if (MeshComponent.m_Mesh->bPlayAnim)
 				MeshComponent.m_Mesh->Draw(transform, cameraPos, Library<Shader>::GetInstance().Get("IBL_pbr_anim"), EntityID);
 			else
 				MeshComponent.m_Mesh->Draw(transform, cameraPos, Library<Shader>::GetInstance().Get("IBL_pbr_static"), EntityID);
