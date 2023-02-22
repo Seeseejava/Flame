@@ -29,6 +29,7 @@ namespace Flame {
 		}
 	private:
 		std::filesystem::path m_Path;
+		bool m_IsLoaded = false;
 		uint32_t m_Width, m_Height;
 		uint32_t m_RendererID;
 		GLenum m_InternalFormat, m_DataFormat;
