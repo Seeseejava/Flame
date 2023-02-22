@@ -78,6 +78,11 @@ namespace Flame
 			return m_FinalBoneMatrices;
 		}
 
+		float GetProgress()
+		{
+			return m_CurrentTime / m_CurrentAnimation->GetDuration();
+		}
+
 	private:
 		std::vector<glm::mat4> m_FinalBoneMatrices;
 		Animation* m_CurrentAnimation;

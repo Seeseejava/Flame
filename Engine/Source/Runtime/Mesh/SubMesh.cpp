@@ -137,7 +137,7 @@ namespace Flame {
 			else
 				Library<Texture2D>::GetInstance().GetWhiteTexture()->Bind(7);
 
-			if (model->bAnimated)
+			if (model->bPlayAnim)
 			{
 				model->m_Animator.UpdateAnimation(0.01f);
 

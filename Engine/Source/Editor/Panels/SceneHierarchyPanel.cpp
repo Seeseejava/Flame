@@ -702,8 +702,11 @@ namespace Flame {
 						label = "Play";
 				}
 					},
-					[]() { ImGui::Button("Pause"); }
+					[]() { ImGui::Button("Pause"); },
+						200.0f
 					);
+				static float progress = 0.0f;
+				ImGui::ProgressBar(component.m_Mesh->m_Animator.GetProgress(), ImVec2(0.0f, 0.0f));
 
 				ImGui::TreePop();
 			}
