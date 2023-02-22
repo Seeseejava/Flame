@@ -9,7 +9,7 @@ namespace Flame
 	class MeshComponent : public ComponentBase
 	{
 	public:
-		MeshComponent() = default;
+		MeshComponent() { m_Mesh = CreateRef<Mesh>(); };
 		MeshComponent(const MeshComponent&) = default;
 		MeshComponent(const std::string& path)
 			: Path(path), m_Mesh(CreateRef<Mesh>(path))
