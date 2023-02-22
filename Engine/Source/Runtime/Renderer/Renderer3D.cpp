@@ -40,9 +40,9 @@ namespace Flame
 	void Renderer3D::DrawModel(const glm::mat4& transform, const glm::vec3& cameraPos, MeshComponent& MeshComponent, int EntityID)
 	{
 		if (ModeManager::bHdrUse)
-			MeshComponent.Mesh.Draw(transform, cameraPos, Library<Shader>::GetInstance().Get("IBL_pbr"), EntityID);
+			MeshComponent.m_Mesh->Draw(transform, cameraPos, Library<Shader>::GetInstance().Get("IBL_pbr"), EntityID);
 		else
-			MeshComponent.Mesh.Draw(transform, cameraPos, EntityID);
+			MeshComponent.m_Mesh->Draw(transform, cameraPos, EntityID);
 	}
 
 

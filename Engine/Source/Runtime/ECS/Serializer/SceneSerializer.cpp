@@ -303,18 +303,18 @@ namespace Flame {
 			out << YAML::Key << "Path" << YAML::Value << staticMeshComponent.Path.c_str();
 
 			// Material 
-			out << YAML::Key << "bUseAlbedoMap" << YAML::Value << staticMeshComponent.Mesh.bUseAlbedoMap;
-			out << YAML::Key << "col" << YAML::Value << staticMeshComponent.Mesh.col;
+			out << YAML::Key << "bUseAlbedoMap" << YAML::Value << staticMeshComponent.m_Mesh->bUseAlbedoMap;
+			out << YAML::Key << "col" << YAML::Value << staticMeshComponent.m_Mesh->col;
 
-			out << YAML::Key << "bUseNormalMap" << YAML::Value << staticMeshComponent.Mesh.bUseNormalMap;
+			out << YAML::Key << "bUseNormalMap" << YAML::Value << staticMeshComponent.m_Mesh->bUseNormalMap;
 
-			out << YAML::Key << "bUseMetallicMap" << YAML::Value << staticMeshComponent.Mesh.bUseMetallicMap;
-			out << YAML::Key << "metallic" << YAML::Value << staticMeshComponent.Mesh.metallic;
+			out << YAML::Key << "bUseMetallicMap" << YAML::Value << staticMeshComponent.m_Mesh->bUseMetallicMap;
+			out << YAML::Key << "metallic" << YAML::Value << staticMeshComponent.m_Mesh->metallic;
 
-			out << YAML::Key << "bUseRoughnessMap" << YAML::Value << staticMeshComponent.Mesh.bUseRoughnessMap;
-			out << YAML::Key << "roughness" << YAML::Value << staticMeshComponent.Mesh.roughness;
+			out << YAML::Key << "bUseRoughnessMap" << YAML::Value << staticMeshComponent.m_Mesh->bUseRoughnessMap;
+			out << YAML::Key << "roughness" << YAML::Value << staticMeshComponent.m_Mesh->roughness;
 
-			out << YAML::Key << "bUseAoMap" << YAML::Value << staticMeshComponent.Mesh.bUseRoughnessMap;
+			out << YAML::Key << "bUseAoMap" << YAML::Value << staticMeshComponent.m_Mesh->bUseRoughnessMap;
 			// End Material
 
 			out << YAML::EndMap; //StaticMeshComponent
@@ -493,14 +493,14 @@ namespace Flame {
 					auto& sm = deserializedEntity.AddComponent<MeshComponent>(str);
 
 					// Material
-					sm.Mesh.bUseAlbedoMap = staticMeshComponent["bUseAlbedoMap"].as<bool>();
-					sm.Mesh.col = staticMeshComponent["col"].as<glm::vec4>();
-					sm.Mesh.bUseNormalMap = staticMeshComponent["bUseNormalMap"].as<bool>();
-					sm.Mesh.bUseMetallicMap = staticMeshComponent["bUseMetallicMap"].as<bool>();
-					sm.Mesh.metallic = staticMeshComponent["metallic"].as<float>();
-					sm.Mesh.bUseRoughnessMap = staticMeshComponent["bUseRoughnessMap"].as<bool>();
-					sm.Mesh.roughness = staticMeshComponent["roughness"].as<float>();
-					sm.Mesh.bUseAoMap = staticMeshComponent["bUseAoMap"].as<bool>();
+					sm.m_Mesh->bUseAlbedoMap = staticMeshComponent["bUseAlbedoMap"].as<bool>();
+					sm.m_Mesh->col = staticMeshComponent["col"].as<glm::vec4>();
+					sm.m_Mesh->bUseNormalMap = staticMeshComponent["bUseNormalMap"].as<bool>();
+					sm.m_Mesh->bUseMetallicMap = staticMeshComponent["bUseMetallicMap"].as<bool>();
+					sm.m_Mesh->metallic = staticMeshComponent["metallic"].as<float>();
+					sm.m_Mesh->bUseRoughnessMap = staticMeshComponent["bUseRoughnessMap"].as<bool>();
+					sm.m_Mesh->roughness = staticMeshComponent["roughness"].as<float>();
+					sm.m_Mesh->bUseAoMap = staticMeshComponent["bUseAoMap"].as<bool>();
 					// End Material
 				}
 
