@@ -11,7 +11,7 @@ namespace py = pybind11;
 
 namespace Flame
 {
-	PYBIND11_EMBEDDED_MODULE(Cpp, m)
+	PYBIND11_EMBEDDED_MODULE(Flame, m)
 	{
 		py::class_<Timestep>(m, "Timestep")
 			.def(py::init<float>())
@@ -50,7 +50,6 @@ namespace Flame
 		auto view = m_Scene->m_Registry.view<TransformComponent, PythonScriptComponent>();
 		for (auto e : view)
 		{
-			py::scoped_interpreter guard{};
 
 			Entity entity = { e, m_Scene };
 			auto& transform = entity.GetComponent<TransformComponent>();
@@ -87,7 +86,6 @@ namespace Flame
 		auto view = m_Scene->m_Registry.view<TransformComponent, PythonScriptComponent>();
 		for (auto entity : view)
 		{
-			py::scoped_interpreter guard{};
 
 			auto [transform, script] = view.get<TransformComponent, PythonScriptComponent>(entity);
 
