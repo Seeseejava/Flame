@@ -3,7 +3,7 @@
 #include "Runtime/Library/Library.h"
 #include "Runtime/Resource/AssetManager/AssetManager.h"
 #include "Runtime/Mesh/Mesh.h"
-#include "Runtime/Library/UniformBufferLibrary.h"
+#include "UniformBufferLibrary.h"
 
 
 namespace Flame

@@ -12,11 +12,11 @@ namespace Flame
 		MeshComponent() = default;
 		MeshComponent(const MeshComponent&) = default;
 		MeshComponent(const std::string& path)
-			: Path(path), m_Mesh(CreateRef<Mesh>(Path))
+			: Path(path), Mesh(path)
 		{
 		}
 
-		Ref<Mesh> m_Mesh;
+		Mesh Mesh;
 		std::string Path;
 	};
 }
