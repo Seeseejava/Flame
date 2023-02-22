@@ -16,7 +16,7 @@ layout(std140, binding = 0) uniform Camera
 	mat4 u_ViewProjection;
 };
 
-uniform mat4 u_Model_transform;
+uniform mat4 model;
 
 const int MAX_BONES = 100;
 const int MAX_BONE_INFLUENCE = 4;
@@ -47,7 +47,7 @@ void main()
     }
     vec4 localPosition = finalBoneTransform * vec4(a_Pos, 1.0);
 
-	vec4 WorldPos = u_Model_transform * localPosition;
+	vec4 WorldPos = model * localPosition;
 	Output.WorldPos = WorldPos.xyz;
 	Output.Normal = mat3(finalBoneTransform) * a_Normal;
 	Output.TexCoord = a_TexCoord;

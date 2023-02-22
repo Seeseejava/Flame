@@ -102,9 +102,19 @@ namespace Flame {
 	void SubMesh::Draw(const glm::mat4& transform, const glm::vec3& cameraPos, const Ref<Shader>& shader, int entityID, Mesh* model)
 	{
 		SetupMesh(entityID);
+
+		shader->Bind();
+		if (model->bPlayAnim)
+		{
+			model->m_Animator.UpdateAnimation(0.01f);
+
+			auto transforms = model->m_Animator.GetFinalBoneMatrices();
+			for (int i = 0; i < transforms.size(); ++i)
+				shader->SetMat4("finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);
+		}
+
 		if (ModeManager::bHdrUse)
 		{
-			shader->Bind();
 			shader->SetMat4("model", transform);
 			shader->SetFloat3("camPos", cameraPos);
 
@@ -137,15 +147,6 @@ namespace Flame {
 			else
 				Library<Texture2D>::GetInstance().GetWhiteTexture()->Bind(7);
 
-			if (model->bPlayAnim)
-			{
-				model->m_Animator.UpdateAnimation(0.01f);
-
-				auto transforms = model->m_Animator.GetFinalBoneMatrices();
-				for (int i = 0; i < transforms.size(); ++i)
-					shader->SetMat4("finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);
-			}
-
 			shader->SetInt("irradianceMap", 0);
 			shader->SetInt("prefilterMap", 1);
 			shader->SetInt("brdfLUT", 2);
@@ -157,8 +158,8 @@ namespace Flame {
 		}
 		else
 		{
-			shader->Bind();
-			shader->SetMat4("u_Model_transform", (transform));
+			shader->SetMat4("u_Model_transform", (transform)); // for static
+			shader->SetMat4("model", (transform)); // for animation
 			m_VertexArray->Bind();
 			if (model->bUseAlbedoMap)
 				model->m_AlbedoMap->Bind(0);
