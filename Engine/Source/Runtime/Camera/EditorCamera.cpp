@@ -86,17 +86,17 @@ namespace Flame {
 			glm::vec2 deltaMove = { 0.0f, 0.0f };
 
 			if (Input::IsKeyPressed(FLAME_KEY_A))
-				m_FocalPoint -= GetRightDirection() * m_CameraSpeed;
+				m_FocalPoint -= GetRightDirection() * m_CameraSpeed * 0.05f;
 			if (Input::IsKeyPressed(FLAME_KEY_D))
-				m_FocalPoint += GetRightDirection() * m_CameraSpeed;
+				m_FocalPoint += GetRightDirection() * m_CameraSpeed * 0.05f;
 			if (Input::IsKeyPressed(FLAME_KEY_W))
-				m_FocalPoint += GetForwardDirection() * m_CameraSpeed;
+				m_FocalPoint += GetForwardDirection() * m_CameraSpeed * 0.05f;
 			if (Input::IsKeyPressed(FLAME_KEY_S))
-				m_FocalPoint -= GetForwardDirection() * m_CameraSpeed;
+				m_FocalPoint -= GetForwardDirection() * m_CameraSpeed * 0.05f;
 			if (Input::IsKeyPressed(FLAME_KEY_Q))
-				m_FocalPoint -= GetUpDirection() * m_CameraSpeed;
+				m_FocalPoint -= glm::vec3(0.0f, 1.0f, 0.0f) * m_CameraSpeed * 0.05f;
 			if (Input::IsKeyPressed(FLAME_KEY_E))
-				m_FocalPoint += GetUpDirection() * m_CameraSpeed;
+				m_FocalPoint += glm::vec3(0.0f, 1.0f, 0.0f) * m_CameraSpeed * 0.05f;
 
 			const glm::vec2& mouse{ Input::GetMouseX(), Input::GetMouseY() };
 			glm::vec2 deltaRotate = (mouse - m_InitialMousePosition) * 0.003f;
