@@ -36,7 +36,7 @@ namespace Flame {
 				m_Context->m_Registry.each([&](auto entityID)
 					{
 						Entity entity{ entityID , m_Context.get() };
-						DrawEntityNode(entity);
+				DrawEntityNode(entity);
 					});
 
 				if (ImGui::IsMouseDown(0) && ImGui::IsWindowHovered())
@@ -393,74 +393,74 @@ namespace Flame {
 
 		DrawComponent<TransformComponent>("Transform", entity, [](auto& component)
 			{
-					DrawVec3Control("Translation", component.Translation);
-					glm::vec3 rotation = glm::degrees(component.Rotation);
-					DrawVec3Control("Rotation", rotation);
-					component.Rotation = glm::radians(rotation);
-					DrawVec3Control("Scale", component.Scale, 1.0f);
+				DrawVec3Control("Translation", component.Translation);
+		glm::vec3 rotation = glm::degrees(component.Rotation);
+		DrawVec3Control("Rotation", rotation);
+		component.Rotation = glm::radians(rotation);
+		DrawVec3Control("Scale", component.Scale, 1.0f);
 			});
 
 		DrawComponent<CameraComponent>("Camera", entity, [](auto& component)
 			{
-					auto& camera = component.Camera;
+				auto& camera = component.Camera;
 
-					ImGui::Checkbox("Primary", &component.Primary);
+		ImGui::Checkbox("Primary", &component.Primary);
 
-					const char* projectionTypeStrings[] = { "Perspective", "Orthographic" };
-					const char* currentProjectionTypeString = projectionTypeStrings[(int)camera.GetProjectionType()];
-					// BeginCombo是ImGui绘制EnumPopup的方法
-					if (ImGui::BeginCombo("Projection", currentProjectionTypeString))
-					{
-						for (int i = 0; i < 2; i++)
-						{
-							bool isSelected = currentProjectionTypeString == projectionTypeStrings[i];
-							if (ImGui::Selectable(projectionTypeStrings[i], isSelected))
-							{
-								currentProjectionTypeString = projectionTypeStrings[i];
-								camera.SetProjectionType((SceneCamera::ProjectionType)i);
-							}
+		const char* projectionTypeStrings[] = { "Perspective", "Orthographic" };
+		const char* currentProjectionTypeString = projectionTypeStrings[(int)camera.GetProjectionType()];
+		// BeginCombo是ImGui绘制EnumPopup的方法
+		if (ImGui::BeginCombo("Projection", currentProjectionTypeString))
+		{
+			for (int i = 0; i < 2; i++)
+			{
+				bool isSelected = currentProjectionTypeString == projectionTypeStrings[i];
+				if (ImGui::Selectable(projectionTypeStrings[i], isSelected))
+				{
+					currentProjectionTypeString = projectionTypeStrings[i];
+					camera.SetProjectionType((SceneCamera::ProjectionType)i);
+				}
 
-							// 高亮当前已经选择的Item
-							if (isSelected)
-								ImGui::SetItemDefaultFocus();
-						}
+				// 高亮当前已经选择的Item
+				if (isSelected)
+					ImGui::SetItemDefaultFocus();
+			}
 
-						ImGui::EndCombo();
-					}
+			ImGui::EndCombo();
+		}
 
-					if (camera.GetProjectionType() == SceneCamera::ProjectionType::Perspective)
-					{
-						float verticalFov = glm::degrees(camera.GetPerspectiveVerticalFOV());
-						if (ImGui::DragFloat("Vertical FOV", &verticalFov))
-							camera.SetPerspectiveVerticalFOV(glm::radians(verticalFov));
+		if (camera.GetProjectionType() == SceneCamera::ProjectionType::Perspective)
+		{
+			float verticalFov = glm::degrees(camera.GetPerspectiveVerticalFOV());
+			if (ImGui::DragFloat("Vertical FOV", &verticalFov))
+				camera.SetPerspectiveVerticalFOV(glm::radians(verticalFov));
 
-						float orthoNear = camera.GetPerspectiveNearClip();
-						if (ImGui::DragFloat("Near", &orthoNear))
-							camera.SetPerspectiveNearClip(orthoNear);
+			float orthoNear = camera.GetPerspectiveNearClip();
+			if (ImGui::DragFloat("Near", &orthoNear))
+				camera.SetPerspectiveNearClip(orthoNear);
 
-						float orthoFar = camera.GetPerspectiveFarClip();
-						if (ImGui::DragFloat("Far", &orthoFar))
-							camera.SetPerspectiveFarClip(orthoFar);
-					}
+			float orthoFar = camera.GetPerspectiveFarClip();
+			if (ImGui::DragFloat("Far", &orthoFar))
+				camera.SetPerspectiveFarClip(orthoFar);
+		}
 
-					if (camera.GetProjectionType() == SceneCamera::ProjectionType::Orthographic)
-					{
-						float orthoSize = camera.GetOrthographicSize();
-						if (ImGui::DragFloat("Size", &orthoSize))
-							camera.SetOrthographicSize(orthoSize);
+		if (camera.GetProjectionType() == SceneCamera::ProjectionType::Orthographic)
+		{
+			float orthoSize = camera.GetOrthographicSize();
+			if (ImGui::DragFloat("Size", &orthoSize))
+				camera.SetOrthographicSize(orthoSize);
 
-						float orthoNear = camera.GetOrthographicNearClip();
-						if (ImGui::DragFloat("Near", &orthoNear))
-							camera.SetOrthographicNearClip(orthoNear);
+			float orthoNear = camera.GetOrthographicNearClip();
+			if (ImGui::DragFloat("Near", &orthoNear))
+				camera.SetOrthographicNearClip(orthoNear);
 
-						float orthoFar = camera.GetOrthographicFarClip();
-						if (ImGui::DragFloat("Far", &orthoFar))
-							camera.SetOrthographicFarClip(orthoFar);
+			float orthoFar = camera.GetOrthographicFarClip();
+			if (ImGui::DragFloat("Far", &orthoFar))
+				camera.SetOrthographicFarClip(orthoFar);
 
-						ImGui::Checkbox("Fixed Aspect Ratio", &component.FixedAspectRatio);
-					}
+			ImGui::Checkbox("Fixed Aspect Ratio", &component.FixedAspectRatio);
+		}
 			});
-		
+
 		DrawComponent<SpriteRendererComponent>("Sprite Renderer", entity, [](auto& component)
 			{
 				/*这里是支持Blend的，修改一个Quad的alpha，再修改其Z值，会产生Blend效果，类似于带颜色的透镜来看的视角。
@@ -468,113 +468,116 @@ namespace Flame {
 				所以这里只有绿色的正方形在红色上方才会出现Blend效果，后续需要根据Z值大小改变物体先后绘制顺序。*/
 				ImGui::ColorEdit4("Color", glm::value_ptr(component.Color));
 
-				ImGui::Button("Texture", ImVec2(100.0f, 0.0f));
-				if (ImGui::BeginDragDropTarget())
-				{
-					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
-					{
-						const wchar_t* path = (const wchar_t*)payload->Data;
-						std::filesystem::path texturePath = std::filesystem::path(ConfigManager::GetInstance().GetAssetsFolder()) / path;
-						component.Texture = Texture2D::Create(texturePath.string());
-					}
-					ImGui::EndDragDropTarget();
-				}
+		ImGui::Button("Texture", ImVec2(100.0f, 0.0f));
+		if (ImGui::BeginDragDropTarget())
+		{
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+			{
+				const wchar_t* path = (const wchar_t*)payload->Data;
+				std::filesystem::path texturePath = std::filesystem::path(ConfigManager::GetInstance().GetAssetsFolder()) / path;
+				component.Texture = Texture2D::Create(texturePath.string());
+			}
+			ImGui::EndDragDropTarget();
+		}
 
 
 
-				ImGui::DragFloat("Tiling Factor", &component.TilingFactor, 0.1f, 0.0f, 100.0f);
+		ImGui::DragFloat("Tiling Factor", &component.TilingFactor, 0.1f, 0.0f, 100.0f);
 			});
 
 		DrawComponent<CircleRendererComponent>("Circle Renderer", entity, [](auto& component)
 			{
 				ImGui::ColorEdit4("Color", glm::value_ptr(component.Color));
-				ImGui::DragFloat("Thickness", &component.Thickness, 0.025f, 0.0f, 1.0f);
-				ImGui::DragFloat("Fade", &component.Fade, 0.00025f, 0.0f, 1.0f);
+		ImGui::DragFloat("Thickness", &component.Thickness, 0.025f, 0.0f, 1.0f);
+		ImGui::DragFloat("Fade", &component.Fade, 0.00025f, 0.0f, 1.0f);
 			});
 
 		DrawComponent<Rigidbody2DComponent>("Rigidbody 2D", entity, [](auto& component)
 			{
 				const char* bodyTypeStrings[] = { "Static", "Dynamic", "Kinematic" };
-				const char* currentBodyTypeString = bodyTypeStrings[(int)component.Type];
-				if (ImGui::BeginCombo("Body Type", currentBodyTypeString))
+		const char* currentBodyTypeString = bodyTypeStrings[(int)component.Type];
+		if (ImGui::BeginCombo("Body Type", currentBodyTypeString))
+		{
+			for (int i = 0; i < 2; i++)
+			{
+				bool isSelected = currentBodyTypeString == bodyTypeStrings[i];
+				if (ImGui::Selectable(bodyTypeStrings[i], isSelected))
 				{
-					for (int i = 0; i < 2; i++)
-					{
-						bool isSelected = currentBodyTypeString == bodyTypeStrings[i];
-						if (ImGui::Selectable(bodyTypeStrings[i], isSelected))
-						{
-							currentBodyTypeString = bodyTypeStrings[i];
-							component.Type = (Rigidbody2DComponent::BodyType)i;
-						}
-
-						if (isSelected)
-							ImGui::SetItemDefaultFocus();
-					}
-
-					ImGui::EndCombo();
+					currentBodyTypeString = bodyTypeStrings[i];
+					component.Type = (Rigidbody2DComponent::BodyType)i;
 				}
 
-				ImGui::Checkbox("Fixed Rotation", &component.FixedRotation);
+				if (isSelected)
+					ImGui::SetItemDefaultFocus();
+			}
+
+			ImGui::EndCombo();
+		}
+
+		ImGui::Checkbox("Fixed Rotation", &component.FixedRotation);
 			});
 
 		DrawComponent<BoxCollider2DComponent>("Box Collider 2D", entity, [](auto& component)
 			{
 				ImGui::DragFloat2("Offset", glm::value_ptr(component.Offset));
-				ImGui::DragFloat2("Size", glm::value_ptr(component.Size));
-				ImGui::DragFloat("Density", &component.Density, 0.01f, 0.0f, 1.0f);
-				ImGui::DragFloat("Friction", &component.Friction, 0.01f, 0.0f, 1.0f);
-				ImGui::DragFloat("Restitution", &component.Restitution, 0.01f, 0.0f, 1.0f);
-				ImGui::DragFloat("Restitution Threshold", &component.RestitutionThreshold, 0.01f, 0.0f);
+		ImGui::DragFloat2("Size", glm::value_ptr(component.Size));
+		ImGui::DragFloat("Density", &component.Density, 0.01f, 0.0f, 1.0f);
+		ImGui::DragFloat("Friction", &component.Friction, 0.01f, 0.0f, 1.0f);
+		ImGui::DragFloat("Restitution", &component.Restitution, 0.01f, 0.0f, 1.0f);
+		ImGui::DragFloat("Restitution Threshold", &component.RestitutionThreshold, 0.01f, 0.0f);
 			});
 
 		DrawComponent<CircleCollider2DComponent>("Circle Collider 2D", entity, [](auto& component)
 			{
 				ImGui::DragFloat2("Offset", glm::value_ptr(component.Offset));
-				ImGui::DragFloat("Radius", &component.Radius);
-				ImGui::DragFloat("Density", &component.Density, 0.01f, 0.0f, 1.0f);
-				ImGui::DragFloat("Friction", &component.Friction, 0.01f, 0.0f, 1.0f);
-				ImGui::DragFloat("Restitution", &component.Restitution, 0.01f, 0.0f, 1.0f);
-				ImGui::DragFloat("Restitution Threshold", &component.RestitutionThreshold, 0.01f, 0.0f);
+		ImGui::DragFloat("Radius", &component.Radius);
+		ImGui::DragFloat("Density", &component.Density, 0.01f, 0.0f, 1.0f);
+		ImGui::DragFloat("Friction", &component.Friction, 0.01f, 0.0f, 1.0f);
+		ImGui::DragFloat("Restitution", &component.Restitution, 0.01f, 0.0f, 1.0f);
+		ImGui::DragFloat("Restitution Threshold", &component.RestitutionThreshold, 0.01f, 0.0f);
 			});
 
 		DrawComponent<MeshComponent>("Mesh Renderer", entity, [](MeshComponent& component)
 			{
-			ImGui::Columns(2, nullptr, false);
-		    ImGui::SetColumnWidth(0, 100.0f);
-			ImGui::Text("Mesh Path");
-			ImGui::NextColumn();
+				ImGui::Columns(2, nullptr, false);
+		ImGui::SetColumnWidth(0, 100.0f);
+		ImGui::Text("Mesh Path");
+		ImGui::NextColumn();
 
-			std::string standardPath = std::regex_replace(component.Path, std::regex("\\\\"), "/");
-			ImGui::Text(standardPath.substr(standardPath.find_last_of("/") + 1, standardPath.length()).c_str());
+		std::string standardPath = std::regex_replace(component.Path, std::regex("\\\\"), "/");
+		ImGui::Text(standardPath.substr(standardPath.find_last_of("/") + 1, standardPath.length()).c_str());
 
-			ImGui::SameLine();
-			if (ImGui::Button("..."))
+		ImGui::SameLine();
+		if (ImGui::Button("..."))
+		{
+			std::string filepath = FileDialogs::OpenFile("Model (*.obj *.fbx *.dae *.gltf)\0");
+			if (filepath.find("Assets") != std::string::npos)
 			{
-				std::string filepath = FileDialogs::OpenFile("Model (*.obj *.fbx *.dae *.gltf)\0");
-				if (filepath.find("Assets") != std::string::npos)
-				{
-					filepath = filepath.substr(filepath.find("Assets"), filepath.length());
-				}
-				else
-				{
-					// TODO: Import Model
-					//FLAME_CORE_ASSERT(false, "Flame Now Only support the model from Assets!");
-				}
-				if (!filepath.empty())
-				{
-					component.m_Mesh = CreateRef<Mesh>(filepath);
-					component.Path = filepath;
-				}
+				filepath = filepath.substr(filepath.find("Assets"), filepath.length());
+			}
+			else
+			{
+				// TODO: Import Model
+				//FLAME_CORE_ASSERT(false, "Flame Now Only support the model from Assets!");
+			}
+			if (!filepath.empty())
+			{
+				component.m_Mesh = CreateRef<Mesh>(filepath);
+				component.Path = filepath;
+			}
 		}
-			ImGui::EndColumns();
+		ImGui::EndColumns();
 
 		if (ImGuiWrapper::TreeNodeExStyle2((void*)"Material", "Material"))
 		{
-			const auto& materialNode = [&model = component.m_Mesh](const char* name, Ref<Texture2D>& tex, void(*func)(Ref<Material>& mat)) {
+			uint32_t matIndex = 0;
+
+			const auto& materialNode = [&matIndex = matIndex](const char* name, Ref<Material>& material, Ref<Texture2D>& tex, void(*func)(Ref<Material>& mat)) {
+				std::string label = std::string(name) + std::to_string(matIndex);
+				ImGui::PushID(label.c_str());
 				if (ImGui::TreeNode((void*)name, name))
 				{
 					ImGui::Image((ImTextureID)tex->GetRendererID(), ImVec2(64, 64), ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
-					static bool use = false;
 					if (ImGui::BeginDragDropTarget())
 					{
 						if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
@@ -588,100 +591,114 @@ namespace Flame {
 						ImGui::EndDragDropTarget();
 					}
 
-					func(model->m_Material[0]);
+					func(material);
 
 					ImGui::TreePop();
 				}
+				ImGui::PopID();
 			};
 
-			materialNode("Albedo", component.m_Mesh->m_Material[0]->m_AlbedoMap, [](Ref<Material>& mat) {
-				ImGui::SameLine();
-			ImGui::Checkbox("Use", &mat->bUseAlbedoMap);
-
-			static float col[4]; // 0 ~ 1
-			if (ImGui::ColorEdit4("##albedo", glm::value_ptr(mat->col)))
+			for (auto& material : component.m_Mesh->m_Material)
 			{
-				if (!mat->bUseAlbedoMap)
+				std::string label = std::string("material") + std::to_string(matIndex);
+				ImGui::PushID(label.c_str());
+
+				static float col[4]; // 0 ~ 1
+
+				if (ImGui::TreeNode((void*)label.c_str(), std::to_string(matIndex).c_str()))
 				{
-					unsigned char data[4];
-					for (size_t i = 0; i < 4; i++)
+					materialNode("Albedo", material, material->m_AlbedoMap, [](Ref<Material>& mat) {
+						ImGui::SameLine();
+					ImGui::Checkbox("Use", &mat->bUseAlbedoMap);
+
+					if (ImGui::ColorEdit4("##albedo", glm::value_ptr(mat->col)))
 					{
-						data[i] = (unsigned char)(mat->col[i] * 255.0f);
-					}
-					mat->albedoRGBA->SetData(data, sizeof(unsigned char) * 4);
-				}
-			}
-				});
-
-			materialNode("Normal", component.m_Mesh->m_Material[0]->m_NormalMap, [](Ref<Material>& mat) {
-				ImGui::SameLine();
-			ImGui::Checkbox("Use", &mat->bUseNormalMap);
-				});
-
-			materialNode("Metallic", component.m_Mesh->m_Material[0]->m_MetallicMap, [](Ref<Material>& mat) {
-				ImGui::SameLine();
-
-			if (ImGui::BeginTable("Metallic", 1))
-			{
-				ImGui::TableNextRow();
-				ImGui::TableNextColumn();
-
-				ImGui::Checkbox("Use", &mat->bUseMetallicMap);
-
-				ImGui::TableNextRow();
-				ImGui::TableNextColumn();
-				if (ImGui::SliderFloat("##Metallic", &mat->metallic, 0.0f, 1.0f))
-				{
-					if (!mat->bUseMetallicMap)
-					{
-						unsigned char data[4];
-						for (size_t i = 0; i < 3; i++)
+						if (!mat->bUseAlbedoMap)
 						{
-							data[i] = (unsigned char)(mat->metallic * 255.0f);
+							unsigned char data[4];
+							for (size_t i = 0; i < 4; i++)
+							{
+								data[i] = (unsigned char)(mat->col[i] * 255.0f);
+							}
+							mat->albedoRGBA->SetData(data, sizeof(unsigned char) * 4);
 						}
-						data[3] = (unsigned char)255.0f;
-						mat->metallicRGBA->SetData(data, sizeof(unsigned char) * 4);
 					}
-				}
+						});
 
-				ImGui::EndTable();
-			}
-				});
+					materialNode("Normal", material, material->m_NormalMap, [](Ref<Material>& mat) {
+						ImGui::SameLine();
+					ImGui::Checkbox("Use", &mat->bUseNormalMap);
+						});
 
-			materialNode("Roughness", component.m_Mesh->m_Material[0]->m_RoughnessMap, [](Ref<Material>& mat) {
-				ImGui::SameLine();
+					materialNode("Metallic", material, material->m_MetallicMap, [](Ref<Material>& mat) {
+						ImGui::SameLine();
 
-			if (ImGui::BeginTable("Roughness", 1))
-			{
-				ImGui::TableNextRow();
-				ImGui::TableNextColumn();
-
-				ImGui::Checkbox("Use", &mat->bUseRoughnessMap);
-
-				ImGui::TableNextRow();
-				ImGui::TableNextColumn();
-				if (ImGui::SliderFloat("##Roughness", &mat->roughness, 0.0f, 1.0f))
-				{
-					if (!mat->bUseRoughnessMap)
+					if (ImGui::BeginTable("Metallic", 1))
 					{
-						unsigned char data[4];
-						for (size_t i = 0; i < 3; i++)
+						ImGui::TableNextRow();
+						ImGui::TableNextColumn();
+
+						ImGui::Checkbox("Use", &mat->bUseMetallicMap);
+
+						ImGui::TableNextRow();
+						ImGui::TableNextColumn();
+						if (ImGui::SliderFloat("##Metallic", &mat->metallic, 0.0f, 1.0f))
 						{
-							data[i] = (unsigned char)(mat->roughness * 255.0f);
+							if (!mat->bUseMetallicMap)
+							{
+								unsigned char data[4];
+								for (size_t i = 0; i < 3; i++)
+								{
+									data[i] = (unsigned char)(mat->metallic * 255.0f);
+								}
+								data[3] = (unsigned char)255.0f;
+								mat->metallicRGBA->SetData(data, sizeof(unsigned char) * 4);
+							}
 						}
-						data[3] = (unsigned char)255.0f;
-						mat->roughnessRGBA->SetData(data, sizeof(unsigned char) * 4);
+						ImGui::EndTable();
 					}
+						});
+
+					materialNode("Roughness", material, material->m_RoughnessMap, [](Ref<Material>& mat) {
+						ImGui::SameLine();
+
+					if (ImGui::BeginTable("Roughness", 1))
+					{
+						ImGui::TableNextRow();
+						ImGui::TableNextColumn();
+
+						ImGui::Checkbox("Use", &mat->bUseRoughnessMap);
+
+						ImGui::TableNextRow();
+						ImGui::TableNextColumn();
+						if (ImGui::SliderFloat("##Roughness", &mat->roughness, 0.0f, 1.0f))
+						{
+							if (!mat->bUseRoughnessMap)
+							{
+								unsigned char data[4];
+								for (size_t i = 0; i < 3; i++)
+								{
+									data[i] = (unsigned char)(mat->roughness * 255.0f);
+								}
+								data[3] = (unsigned char)255.0f;
+								mat->roughnessRGBA->SetData(data, sizeof(unsigned char) * 4);
+							}
+						}
+						ImGui::EndTable();
+					}
+						});
+					materialNode("Ambient Occlusion", material, material->m_AoMap, [](Ref<Material>& mat) {
+						ImGui::SameLine();
+					ImGui::Checkbox("Use", &mat->bUseAoMap);
+						});
+
+					ImGui::TreePop();
 				}
 
-				ImGui::EndTable();
-			}
-				});
+				matIndex++;
 
-			materialNode("Ambient Occlusion", component.m_Mesh->m_Material[0]->m_AoMap, [](Ref<Material>& mat) {
-				ImGui::SameLine();
-			ImGui::Checkbox("Use", &mat->bUseAoMap);
-				});
+				ImGui::PopID();
+			}
 
 			ImGui::TreePop();
 		}
@@ -715,9 +732,9 @@ namespace Flame {
 						else
 							label = "Pause";
 					}
-				},
-					88.0f
-			);
+					},
+						88.0f
+						);
 
 				ImGui::Columns(2, nullptr, false);
 				ImGui::Text("Speed");
@@ -735,36 +752,36 @@ namespace Flame {
 		DrawComponent<Rigidbody3DComponent>("Rigidbody 3D", entity, [](auto& component)
 			{
 				const char* bodyTypeStrings[] = { "Static", "Dynamic", "Kinematic" };
-				const char* currentBodyTypeString = bodyTypeStrings[(int)component.Type];
+		const char* currentBodyTypeString = bodyTypeStrings[(int)component.Type];
 
-				ImGui::Columns(2, nullptr, false);
-				ImGui::SetColumnWidth(0, 100.0f);
-				ImGui::Text("Body Type");
-				ImGui::NextColumn();
+		ImGui::Columns(2, nullptr, false);
+		ImGui::SetColumnWidth(0, 100.0f);
+		ImGui::Text("Body Type");
+		ImGui::NextColumn();
 
-				if (ImGui::BeginCombo("##Body Type", currentBodyTypeString))
+		if (ImGui::BeginCombo("##Body Type", currentBodyTypeString))
+		{
+			for (int i = 0; i < 3; i++)
+			{
+				bool isSelected = currentBodyTypeString == bodyTypeStrings[i];
+				if (ImGui::Selectable(bodyTypeStrings[i], isSelected))
 				{
-					for (int i = 0; i < 3; i++)
-					{
-						bool isSelected = currentBodyTypeString == bodyTypeStrings[i];
-						if (ImGui::Selectable(bodyTypeStrings[i], isSelected))
-						{
-							currentBodyTypeString = bodyTypeStrings[i];
-							component.Type = (Rigidbody3DComponent::Body3DType)i;
-						}
-
-						if (isSelected)
-							ImGui::SetItemDefaultFocus();
-					}
-
-					ImGui::EndCombo();
+					currentBodyTypeString = bodyTypeStrings[i];
+					component.Type = (Rigidbody3DComponent::Body3DType)i;
 				}
-				ImGui::EndColumns();
 
-				ImGuiWrapper::DrawTwoUI(
-					[]() { ImGui::Text("mass"); },
-					[&component = component]() { ImGui::SliderFloat("##masas", &component.mass, 0.0f, 10.0f, "%.2f"); }
-				);
+				if (isSelected)
+					ImGui::SetItemDefaultFocus();
+			}
+
+			ImGui::EndCombo();
+		}
+		ImGui::EndColumns();
+
+		ImGuiWrapper::DrawTwoUI(
+			[]() { ImGui::Text("mass"); },
+			[&component = component]() { ImGui::SliderFloat("##masas", &component.mass, 0.0f, 10.0f, "%.2f"); }
+		);
 
 			});
 
@@ -778,12 +795,12 @@ namespace Flame {
 				std::string label = std::string("##") + std::string(name);
 				ImGui::SliderFloat(label.c_str(), &value, 0.0f, 1.0f, "%.2f");
 				ImGui::EndColumns();
-				};
+			};
 
-				floatValueUI("linearDamping", component.linearDamping);
-				floatValueUI("angularDamping", component.angularDamping);
-				floatValueUI("restitution", component.restitution);
-				floatValueUI("friction", component.friction);
+		floatValueUI("linearDamping", component.linearDamping);
+		floatValueUI("angularDamping", component.angularDamping);
+		floatValueUI("restitution", component.restitution);
+		floatValueUI("friction", component.friction);
 			});
 
 		DrawComponent<SphereCollider3DComponent>("Sphere Collider 3D", entity, [](auto& component)
@@ -796,19 +813,19 @@ namespace Flame {
 				std::string label = std::string("##") + std::string(name);
 				ImGui::SliderFloat(label.c_str(), &value, 0.0f, 1.0f, "%.2f");
 				ImGui::EndColumns();
-				};
+			};
 
-				floatValueUI("linearDamping", component.linearDamping);
-				floatValueUI("angularDamping", component.angularDamping);
-				floatValueUI("restitution", component.restitution);
-				floatValueUI("friction", component.friction);
+		floatValueUI("linearDamping", component.linearDamping);
+		floatValueUI("angularDamping", component.angularDamping);
+		floatValueUI("restitution", component.restitution);
+		floatValueUI("friction", component.friction);
 			});
 
 		DrawComponent<LightComponent>("Point Light", entity, [](auto& component)
 			{
 				ImGui::Text("Light Color");
-				ImGui::SameLine();
-				ImGui::DragFloat3("##Light Color", (float*)&component.LightColor, 2.0f, 0.0f, 10000.0f, "%.1f");
+		ImGui::SameLine();
+		ImGui::DragFloat3("##Light Color", (float*)&component.LightColor, 2.0f, 0.0f, 10000.0f, "%.1f");
 			});
 
 		DrawComponent<PythonScriptComponent>("Python Script", entity, [](auto& component)
@@ -829,8 +846,5 @@ namespace Flame {
 			}
 		}
 			});
-
-
 	}
-
 }

@@ -40,6 +40,8 @@ namespace Flame
 
 	void Mesh::LoadModel(const std::string& path)
 	{
+		m_Material.resize(20);
+
 		Assimp::Importer importer;
 
 		std::string standardPath = std::regex_replace(path, std::regex("\\\\"), "/");
@@ -66,7 +68,7 @@ namespace Flame
 		else
 			ProcessNode(scene->mRootNode, scene, subMeshIndex);
 
-		ProcessNode(scene->mRootNode, scene, subMeshIndex);
+		m_Material.resize(subMeshIndex);
 	}
 
 	void Mesh::ProcessNode(aiNode* node, const aiScene* scene, uint32_t& subMeshIndex)
@@ -79,6 +81,8 @@ namespace Flame
 				m_SubMeshes.push_back(ProcessMesh<SkinnedVertex>(mesh, scene, subMeshIndex));
 			else
 				m_SubMeshes.push_back(ProcessMesh<StaticVertex>(mesh, scene, subMeshIndex));
+
+			subMeshIndex++;
 		}
 
 		for (uint32_t i = 0; i < node->mNumChildren; ++i)
@@ -217,6 +221,8 @@ namespace Flame
 		// specular: texture_specularN
 		// normal: texture_normalN
 
+		m_Material[subMeshIndex] = CreateRef<Material>();
+
 		const auto& loadTexture = [&](aiTextureType type) {
 			auto maps = loadMaterialTextures(material, type, subMeshIndex);
 			if (maps) textures.insert(textures.end(), maps.value().begin(), maps.value().end());
@@ -240,15 +246,6 @@ namespace Flame
 
 			// check if texture was loaded before and if so, continue to next iteration: skip loading a new texture
 			bool skip = false;
-			for (unsigned int j = 0; j < m_Material[subMeshIndex]->m_Textures.size(); j++)
-			{
-				if (std::strcmp(m_Material[subMeshIndex]->m_Textures[j].path.data(), str.C_Str()) == 0)
-				{
-					textures.push_back(m_Material[subMeshIndex]->m_Textures[j]);
-					skip = true; // a texture with the same filepath has already been loaded, continue to next one. (optimization)
-					break;
-				}
-			}
 			if (!skip)
 			{   // if texture hasn't been loaded already, load it
 				MaterialTexture texture;
