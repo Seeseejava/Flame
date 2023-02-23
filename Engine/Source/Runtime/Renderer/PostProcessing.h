@@ -16,6 +16,7 @@ namespace Flame
 
 	class PostProcessing
 	{
+		friend class RenderPass;
 	public:
 		PostProcessing(const PostProcessingType& type);
 		virtual ~PostProcessing() {}

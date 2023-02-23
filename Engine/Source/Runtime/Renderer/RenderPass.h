@@ -22,15 +22,7 @@ namespace Flame
 		const RenderPassSpecification& GetSpecification() const { return m_Specification; };
 
 		void AddPostProcessing(PostProcessingType type);
-		uint32_t ExcuteAndReturnFinalTex()
-		{
-			uint32_t final = 0;
-			for (auto& effect : m_PostProcessings)
-			{
-				final = effect->ExcuteAndReturnFinalTex(m_Specification.TargetFramebuffer);
-			}
-			return final;
-		}
+		uint32_t ExcuteAndReturnFinalTex();
 	private:
 		RenderPassSpecification m_Specification;
 		std::vector<std::unique_ptr<PostProcessing>> m_PostProcessings;
