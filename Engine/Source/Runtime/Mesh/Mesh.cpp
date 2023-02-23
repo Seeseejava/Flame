@@ -228,7 +228,7 @@ namespace Flame
 			if (maps) textures.insert(textures.end(), maps.value().begin(), maps.value().end());
 		};
 
-		for (uint32_t type = aiTextureType_NONE; type < aiTextureType_REFLECTION; type++)
+		for (uint32_t type = aiTextureType_NONE; type < aiTextureType_AMBIENT_OCCLUSION; type++)
 		{
 			loadTexture(static_cast<aiTextureType>(type));
 		}
@@ -277,45 +277,40 @@ namespace Flame
 				switch (type)
 				{
 				case aiTextureType_DIFFUSE:
+				case aiTextureType_BASE_COLOR:
 					texture.type = TextureType::Albedo;
 					m_Material[subMeshIndex]->m_AlbedoMap = texture.texture2d;
 					m_Material[subMeshIndex]->bUseAlbedoMap = true;
-					break;
-				case aiTextureType_SPECULAR:
-					texture.type = TextureType::Specular;
 					break;
 				case aiTextureType_HEIGHT:
 					texture.type = TextureType::Height;
 					break;
 				case aiTextureType_AMBIENT:
+				case aiTextureType_AMBIENT_OCCLUSION:
 					texture.type = TextureType::AmbientOcclusion;
 					m_Material[subMeshIndex]->m_AoMap = texture.texture2d;
 					m_Material[subMeshIndex]->bUseAoMap = true;
 					break;
 				case aiTextureType_NORMALS:
+				case aiTextureType_NORMAL_CAMERA:
 					texture.type = TextureType::Normal;
 					m_Material[subMeshIndex]->m_NormalMap = texture.texture2d;
 					m_Material[subMeshIndex]->bUseNormalMap = true;
 					break;
-				case aiTextureType_EMISSIVE:
-					texture.type = TextureType::Emission;
-					break;
-			/*	case aiTextureType_BASE_COLOR:
-					texture.type = TextureType::Albedo;
-					m_AlbedoMap = texture.texture2d;
-					break;
+				case aiTextureType_SPECULAR:
 				case aiTextureType_METALNESS:
 					texture.type = TextureType::Metalness;
-					m_MetallicMap = texture.texture2d;
+					m_Material[subMeshIndex]->m_MetallicMap = texture.texture2d;
+					m_Material[subMeshIndex]->bUseMetallicMap = true;
 					break;
 				case aiTextureType_DIFFUSE_ROUGHNESS:
 					texture.type = TextureType::Roughness;
-					m_RoughnessMap = texture.texture2d;
+					m_Material[subMeshIndex]->m_RoughnessMap = texture.texture2d;
+					m_Material[subMeshIndex]->bUseRoughnessMap = true;
 					break;
-				case aiTextureType_AMBIENT_OCCLUSION:
-					texture.type = TextureType::AmbientOcclusion;
-					m_AoMap = texture.texture2d;
-					break;*/
+				case aiTextureType_EMISSIVE:
+					texture.type = TextureType::Emission;
+					break;
 				}
 				texture.path = str.C_Str();
 				textures.push_back(texture);

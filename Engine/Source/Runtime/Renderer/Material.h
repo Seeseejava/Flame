@@ -42,11 +42,11 @@ namespace Flame
     class Material
     {
     public:
-        Material() = default;
-        Material(Ref<Shader> shader) : m_Shader(shader) {}
+		Material() { Initialize(); };
+		Material(Ref<Shader> shader) : m_Shader(shader) { Initialize(); };
     public:
         void SetShader(Ref<Shader> shader) { m_Shader = shader; }
-        [[nodiscard]] Ref<Shader> GetShader() { return m_Shader; }
+        Ref<Shader> GetShader() { return m_Shader; }
 
         void AddTexture(TextureType type, Ref<Texture2D> texture) 
         {
@@ -54,7 +54,9 @@ namespace Flame
             m_TexMap[type] = texture;
         }
 
-        [[nodiscard]] Ref<Texture2D> GetTexture(TextureType type) { return m_TexMap[type]; }
+        Ref<Texture2D> GetTexture(TextureType type) { return m_TexMap[type]; }
+	private:
+		void Initialize();
     public:
         std::vector<MaterialTexture> m_Textures;
 
@@ -72,7 +74,7 @@ namespace Flame
 		Ref<Texture2D> m_MetallicMap = Library<Texture2D>::GetInstance().Get("DefaultMetallicRoughness");
 
 		bool bUseRoughnessMap = false;
-		float roughness = 0.1f;
+		float roughness = 0.9f;
 		Ref<Texture2D> roughnessRGBA = Texture2D::Create(1, 1);
 		Ref<Texture2D> m_RoughnessMap = Library<Texture2D>::GetInstance().Get("DefaultMetallicRoughness");
 
