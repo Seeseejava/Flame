@@ -60,6 +60,12 @@ namespace Flame {
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);//source权重值用其alpha值，destination权重值为1-source权重值
 
 		glEnable(GL_DEPTH_TEST);
+		glDepthFunc(GL_LESS);
+
+		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+		glStencilMask(0x00); // forbidden to write in stencil
+
 		glEnable(GL_LINE_SMOOTH); //线条平滑，相当于抗锯齿
 		glEnable(GL_MULTISAMPLE);
 		glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
@@ -106,9 +112,9 @@ namespace Flame {
 		glClear(GL_STENCIL_BUFFER_BIT);
 	}
 
-	void OpenGLRendererAPI::DepthMask(int32_t MaskBit)
+	void OpenGLRendererAPI::DepthMask(bool maskFlag)
 	{
-		if (MaskBit) glDepthMask(GL_TRUE);
+		if (maskFlag) glDepthMask(GL_TRUE);
 		else glDepthMask(GL_FALSE);
 	}
 
@@ -153,6 +159,13 @@ namespace Flame {
 	void OpenGLRendererAPI::SetStencilFunc(StencilFunc stencilFunc, int32_t ref, int32_t mask)
 	{
 		glStencilFunc(Utils::StencilFuncToOpenGLStencilFunc(stencilFunc), ref, mask);
+	}
+
+	void OpenGLRendererAPI::StencilMask(uint32_t mask)
+	{
+		// glStencilMask(0x00): forbidden to write in stencil
+		// glStencilMask(0xFF): allow to write in stencil
+		glStencilMask(mask);
 	}
 
 	void OpenGLRendererAPI::SetFrontOrBackStencilOp(int32_t FrontOrBack, StencilOp stencilFail, StencilOp depthFail, StencilOp depthSuccess)

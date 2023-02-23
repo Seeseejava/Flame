@@ -21,7 +21,7 @@ namespace Flame {
 
 		virtual void ClearStencil() override;
 
-		virtual void DepthMask(int32_t MaskBit) override;
+		virtual void DepthMask(bool maskFlag) override;
 		virtual void DepthTest(int32_t Bit) override;
 		virtual void Blend(int32_t Bit) override;
 
@@ -34,6 +34,8 @@ namespace Flame {
 		virtual void CullFrontOrBack(int32_t Bit) override;
 
 		virtual void SetStencilFunc(StencilFunc stencilFunc, int32_t ref, int32_t mask) override;
+
+		virtual void StencilMask(uint32_t mask) override;
 
 		virtual void SetFrontOrBackStencilOp(int32_t FrontOrBack, StencilOp stencilFail, StencilOp depthFail, StencilOp depthSuccess) override;
 

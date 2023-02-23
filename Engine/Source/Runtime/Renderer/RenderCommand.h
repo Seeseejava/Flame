@@ -44,9 +44,9 @@ namespace Flame {
 		}
 
 		//Open/Close Depth Write
-		inline static void DepthMask(int32_t MaskBit)
+		inline static void DepthMask(bool maskFlag)
 		{
-			s_RendererAPI->DepthMask(MaskBit);
+			s_RendererAPI->DepthMask(maskFlag);
 		}
 
 		//Open/Close Depth Test
@@ -90,6 +90,12 @@ namespace Flame {
 		inline static void ClearStencil()
 		{
 			s_RendererAPI->ClearStencil();
+		}
+
+
+		static void StencilMask(uint32_t mask)
+		{
+			s_RendererAPI->StencilMask(mask);
 		}
 
 		//cull
