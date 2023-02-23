@@ -537,7 +537,7 @@ namespace Flame {
 				ImGui::DragFloat("Restitution Threshold", &component.RestitutionThreshold, 0.01f, 0.0f);
 			});
 
-		DrawComponent<MeshComponent>("Static Mesh Renderer", entity, [](MeshComponent& component)
+		DrawComponent<MeshComponent>("Mesh Renderer", entity, [](MeshComponent& component)
 			{
 			ImGui::Columns(2, nullptr, false);
 		    ImGui::SetColumnWidth(0, 100.0f);
@@ -570,7 +570,7 @@ namespace Flame {
 
 		if (ImGuiWrapper::TreeNodeExStyle2((void*)"Material", "Material"))
 		{
-			const auto& materialNode = [&model = component.m_Mesh](const char* name, Ref<Texture2D>& tex, void(*func)(Ref<Mesh>& model)) {
+			const auto& materialNode = [&model = component.m_Mesh](const char* name, Ref<Texture2D>& tex, void(*func)(Ref<Material>& mat)) {
 				if (ImGui::TreeNode((void*)name, name))
 				{
 					ImGui::Image((ImTextureID)tex->GetRendererID(), ImVec2(64, 64), ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
@@ -588,37 +588,37 @@ namespace Flame {
 						ImGui::EndDragDropTarget();
 					}
 
-					func(model);
+					func(model->m_Material[0]);
 
 					ImGui::TreePop();
 				}
 			};
 
-			materialNode("Albedo", component.m_Mesh->m_AlbedoMap, [](Ref<Mesh>& model) {
+			materialNode("Albedo", component.m_Mesh->m_Material[0]->m_AlbedoMap, [](Ref<Material>& mat) {
 				ImGui::SameLine();
-			ImGui::Checkbox("Use", &model->bUseAlbedoMap);
+			ImGui::Checkbox("Use", &mat->bUseAlbedoMap);
 
 			static float col[4]; // 0 ~ 1
-			if (ImGui::ColorEdit4("##albedo", glm::value_ptr(model->col)))
+			if (ImGui::ColorEdit4("##albedo", glm::value_ptr(mat->col)))
 			{
-				if (!model->bUseAlbedoMap)
+				if (!mat->bUseAlbedoMap)
 				{
 					unsigned char data[4];
 					for (size_t i = 0; i < 4; i++)
 					{
-						data[i] = (unsigned char)(model->col[i] * 255.0f);
+						data[i] = (unsigned char)(mat->col[i] * 255.0f);
 					}
-					model->albedoRGBA->SetData(data, sizeof(unsigned char) * 4);
+					mat->albedoRGBA->SetData(data, sizeof(unsigned char) * 4);
 				}
 			}
 				});
 
-			materialNode("Normal", component.m_Mesh->m_NormalMap, [](Ref<Mesh>& model) {
+			materialNode("Normal", component.m_Mesh->m_Material[0]->m_NormalMap, [](Ref<Material>& mat) {
 				ImGui::SameLine();
-			ImGui::Checkbox("Use", &model->bUseNormalMap);
+			ImGui::Checkbox("Use", &mat->bUseNormalMap);
 				});
 
-			materialNode("Metallic", component.m_Mesh->m_MetallicMap, [](Ref<Mesh>& model) {
+			materialNode("Metallic", component.m_Mesh->m_Material[0]->m_MetallicMap, [](Ref<Material>& mat) {
 				ImGui::SameLine();
 
 			if (ImGui::BeginTable("Metallic", 1))
@@ -626,21 +626,21 @@ namespace Flame {
 				ImGui::TableNextRow();
 				ImGui::TableNextColumn();
 
-				ImGui::Checkbox("Use", &model->bUseMetallicMap);
+				ImGui::Checkbox("Use", &mat->bUseMetallicMap);
 
 				ImGui::TableNextRow();
 				ImGui::TableNextColumn();
-				if (ImGui::SliderFloat("##Metallic", &model->metallic, 0.0f, 1.0f))
+				if (ImGui::SliderFloat("##Metallic", &mat->metallic, 0.0f, 1.0f))
 				{
-					if (!model->bUseMetallicMap)
+					if (!mat->bUseMetallicMap)
 					{
 						unsigned char data[4];
 						for (size_t i = 0; i < 3; i++)
 						{
-							data[i] = (unsigned char)(model->metallic * 255.0f);
+							data[i] = (unsigned char)(mat->metallic * 255.0f);
 						}
 						data[3] = (unsigned char)255.0f;
-						model->metallicRGBA->SetData(data, sizeof(unsigned char) * 4);
+						mat->metallicRGBA->SetData(data, sizeof(unsigned char) * 4);
 					}
 				}
 
@@ -648,7 +648,7 @@ namespace Flame {
 			}
 				});
 
-			materialNode("Roughness", component.m_Mesh->m_RoughnessMap, [](Ref<Mesh>& model) {
+			materialNode("Roughness", component.m_Mesh->m_Material[0]->m_RoughnessMap, [](Ref<Material>& mat) {
 				ImGui::SameLine();
 
 			if (ImGui::BeginTable("Roughness", 1))
@@ -656,21 +656,21 @@ namespace Flame {
 				ImGui::TableNextRow();
 				ImGui::TableNextColumn();
 
-				ImGui::Checkbox("Use", &model->bUseRoughnessMap);
+				ImGui::Checkbox("Use", &mat->bUseRoughnessMap);
 
 				ImGui::TableNextRow();
 				ImGui::TableNextColumn();
-				if (ImGui::SliderFloat("##Roughness", &model->roughness, 0.0f, 1.0f))
+				if (ImGui::SliderFloat("##Roughness", &mat->roughness, 0.0f, 1.0f))
 				{
-					if (!model->bUseRoughnessMap)
+					if (!mat->bUseRoughnessMap)
 					{
 						unsigned char data[4];
 						for (size_t i = 0; i < 3; i++)
 						{
-							data[i] = (unsigned char)(model->roughness * 255.0f);
+							data[i] = (unsigned char)(mat->roughness * 255.0f);
 						}
 						data[3] = (unsigned char)255.0f;
-						model->roughnessRGBA->SetData(data, sizeof(unsigned char) * 4);
+						mat->roughnessRGBA->SetData(data, sizeof(unsigned char) * 4);
 					}
 				}
 
@@ -678,9 +678,9 @@ namespace Flame {
 			}
 				});
 
-			materialNode("Ambient Occlusion", component.m_Mesh->m_AoMap, [](Ref<Mesh>& model) {
+			materialNode("Ambient Occlusion", component.m_Mesh->m_Material[0]->m_AoMap, [](Ref<Material>& mat) {
 				ImGui::SameLine();
-			ImGui::Checkbox("Use", &model->bUseAoMap);
+			ImGui::Checkbox("Use", &mat->bUseAoMap);
 				});
 
 			ImGui::TreePop();

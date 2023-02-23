@@ -23,7 +23,7 @@ namespace Flame
 	void Mesh::Draw(const glm::mat4& transform, const glm::vec3& cameraPos, int entityID)
 	{
 		for (unsigned int i = 0; i < m_SubMeshes.size(); ++i)
-			m_SubMeshes[i].Draw(transform, cameraPos, m_Material->GetShader(), entityID, this);
+			m_SubMeshes[i].Draw(transform, cameraPos, m_Material[0]->GetShader(), entityID, this);
 	}
 
 	void Mesh::Draw(const glm::mat4& transform, const glm::vec3& cameraPos, Ref<Shader> shader, int entityID)
@@ -54,40 +54,42 @@ namespace Flame
 
 		m_Directory = standardPath.substr(0, standardPath.find_last_of('/'));
 
+		uint32_t subMeshIndex = 0;
+
 		if (scene->HasAnimations())
 		{
 			bAnimated = true;
-			ProcessNode(scene->mRootNode, scene);
+			ProcessNode(scene->mRootNode, scene, subMeshIndex);
 			m_Animation = Animation(standardFullPath, this);
 			m_Animator = Animator(&m_Animation);
 		}
 		else
-			ProcessNode(scene->mRootNode, scene);
+			ProcessNode(scene->mRootNode, scene, subMeshIndex);
 
-		ProcessNode(scene->mRootNode, scene);
+		ProcessNode(scene->mRootNode, scene, subMeshIndex);
 	}
 
-	void Mesh::ProcessNode(aiNode* node, const aiScene* scene)
+	void Mesh::ProcessNode(aiNode* node, const aiScene* scene, uint32_t& subMeshIndex)
 	{
 		for (uint32_t i = 0; i < node->mNumMeshes; ++i)
 		{
 			aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
 
 			if (bAnimated)
-				m_SubMeshes.push_back(ProcessMesh<SkinnedVertex>(mesh, scene));
+				m_SubMeshes.push_back(ProcessMesh<SkinnedVertex>(mesh, scene, subMeshIndex));
 			else
-				m_SubMeshes.push_back(ProcessMesh<StaticVertex>(mesh, scene));
+				m_SubMeshes.push_back(ProcessMesh<StaticVertex>(mesh, scene, subMeshIndex));
 		}
 
 		for (uint32_t i = 0; i < node->mNumChildren; ++i)
 		{
-			ProcessNode(node->mChildren[i], scene);
+			ProcessNode(node->mChildren[i], scene, subMeshIndex);
 		}
 	}
 
 
 	template <typename Vertex>
-	SubMesh Mesh::ProcessMesh(aiMesh* mesh, const aiScene* scene)
+	SubMesh Mesh::ProcessMesh(aiMesh* mesh, const aiScene* scene, uint32_t& subMeshIndex)
 	{
 		std::vector<Vertex> vertices;
 		std::vector<uint32_t> indices;
@@ -216,7 +218,7 @@ namespace Flame
 		// normal: texture_normalN
 
 		const auto& loadTexture = [&](aiTextureType type) {
-			auto maps = loadMaterialTextures(material, type);
+			auto maps = loadMaterialTextures(material, type, subMeshIndex);
 			if (maps) textures.insert(textures.end(), maps.value().begin(), maps.value().end());
 		};
 
@@ -225,11 +227,10 @@ namespace Flame
 			loadTexture(static_cast<aiTextureType>(type));
 		}
 
-
-		return SubMesh(vertices, indices);
+		return SubMesh(vertices, indices, textures, subMeshIndex);
 	}
 
-	std::optional<std::vector<MaterialTexture>> Mesh::loadMaterialTextures(aiMaterial* mat, aiTextureType type)
+	std::optional<std::vector<MaterialTexture>> Mesh::loadMaterialTextures(aiMaterial* mat, aiTextureType type, uint32_t& subMeshIndex)
 	{
 		std::vector<MaterialTexture> textures;
 		for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)
@@ -239,11 +240,11 @@ namespace Flame
 
 			// check if texture was loaded before and if so, continue to next iteration: skip loading a new texture
 			bool skip = false;
-			for (unsigned int j = 0; j < m_Material->m_Textures.size(); j++)
+			for (unsigned int j = 0; j < m_Material[subMeshIndex]->m_Textures.size(); j++)
 			{
-				if (std::strcmp(m_Material->m_Textures[j].path.data(), str.C_Str()) == 0)
+				if (std::strcmp(m_Material[subMeshIndex]->m_Textures[j].path.data(), str.C_Str()) == 0)
 				{
-					textures.push_back(m_Material->m_Textures[j]);
+					textures.push_back(m_Material[subMeshIndex]->m_Textures[j]);
 					skip = true; // a texture with the same filepath has already been loaded, continue to next one. (optimization)
 					break;
 				}
@@ -269,7 +270,7 @@ namespace Flame
 				{
 				case aiTextureType_DIFFUSE:
 					texture.type = TextureType::Albedo;
-					m_AlbedoMap = texture.texture2d;
+					m_Material[subMeshIndex]->m_AlbedoMap = texture.texture2d;
 					break;
 				case aiTextureType_SPECULAR:
 					texture.type = TextureType::Specular;
@@ -279,11 +280,11 @@ namespace Flame
 					break;
 				case aiTextureType_AMBIENT:
 					texture.type = TextureType::AmbientOcclusion;
-					m_AoMap = texture.texture2d;
+					m_Material[subMeshIndex]->m_AoMap = texture.texture2d;
 					break;
 				case aiTextureType_NORMALS:
 					texture.type = TextureType::Normal;
-					m_NormalMap = texture.texture2d;
+					m_Material[subMeshIndex]->m_NormalMap = texture.texture2d;
 					break;
 				case aiTextureType_EMISSIVE:
 					texture.type = TextureType::Emission;
@@ -307,7 +308,7 @@ namespace Flame
 				}
 				texture.path = str.C_Str();
 				textures.push_back(texture);
-				m_Material->m_Textures.push_back(texture);  // store it as texture loaded for entire model, to ensure we won't unnecesery load duplicate textures.
+				m_Material[subMeshIndex]->m_Textures.push_back(texture);  // store it as texture loaded for entire model, to ensure we won't unnecesery load duplicate textures.
 			}
 		}
 

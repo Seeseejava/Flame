@@ -3,6 +3,7 @@
 #include "Runtime/Renderer/Texture.h"
 #include "Runtime/Renderer/Shader.h"
 #include "Runtime/Library/ShaderLibrary.h"
+#include "Runtime/Library/TextureLibrary.h"
 
 #include <unordered_map>
 
@@ -56,6 +57,27 @@ namespace Flame
         [[nodiscard]] Ref<Texture2D> GetTexture(TextureType type) { return m_TexMap[type]; }
     public:
         std::vector<MaterialTexture> m_Textures;
+
+		bool bUseAlbedoMap = false;
+		glm::vec4 col = { 1.0f, 1.0f, 1.0f, 1.0f }; // 0 ~ 1
+		Ref<Texture2D> albedoRGBA = Texture2D::Create(1, 1);
+		Ref<Texture2D> m_AlbedoMap = Library<Texture2D>::GetInstance().GetDefaultTexture();
+
+		bool bUseNormalMap = false;
+		Ref<Texture2D> m_NormalMap = Library<Texture2D>::GetInstance().Get("DefaultNormal");
+
+		bool bUseMetallicMap = false;
+		float metallic = 0.1f;
+		Ref<Texture2D> metallicRGBA = Texture2D::Create(1, 1);
+		Ref<Texture2D> m_MetallicMap = Library<Texture2D>::GetInstance().Get("DefaultMetallicRoughness");
+
+		bool bUseRoughnessMap = false;
+		float roughness = 0.1f;
+		Ref<Texture2D> roughnessRGBA = Texture2D::Create(1, 1);
+		Ref<Texture2D> m_RoughnessMap = Library<Texture2D>::GetInstance().Get("DefaultMetallicRoughness");
+
+		bool bUseAoMap = false;
+		Ref<Texture2D> m_AoMap = Library<Texture2D>::GetInstance().GetWhiteTexture();
     private:
         Ref<Shader> m_Shader;
         std::unordered_map<TextureType, Ref<Texture2D>, EnumClassHash> m_TexMap;

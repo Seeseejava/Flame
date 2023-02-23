@@ -8,7 +8,6 @@
 #include "Runtime/Mesh/SubMesh.h"
 #include "Runtime/Renderer/Texture.h"
 #include "Runtime/Renderer/Material.h"
-#include "Runtime/Library/TextureLibrary.h"
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -25,18 +24,18 @@ namespace Flame
 		Mesh() = default;
 		Mesh(const Mesh&) = default;
 		Mesh(const std::string& path)
-			: m_Material(CreateRef<Material>(Library<Shader>::GetInstance().GetDefaultShader()))
 		{
+			m_Material.push_back(CreateRef<Material>(Library<Shader>::GetInstance().GetDefaultShader()));
 			LoadModel(path);
 		}
 
 		Mesh(const std::string& path, Ref<Shader> shader)
-			: m_Material(CreateRef<Material>(shader))
 		{
+			m_Material.push_back(CreateRef<Material>(shader));
 			LoadModel(path);
 		}
 
-		void SetShader(Ref<Shader> shader) { m_Material->SetShader(shader); };
+		void SetShader(Ref<Shader> shader) { m_Material[0]->SetShader(shader); };
 		void Draw(const glm::mat4& transform, const glm::vec3& cameraPos, int entityID);
 		void Draw(const glm::mat4& transform, const glm::vec3& cameraPos, Ref<Shader> shader, int entityID);
 		void Draw();
@@ -46,36 +45,14 @@ namespace Flame
 
 	private:
 
-		std::optional<std::vector<MaterialTexture>> loadMaterialTextures(aiMaterial* mat, aiTextureType type);
-
 		void LoadModel(const std::string& path);
-		void ProcessNode(aiNode* node, const aiScene* scene);
+		void ProcessNode(aiNode* node, const aiScene* scene, uint32_t& subMeshIndex);
 
 		template <typename Vertex>
-		SubMesh ProcessMesh(aiMesh* mesh, const aiScene* scene);
+		SubMesh ProcessMesh(aiMesh* mesh, const aiScene* scene, uint32_t& subMeshIndex);
+		std::optional<std::vector<MaterialTexture>> loadMaterialTextures(aiMaterial* mat, aiTextureType type, uint32_t& subMeshIndex);
 
 	public:
-		bool bUseAlbedoMap = false;
-		glm::vec4 col = { 1.0f, 1.0f, 1.0f, 1.0f }; // 0 ~ 1
-		Ref<Texture2D> albedoRGBA = Texture2D::Create(1, 1);
-		Ref<Texture2D> m_AlbedoMap = Library<Texture2D>::GetInstance().GetDefaultTexture();
-
-		bool bUseNormalMap = false;
-		Ref<Texture2D> m_NormalMap = Library<Texture2D>::GetInstance().Get("DefaultNormal");
-
-		bool bUseMetallicMap = false;
-		float metallic = 0.1f;
-		Ref<Texture2D> metallicRGBA = Texture2D::Create(1, 1);
-		Ref<Texture2D> m_MetallicMap = Library<Texture2D>::GetInstance().Get("DefaultMetallicRoughness");
-
-		bool bUseRoughnessMap = false;
-		float roughness = 0.1f;
-		Ref<Texture2D> roughnessRGBA = Texture2D::Create(1, 1);
-		Ref<Texture2D> m_RoughnessMap = Library<Texture2D>::GetInstance().Get("DefaultMetallicRoughness");
-
-		bool bUseAoMap = false;
-		Ref<Texture2D> m_AoMap = Library<Texture2D>::GetInstance().GetWhiteTexture();
-
 		// Animation
 		bool bAnimated = false;
 		bool bPlayAnim = false;
@@ -86,10 +63,10 @@ namespace Flame
 
 		float m_AnimPlaySpeed = 1.0f;
 
+		std::vector<Ref<Material>> m_Material;
 	private:
 		std::vector<SubMesh> m_SubMeshes;
 		std::string m_Directory;
-		Ref<Material> m_Material = CreateRef<Material>();
 
 		// Animation
 		int m_BoneCounter = 0;
