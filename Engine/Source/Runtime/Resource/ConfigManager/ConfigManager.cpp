@@ -3,7 +3,7 @@
 
 namespace Flame
 {
-	glm::vec2 ConfigManager::m_ViewportSize = { 0.0f, 0.0f };
+	glm::vec2 ConfigManager::m_ViewportSize = { 1280.0f, 720.0f };
 
 	ConfigManager::ConfigManager()
 	{

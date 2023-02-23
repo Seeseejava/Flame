@@ -4,6 +4,7 @@
 #include "Runtime/Renderer/Renderer3D.h"
 
 #include "Platform/OpenGL/OpenGLShader.h"
+#include "Runtime/Renderer/PostProcessing.h"
 
 
 namespace Flame {
@@ -17,6 +18,7 @@ namespace Flame {
 		RenderCommand::Init();
 		Renderer2D::Init();
 		Renderer3D::Init();
+		PostProcessing::Init();
 	}
 
 	void Renderer::OnWindowResize(uint32_t width, uint32_t height)

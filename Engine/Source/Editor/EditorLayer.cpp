@@ -105,6 +105,7 @@ namespace Flame {
 		RenderPassSpecification rpSpec = { m_Framebuffer, "MainPass" };
 		m_RenderPass = std::make_shared<RenderPass>(rpSpec);
 		m_RenderPass->AddPostProcessing(PostProcessingType::MSAA);
+		//mRenderPass->AddPostProcessing(PostProcessingType::Outline);
 
 		m_ActiveScene = std::make_shared<Scene>();
 

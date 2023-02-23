@@ -346,35 +346,6 @@ namespace Flame {
 		}
 	}
 
-	uint32_t OpenGLFramebuffer::GetColorAttachmentRendererID(uint32_t index) const
-	{
-		FLAME_CORE_ASSERT(index < m_ColorAttachments.size(), "Index Error"); return m_ColorAttachments[index];
-
-		//configure second post-processing framebuffer
-		unsigned int intermediateFBO;
-		glGenFramebuffers(1, &intermediateFBO);
-		glBindFramebuffer(GL_FRAMEBUFFER, intermediateFBO);
-		// create a color attachment texture
-		unsigned int screenTexture;
-		glGenTextures(1, &screenTexture);
-		glBindTexture(GL_TEXTURE_2D, screenTexture);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_Specification.Width, m_Specification.Height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, screenTexture, 0);	// we only need a color buffer
-
-		glBindFramebuffer(GL_READ_FRAMEBUFFER, m_RendererID);
-		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, intermediateFBO);
-		glBlitFramebuffer(0, 0, m_Specification.Width, m_Specification.Height, 0, 0, m_Specification.Width, m_Specification.Height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
-
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
-		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-		//glBindTexture(GL_TEXTURE_2D, 0);
-
-		//return mColorAttachments[index];
-		return screenTexture;
-	}
 
 	void OpenGLFramebuffer::FramebufferTexture2D(uint32_t cubemapIndex, uint32_t cubemapID, uint32_t slot)
 	{
