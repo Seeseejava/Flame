@@ -22,7 +22,7 @@ namespace Flame {
 		virtual void ClearStencil() override;
 
 		virtual void DepthMask(bool maskFlag) override;
-		virtual void DepthTest(int32_t Bit) override;
+		virtual void DepthTest(bool enable) override;
 		virtual void Blend(int32_t Bit) override;
 
 		virtual void StencilTest(int32_t Bit) override;

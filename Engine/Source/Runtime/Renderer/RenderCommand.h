@@ -50,9 +50,9 @@ namespace Flame {
 		}
 
 		//Open/Close Depth Test
-		inline static void DepthTest(int32_t Bit)
+		inline static void DepthTest(bool enable)
 		{
-			s_RendererAPI->DepthTest(Bit);
+			s_RendererAPI->DepthTest(enable);
 		}
 
 		inline static void DepthFunc(DepthComp comp)

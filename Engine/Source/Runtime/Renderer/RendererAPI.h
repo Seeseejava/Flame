@@ -51,7 +51,7 @@ namespace Flame {
 		inline static API GetAPI() { return s_API; }
 
 		//depth
-		virtual void DepthTest(int32_t Bit) = 0;
+		virtual void DepthTest(bool enable) = 0;
 		virtual void DepthMask(bool maskFlag) = 0;
 		virtual void DepthFunc(DepthComp comp) = 0;
 
