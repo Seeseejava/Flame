@@ -40,7 +40,7 @@ namespace Flame
 
 	void Mesh::LoadModel(const std::string& path)
 	{
-		m_Material.resize(20);
+		m_Material.resize(200);
 
 		Assimp::Importer importer;
 
@@ -246,6 +246,17 @@ namespace Flame
 
 			// check if texture was loaded before and if so, continue to next iteration: skip loading a new texture
 			bool skip = false;
+
+			for (unsigned int j = 0; j < m_Material[subMeshIndex]->m_Textures.size(); j++)
+			{
+				if (std::strcmp(m_Material[subMeshIndex]->m_Textures[j].path.data(), str.C_Str()) == 0)
+				{
+					textures.push_back(m_Material[subMeshIndex]->m_Textures[j]);
+					skip = true; // a texture with the same filepath has already been loaded, continue to next one. (optimization)
+					break;
+				}
+			}
+
 			if (!skip)
 			{   // if texture hasn't been loaded already, load it
 				MaterialTexture texture;
@@ -268,6 +279,7 @@ namespace Flame
 				case aiTextureType_DIFFUSE:
 					texture.type = TextureType::Albedo;
 					m_Material[subMeshIndex]->m_AlbedoMap = texture.texture2d;
+					m_Material[subMeshIndex]->bUseAlbedoMap = true;
 					break;
 				case aiTextureType_SPECULAR:
 					texture.type = TextureType::Specular;
@@ -278,10 +290,12 @@ namespace Flame
 				case aiTextureType_AMBIENT:
 					texture.type = TextureType::AmbientOcclusion;
 					m_Material[subMeshIndex]->m_AoMap = texture.texture2d;
+					m_Material[subMeshIndex]->bUseAoMap = true;
 					break;
 				case aiTextureType_NORMALS:
 					texture.type = TextureType::Normal;
 					m_Material[subMeshIndex]->m_NormalMap = texture.texture2d;
+					m_Material[subMeshIndex]->bUseNormalMap = true;
 					break;
 				case aiTextureType_EMISSIVE:
 					texture.type = TextureType::Emission;
