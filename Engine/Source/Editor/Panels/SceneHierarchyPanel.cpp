@@ -550,7 +550,7 @@ namespace Flame {
 			ImGui::SameLine();
 			if (ImGui::Button("..."))
 			{
-				std::string filepath = FileDialogs::OpenFile("Model (*.obj *.fbx *.dae)\0*.obj;*.fbx;*.dae\0");
+				std::string filepath = FileDialogs::OpenFile("Model (*.obj *.fbx *.dae *.gltf)\0");
 				if (filepath.find("Assets") != std::string::npos)
 				{
 					filepath = filepath.substr(filepath.find("Assets"), filepath.length());

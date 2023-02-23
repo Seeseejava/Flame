@@ -54,7 +54,7 @@ namespace Flame {
 		virtual void UnBind() const override;
 
 		virtual void Generate() override;
-		[[nodiscard]] virtual std::vector<std::string> GetPaths() override { return m_Paths; }
+		virtual std::vector<std::string> GetPaths() override { return m_Paths; }
 
 		virtual bool operator==(const Texture& other) const override
 		{
