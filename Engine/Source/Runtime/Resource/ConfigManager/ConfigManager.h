@@ -26,6 +26,7 @@ namespace Flame
 		const std::filesystem::path& GetResourcesFolder() const;
 
 		static glm::vec2 m_ViewportSize;
+		static int selectedEntity;
 	private:
 		std::filesystem::path mRootFolder;
 		std::filesystem::path mAssetsFolder;

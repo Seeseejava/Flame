@@ -273,8 +273,16 @@ namespace Flame {
 		//m_ParticleSystem.OnRender(m_CameraController.GetCamera()); //目前粒子系统的鼠标位置有问题
 
 		Entity selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();
-		if (selectedEntity && Input::IsKeyPressed(FLAME_KEY_F))
-			m_EditorCamera.SetCenter(selectedEntity.GetComponent<TransformComponent>().Translation);
+		if (selectedEntity)
+		{
+			ConfigManager::selectedEntity = (int)(uint32_t)selectedEntity;
+			if (Input::IsKeyPressed(FLAME_KEY_F))
+				m_EditorCamera.SetCenter(selectedEntity.GetComponent<TransformComponent>().Translation);
+		}
+		else
+		{
+			ConfigManager::selectedEntity = -1;
+		}
 
 		OnOverlayRender();
 
