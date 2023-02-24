@@ -11,6 +11,7 @@ namespace Flame
 		None = 1,
 		MSAA,
 		Outline,
+		Cartoon,
 
 	};
 
