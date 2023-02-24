@@ -171,6 +171,7 @@ namespace Flame {
 
 			m_EditorCamera.SetViewportSize(ConfigManager::m_ViewportSize.x, ConfigManager::m_ViewportSize.y);
 			m_ActiveScene->OnViewportResize((uint32_t)ConfigManager::m_ViewportSize.x, (uint32_t)ConfigManager::m_ViewportSize.y);
+			PostProcessing::m_Framebuffer->Resize((uint32_t)ConfigManager::m_ViewportSize.x, (uint32_t)ConfigManager::m_ViewportSize.y);
 		}
 
 

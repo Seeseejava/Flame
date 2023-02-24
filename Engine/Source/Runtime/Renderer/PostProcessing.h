@@ -17,7 +17,6 @@ namespace Flame
 
 	class PostProcessing
 	{
-		friend class RenderPass;
 	public:
 		PostProcessing(const PostProcessingType& type);
 		virtual ~PostProcessing() {}
@@ -26,11 +25,12 @@ namespace Flame
 		virtual uint32_t ExcuteAndReturnFinalTex(const Ref<Framebuffer>& fb) { return 0; };
 	protected:
 		void DoPostProcessing();
+	public:
+		static Ref<Framebuffer> m_Framebuffer;
 	protected:
 		PostProcessingType m_Type;
 		static Ref<VertexArray> m_ScreenQuadVAO;
 		static Ref<VertexBuffer> m_ScreenQuadVBO;
 		static Ref<IndexBuffer> m_ScreenQuadIBO;
-		static Ref<Framebuffer> m_Framebuffer;
 	};
 }

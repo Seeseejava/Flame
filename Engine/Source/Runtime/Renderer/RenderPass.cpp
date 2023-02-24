@@ -20,10 +20,6 @@ namespace Flame
 
 	uint32_t RenderPass::ExcuteAndReturnFinalTex()
 	{
-		uint32_t width = m_Specification.TargetFramebuffer->GetSpecification().Width;
-		uint32_t height = m_Specification.TargetFramebuffer->GetSpecification().Height;
-		PostProcessing::m_Framebuffer->Bind();
-		PostProcessing::m_Framebuffer->Resize(width, height);
 
 		uint32_t final = 0;
 		for (auto& effect : m_PostProcessings)
