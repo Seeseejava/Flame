@@ -12,6 +12,8 @@ namespace Flame
 		MSAA,
 		Outline,
 		Cartoon,
+		GrayScale,
+		GaussianBlur,
 
 	};
 
