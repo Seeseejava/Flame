@@ -53,8 +53,8 @@ namespace Flame {
 
 					if (ImGui::MenuItem("Create Point Light"))
 					{
-						auto entity = m_Context->CreateEntity("Light");
-						entity.AddComponent<LightComponent>();
+						auto entity = m_Context->CreateEntity("Point Light");
+						entity.AddComponent<PointLightComponent>();
 						SetSelectedEntity(entity);
 					}
 
@@ -369,11 +369,11 @@ namespace Flame {
 				}
 			}
 
-			if (!m_SelectionContext.HasComponent<LightComponent>())
+			if (!m_SelectionContext.HasComponent<PointLightComponent>())
 			{
 				if (ImGui::MenuItem("Point Light"))
 				{
-					m_SelectionContext.AddComponent<LightComponent>();
+					m_SelectionContext.AddComponent<PointLightComponent>();
 					ImGui::CloseCurrentPopup();
 				}
 			}
@@ -821,30 +821,30 @@ namespace Flame {
 		floatValueUI("friction", component.friction);
 			});
 
-		DrawComponent<LightComponent>("Point Light", entity, [](auto& component)
+		DrawComponent<PointLightComponent>("Point Light", entity, [](auto& component)
 			{
 				ImGui::Text("Light Color");
-		ImGui::SameLine();
-		ImGui::DragFloat3("##Light Color", (float*)&component.LightColor, 2.0f, 0.0f, 10000.0f, "%.1f");
+				ImGui::SameLine();
+				ImGui::DragFloat3("##Light Color", (float*)&component.LightColor, 2.0f, 0.0f, 10000.0f, "%.1f");
 			});
 
 		DrawComponent<PythonScriptComponent>("Python Script", entity, [](auto& component)
 			{
 				ImGui::Text("Python Script");
-		ImGui::SameLine();
-		ImGui::Text(component.Path.c_str());
+				ImGui::SameLine();
+				ImGui::Text(component.Path.c_str());
 
-		ImGui::SameLine();
-		if (ImGui::Button("..."))
-		{
-			std::string filepath = FileDialogs::OpenFile("PythonScript (*.py)\0*.py\0");
-			if (!filepath.empty())
-			{
-				filepath = std::regex_replace(filepath, std::regex("\\\\"), "/");
-				filepath = filepath.substr(filepath.find_last_of("/") + 1, filepath.length());
-				component.Path = filepath;
-			}
-		}
+				ImGui::SameLine();
+				if (ImGui::Button("..."))
+				{
+					std::string filepath = FileDialogs::OpenFile("PythonScript (*.py)\0*.py\0");
+					if (!filepath.empty())
+					{
+						filepath = std::regex_replace(filepath, std::regex("\\\\"), "/");
+						filepath = filepath.substr(filepath.find_last_of("/") + 1, filepath.length());
+						component.Path = filepath;
+					}
+				}
 			});
 	}
 }

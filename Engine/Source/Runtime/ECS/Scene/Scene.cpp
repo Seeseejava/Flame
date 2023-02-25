@@ -361,7 +361,7 @@ namespace Flame {
 	}
 
 	template<>
-	void Scene::OnComponentAdded<LightComponent>(Entity entity, LightComponent& component)
+	void Scene::OnComponentAdded<PointLightComponent>(Entity entity, PointLightComponent& component)
 	{
 	}
 
