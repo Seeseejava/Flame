@@ -6,10 +6,11 @@
 
 namespace Flame
 {
-	Ref<VertexArray> PostProcessing::m_ScreenQuadVAO = nullptr;
+	Ref<VertexArray>  PostProcessing::m_ScreenQuadVAO = nullptr;
 	Ref<VertexBuffer> PostProcessing::m_ScreenQuadVBO = nullptr;
-	Ref<IndexBuffer> PostProcessing::m_ScreenQuadIBO = nullptr;
-	Ref<Framebuffer> PostProcessing::m_Framebuffer = nullptr;
+	Ref<IndexBuffer>  PostProcessing::m_ScreenQuadIBO = nullptr;
+	Ref<Framebuffer>  PostProcessing::m_Framebuffer = nullptr;
+	Ref<Texture2D>    PostProcessing::m_IntermediateScreenTex = nullptr;
 
 	PostProcessing::PostProcessing(const PostProcessingType& type)
 		: m_Type{ type }

@@ -29,8 +29,13 @@ namespace Flame
 		uint32_t height = fb->GetSpecification().Height;
 		m_Framebuffer->Bind();
 
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, m_Framebuffer->GetColorAttachmentRendererID());
+		// copy the framebuffer to the intermediate screen texture
+		m_Framebuffer->BindReadFramebuffer();
+		m_IntermediateScreenTex->Bind();
+		glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, width, height);
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+
+		m_Framebuffer->BindDrawFramebuffer();
 
 		shader->Bind();
 		shader->SetInt("screenTexture", 0);

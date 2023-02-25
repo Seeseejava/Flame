@@ -20,6 +20,10 @@ namespace Flame
 
 	uint32_t RenderPass::ExcuteAndReturnFinalTex()
 	{
+		PostProcessing::m_IntermediateScreenTex = Texture2D::Create(
+			m_Specification.TargetFramebuffer->GetSpecification().Width,
+			m_Specification.TargetFramebuffer->GetSpecification().Height
+		);
 
 		uint32_t final = 0;
 		for (auto& effect : m_PostProcessings)

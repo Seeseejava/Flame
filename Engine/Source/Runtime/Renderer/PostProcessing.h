@@ -29,10 +29,11 @@ namespace Flame
 		void DoPostProcessing();
 	public:
 		static Ref<Framebuffer> m_Framebuffer;
+		static Ref<Texture2D>   m_IntermediateScreenTex;
 	protected:
 		PostProcessingType m_Type;
-		static Ref<VertexArray> m_ScreenQuadVAO;
+		static Ref<VertexArray>  m_ScreenQuadVAO;
 		static Ref<VertexBuffer> m_ScreenQuadVBO;
-		static Ref<IndexBuffer> m_ScreenQuadIBO;
+		static Ref<IndexBuffer>  m_ScreenQuadIBO;
 	};
 }
