@@ -369,4 +369,9 @@ namespace Flame {
 	void Scene::OnComponentAdded<PythonScriptComponent>(Entity entity, PythonScriptComponent& component)
 	{
 	}
+
+	template<>
+	void Scene::OnComponentAdded<DirectionalLightComponent>(Entity entity, DirectionalLightComponent& component)
+	{
+	}
 }
