@@ -25,13 +25,15 @@ namespace Flame
 	public:
 		static void Init();
 		virtual uint32_t ExcuteAndReturnFinalTex(const Ref<Framebuffer>& fb) { return 0; };
+
+		static std::string PostTypeToString(PostProcessingType type);
 	protected:
 		void DoPostProcessing();
 	public:
+		PostProcessingType m_Type;
 		static Ref<Framebuffer> m_Framebuffer;
 		static Ref<Texture2D>   m_IntermediateScreenTex;
 	protected:
-		PostProcessingType m_Type;
 		static Ref<VertexArray>  m_ScreenQuadVAO;
 		static Ref<VertexBuffer> m_ScreenQuadVBO;
 		static Ref<IndexBuffer>  m_ScreenQuadIBO;

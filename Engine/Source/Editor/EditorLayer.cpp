@@ -104,30 +104,12 @@ namespace Flame {
 
 		RenderPassSpecification rpSpec = { m_Framebuffer, "MainPass" };
 		m_RenderPass = std::make_shared<RenderPass>(rpSpec);
-		m_RenderPass->AddPostProcessing(PostProcessingType::MSAA);
-		//m_RenderPass->AddPostProcessing(PostProcessingType::Cartoon);
-		m_RenderPass->AddPostProcessing(PostProcessingType::Outline);
-		//m_RenderPass->AddPostProcessing(PostProcessingType::GrayScale);
-		//m_RenderPass->AddPostProcessing(PostProcessingType::GaussianBlur);
+		m_RenderPass->AddPostProcessing(PostProcessingType::MSAA); //default
+
 
 		m_ActiveScene = std::make_shared<Scene>();
 
 		m_EditorCamera = EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
-
-
-		// Entity （逆序绘制）
-		/*m_SquareEntity = m_ActiveScene->CreateEntity("Green Square");
-		m_SquareEntity.AddComponent<SpriteRendererComponent>(glm::vec4{ 0.0f, 1.0f, 0.0f, 1.0f });
-
-		auto redSquare = m_ActiveScene->CreateEntity("Red Square");
-		redSquare.AddComponent<SpriteRendererComponent>(glm::vec4{ 1.0f, 0.0f, 0.0f, 1.0f });
-
-		m_SecondCamera = m_ActiveScene->CreateEntity("Camera B");
-		auto& cc = m_SecondCamera.AddComponent<CameraComponent>();
-		cc.Primary = false;
-
-		m_CameraEntity = m_ActiveScene->CreateEntity("Camera A");
-		m_CameraEntity.AddComponent<CameraComponent>();*/
 
 
 		m_MapWidth = s_MapWidth;
@@ -197,34 +179,6 @@ namespace Flame {
 		{
 			FLAME_PROFILE_SCOPE("Renderer Draw");
 
-			//-------------地图--------------------
-			//for (uint32_t y = 0; y < m_MapHeight; y++)
-			//{
-			//	for (uint32_t x = 0; x < m_MapWidth; x++)
-			//	{
-			//		char tileType = s_MapTiles[x + y * m_MapWidth];
-			//		Ref<SubTexture2D> texture;
-
-			//		if (s_TextureMap.find(tileType) != s_TextureMap.end())
-			//			texture = s_TextureMap[tileType];
-			//		else
-			//			texture = m_TextureGrass;
-
-			//		Renderer2D::DrawQuad({ x - m_MapWidth / 2.0f, m_MapHeight / 2.0f - y, 0.1f }, { 1.0f,1.0f }, texture);// 这里需要翻转一下y轴
-			//	}
-			//}
-
-			//---------------Draw SubTexture--------------------
-			/*Renderer2D::BeginScene(m_CameraController.GetCamera());
-			Renderer2D::DrawQuad({ 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, m_TextureGrass);
-			Renderer2D::DrawQuad({ 1.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, m_TextureStair);
-			Renderer2D::DrawQuad({ 2.0f, 0.0f, 0.0f }, { 1.0f, 2.0f }, m_TextureTree);
-			Renderer2D::EndScene();*/
-
-			//--------------加载人脸图片--------------------------
-			/*Renderer2D::BeginScene(m_CameraController.GetCamera());
-			Renderer2D::DrawQuad({ 0.5f, 0.5f, 0.0f }, { 7.0f, 7.0f * 1153.0f / 1039.0f }, m_FaceTexture);
-			Renderer2D::EndScene();*/
 
 			if (ModeManager::IsEditState())
 			{
@@ -256,25 +210,6 @@ namespace Flame {
 			}
 
 		}
-
-		//-------------粒子系统-----------------------
-		//if (Input::IsMouseButtonPressed(FLAME_MOUSE_BUTTON_LEFT))
-		//{
-		//	auto [x, y] = Input::GetMousePosition();						//这个位置是相对于窗口左上角，且向右向下为正，单位为像素
-		//	auto width = Application::GetInstance().GetWindow().GetWidth();
-		//	auto height = Application::GetInstance().GetWindow().GetHeight();	//串口大小：1280x720
-
-		//	auto bounds = m_CameraController.GetBounds();						//当zoomlevel时，left = -5 * 1280 / 720, bottom = -5;
-		//	auto pos = m_CameraController.GetCamera().GetPosition();			//当摄像机未移动时为0
-		//	x = (x / width) * bounds.GetWidth() - bounds.GetWidth() * 0.5f;		//前一部分求得相较于摄像机左下角的位置，减摄像机半宽后得到相对于摄像机的位置（变换成摄像机的坐标了）
-		//	y = bounds.GetHeight() * 0.5f - (y / height) * bounds.GetHeight();
-		//	m_Particle.Position = { x + pos.x, y + pos.y };
-		//	for (int i = 0; i < 5; i++)
-		//		m_ParticleSystem.Emit(m_Particle);
-		//}
-
-		//m_ParticleSystem.OnUpdate(ts);
-		//m_ParticleSystem.OnRender(m_CameraController.GetCamera()); //目前粒子系统的鼠标位置有问题
 
 		Entity selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();
 		if (selectedEntity)
@@ -462,14 +397,60 @@ namespace Flame {
 			ImGui::SliderFloat("##Camera Speed", &m_EditorCamera.m_CameraSpeed, 0.1f, 5.0f);
 			ImGui::EndColumns();
 
-			bool open = ImGuiWrapper::TreeNodeExStyle1((void*)"Physics Settings", "Physics Settings");
-
-			if (open)
+			if (ImGuiWrapper::TreeNodeExStyle1((void*)"Physics Settings", "Physics Settings"))
 			{
 				ImGui::Checkbox("Show physics colliders", &m_ShowPhysicsColliders);
 				ImGui::TreePop();
 			}
 
+			if (ImGuiWrapper::TreeNodeExStyle1((void*)"Post Processing", "Post Processing"))
+			{
+				if (ImGui::Button("Add Post Processing"))
+					ImGui::OpenPopup("AddPostProcessing");
+
+				if (ImGui::BeginPopup("AddPostProcessing"))
+				{
+					if (ImGui::MenuItem("Outline"))
+					{
+						m_RenderPass->AddPostProcessing(PostProcessingType::Outline);
+						ImGui::CloseCurrentPopup();
+					}
+
+					if (ImGui::MenuItem("Cartoon"))
+					{
+						m_RenderPass->AddPostProcessing(PostProcessingType::Cartoon);
+						ImGui::CloseCurrentPopup();
+					}
+
+					if (ImGui::MenuItem("GrayScale"))
+					{
+						m_RenderPass->AddPostProcessing(PostProcessingType::GrayScale);
+						ImGui::CloseCurrentPopup();
+					}
+
+					if (ImGui::MenuItem("GaussianBlur"))
+					{
+						m_RenderPass->AddPostProcessing(PostProcessingType::GaussianBlur);
+						ImGui::CloseCurrentPopup();
+					}
+
+					ImGui::EndPopup();
+				}
+
+				for (size_t i = 1; i < m_RenderPass->m_PostProcessings.size(); i++)
+				{
+					ImGui::Selectable(PostProcessing::PostTypeToString(m_RenderPass->m_PostProcessings[i]->m_Type).c_str());
+					if (ImGui::BeginPopupContextItem())
+					{
+						if (ImGui::MenuItem("Delete"))
+							m_RenderPass->m_PostProcessings.erase(m_RenderPass->m_PostProcessings.begin() + i);
+
+						ImGui::EndPopup();
+					}
+				}
+
+				ImGui::TreePop();
+			}
 			ImGui::End();
 		}
 

@@ -23,8 +23,9 @@ namespace Flame
 
 		void AddPostProcessing(PostProcessingType type);
 		uint32_t ExcuteAndReturnFinalTex();
+	public:
+		std::vector<Scope<PostProcessing>> m_PostProcessings;
 	private:
 		RenderPassSpecification m_Specification;
-		std::vector<std::unique_ptr<PostProcessing>> m_PostProcessings;
 	};
 }

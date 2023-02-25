@@ -46,6 +46,34 @@ namespace Flame
 		m_Framebuffer = Framebuffer::Create(fbSpec);
 	}
 
+	std::string PostProcessing::PostTypeToString(PostProcessingType type)
+	{
+		switch (type)
+		{
+		case Flame::PostProcessingType::None:
+			return "";
+			break;
+		case Flame::PostProcessingType::MSAA:
+			return "MSAA";
+			break;
+		case Flame::PostProcessingType::Outline:
+			return "Outline";
+			break;
+		case Flame::PostProcessingType::Cartoon:
+			return "Cartoon";
+			break;
+		case Flame::PostProcessingType::GrayScale:
+			return "GrayScale";
+			break;
+		case Flame::PostProcessingType::GaussianBlur:
+			return "GaussianBlur";
+			break;
+		default:
+			break;
+		}
+		return std::string();
+	}
+
 	void PostProcessing::DoPostProcessing()
 	{
 		RenderCommand::DrawIndexed(m_ScreenQuadVAO);
