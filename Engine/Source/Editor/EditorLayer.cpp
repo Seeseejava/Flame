@@ -440,6 +440,21 @@ namespace Flame {
 				for (size_t i = 1; i < m_RenderPass->m_PostProcessings.size(); i++)
 				{
 					ImGui::Selectable(PostProcessing::PostTypeToString(m_RenderPass->m_PostProcessings[i]->m_Type).c_str());
+
+					// imgui demo: Drag to reorder items (simple)
+					if (ImGui::IsItemActive() && !ImGui::IsItemHovered())
+					{
+						int next = i + (ImGui::GetMouseDragDelta(0).y < 0.f ? -1 : 1);
+						if (next >= 1 && next < m_RenderPass->m_PostProcessings.size())
+						{
+							PostProcessingType tempType = m_RenderPass->m_PostProcessings[i]->m_Type;
+							m_RenderPass->m_PostProcessings[i]->m_Type = m_RenderPass->m_PostProcessings[next]->m_Type;
+							m_RenderPass->m_PostProcessings[next]->m_Type = tempType;
+							ImGui::ResetMouseDragDelta();
+						}
+					}
+
+
 					if (ImGui::BeginPopupContextItem())
 					{
 						if (ImGui::MenuItem("Delete"))
