@@ -331,6 +331,17 @@ namespace Flame {
 
 			out << YAML::EndMap;
 		}
+
+		if (entity.HasComponent<DirectionalLightComponent>())
+		{
+			out << YAML::Key << "DirectionalLightComponent";
+			out << YAML::BeginMap;
+
+			auto& lightComponent = entity.GetComponent<DirectionalLightComponent>();
+			out << YAML::Key << "dirIntensity" << YAML::Value << lightComponent.Intensity;
+
+			out << YAML::EndMap;
+		}
 		out << YAML::EndMap; // Entity
 	}
 
@@ -511,6 +522,13 @@ namespace Flame {
 					float intensity = pointLightComponent["Intensity"].as<float>();
 					glm::vec3 color = pointLightComponent["Color"].as<glm::vec3>();
 					auto& src = deserializedEntity.AddComponent<PointLightComponent>(intensity, color);
+				}
+
+				auto directionalLightComponent = entity["DirectionalLightComponent"];
+				if (directionalLightComponent)
+				{
+					float intensity = directionalLightComponent["dirIntensity"].as<float>();
+					auto& src = deserializedEntity.AddComponent<DirectionalLightComponent>(intensity);
 				}
 			}
 		}

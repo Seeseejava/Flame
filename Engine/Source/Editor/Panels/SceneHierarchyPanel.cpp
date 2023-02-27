@@ -840,7 +840,7 @@ namespace Flame {
 			{
 				ImGuiWrapper::DrawTwoUI(
 					[]() { ImGui::Text("Light Intensity"); },
-					[&component = component]() { ImGui::DragFloat("##Light Intensity", &component.Intensity, 2.0f, 0.0f, 10000.0f, "%.1f"); }
+					[&component = component]() { ImGui::SliderFloat("##Light Intensity", &component.Intensity, 0.0f, 10000.0f, "%.1f"); }
 				);
 
 				ImGuiWrapper::DrawTwoUI(
@@ -851,9 +851,10 @@ namespace Flame {
 
 		DrawComponent<DirectionalLightComponent>("Directional Light", entity, [](auto& component)
 			{
-				ImGui::Text("Light Dir");
-		ImGui::SameLine();
-		ImGui::DragFloat3("##Light Dir", (float*)&component.LightDir, 0.01f, -1.0f, 1.0f, "%.2f");
+				ImGuiWrapper::DrawTwoUI(
+					[]() { ImGui::Text("Light Intensity"); },
+					[&component = component]() { ImGui::SliderFloat("##Light Intensity", &component.Intensity, 0.0f, 10.0f, "%.2f"); }
+				);
 			});
 
 		DrawComponent<PythonScriptComponent>("Python Script", entity, [](auto& component)

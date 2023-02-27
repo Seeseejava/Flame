@@ -171,6 +171,15 @@ namespace Flame
 		else
 			defaultShader->SetFloat("exposure", 1.0f);
 
+		// directional light reset
+		defaultShader->SetInt("cascadeCount", -2);
+		//for (size_t i = 0; i < 4; ++i)
+		//{
+		//	defaultShader->SetFloat("cascadePlaneDistances[" + std::to_string(i) + "]", 1);
+		//}
+		defaultShader->SetFloat3("lightDir", glm::vec3(0.0f));
+
+
 		// Point Light
 		{
 			auto view = m_Scene->m_Registry.view<TransformComponent, PointLightComponent>();
@@ -202,7 +211,7 @@ namespace Flame
 			}
 		}
 
-		// Directional light depth pass
+		// Directional light 
 		{
 			auto view = m_Scene->m_Registry.view<TransformComponent, DirectionalLightComponent>();
 
@@ -220,8 +229,10 @@ namespace Flame
 				float cameraFarPlane = camera.GetFarPlane();
 				std::vector<float> shadowCascadeLevels{ cameraFarPlane / 50.0f, cameraFarPlane / 25.0f, cameraFarPlane / 10.0f, cameraFarPlane / 2.0f };
 
+				glm::vec3 lightDir = glm::normalize(glm::eulerAngles(glm::quat(transform.Rotation)));
+
 				const auto lightMatrices = Utils::getLightSpaceMatrices(cameraNearPlane, cameraFarPlane, camera.GetFOV(),
-					camera.GetAspect(), glm::normalize(directionalLight.LightDir), camera.GetViewMatrix(), shadowCascadeLevels);
+					camera.GetAspect(), lightDir, camera.GetViewMatrix(), shadowCascadeLevels);
 				Ref<UniformBuffer> lightMatricesUBO = Library<UniformBuffer>::GetInstance().Get("LightMatricesUniform");
 				for (size_t i = 0; i < lightMatrices.size(); i++)
 				{
@@ -229,9 +240,10 @@ namespace Flame
 				}
 
 				defaultShader->SetMat4("view", camera.GetViewMatrix());
-				defaultShader->SetFloat3("lightDir", glm::normalize(directionalLight.LightDir));
+				defaultShader->SetFloat3("lightDir", lightDir);
 				defaultShader->SetFloat("farPlane", cameraFarPlane);
 				defaultShader->SetInt("cascadeCount", shadowCascadeLevels.size());
+				defaultShader->SetFloat("dirLightIntensity", directionalLight.Intensity);
 
 				for (size_t i = 0; i < shadowCascadeLevels.size(); ++i)
 				{
