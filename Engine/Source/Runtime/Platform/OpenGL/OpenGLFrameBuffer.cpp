@@ -87,6 +87,26 @@ namespace Flame {
 			glFramebufferTexture2D(GL_FRAMEBUFFER, attachmentType, TextureTarget(multisampled), id, 0);
 		}
 
+		static void AttachDepthTexture3D(uint32_t& id, GLenum format, uint32_t width, uint32_t height, int depth = 5)
+		{
+			glGenTextures(1, &id);
+
+			glBindTexture(GL_TEXTURE_2D_ARRAY, id);
+			glTexImage3D(
+				GL_TEXTURE_2D_ARRAY, 0, format, width, height, depth,
+				0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
+
+			glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+			glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+
+			constexpr float bordercolor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+			glTexParameterfv(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_BORDER_COLOR, bordercolor);
+
+			glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, id, 0);
+		}
+
 
 		static void AttachDepthRenderBuffer(uint32_t& id, int samples, GLenum format, GLenum attachmentType, uint32_t width, uint32_t height)
 		{
@@ -113,7 +133,8 @@ namespace Flame {
 		{
 			switch (format)
 			{
-				case FramebufferTextureFormat::DEPTH24STENCIL8:  return true;
+				case Flame::FramebufferTextureFormat::DEPTH32F_TEX3D:
+				case Flame::FramebufferTextureFormat::DEPTH24STENCIL8:  return true;
 			}
 
 			return false;
@@ -213,6 +234,9 @@ namespace Flame {
 			{
 				case FramebufferTextureFormat::DEPTH24STENCIL8:
 					Utils::AttachDepthRenderBuffer(m_DepthAttachment, m_Specification.Samples, GL_DEPTH24_STENCIL8, GL_DEPTH_STENCIL_ATTACHMENT, m_Specification.Width, m_Specification.Height);
+					break;
+				case FramebufferTextureFormat::DEPTH32F_TEX3D:
+					Utils::AttachDepthTexture3D(m_DepthAttachment, GL_DEPTH_COMPONENT32F, m_Specification.Width, m_Specification.Height);
 					break;
 			}
 		}

@@ -32,8 +32,11 @@ namespace Flame {
 		const glm::vec3& GetPosition() const { return m_Position; }
 		glm::quat GetOrientation() const;
 
-		float GetPitch() const { return m_Pitch; }
-		float GetYaw() const { return m_Yaw; }
+		float GetPitch()     const { return m_Pitch; }
+		float GetYaw()       const { return m_Yaw; }
+
+		float GetNearPlane() const { return m_NearClip; }
+		float GetFarPlane()  const { return m_FarClip; }
 
 		void SetCenter(const glm::vec3& center);
 	private:

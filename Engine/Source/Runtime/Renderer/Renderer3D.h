@@ -19,5 +19,9 @@ namespace Flame
 
 		static void DrawModel(const glm::mat4& transform, const glm::vec3& cameraPos, MeshComponent& MeshComponent, int EntityID);
 
+	public:
+		// shadow pass
+		static Ref<class Framebuffer> lightFBO;
+
 	};
 }

@@ -6,10 +6,12 @@
 #include "Runtime/Renderer/Shader.h"
 #include "Runtime/Renderer/RenderCommand.h"
 #include "Runtime/Renderer/UniformBuffer.h"
+#include "Runtime/Renderer/Framebuffer.h"
 #include "Runtime/Library/ShaderLibrary.h"
 #include "Runtime/Library/UniformBufferLibrary.h"
 #include "Runtime/Library/Library.h"
 #include "Runtime/Resource/ModeManager/ModeManager.h"
+#include "Runtime/Resource/ConfigManager/ConfigManager.h"
 
 #include "Runtime/Resource/AssetManager/AssetManager.h"
 
@@ -17,6 +19,7 @@
 
 namespace Flame
 {
+	Ref<Framebuffer> Renderer3D::lightFBO = nullptr;
 
 	std::vector<std::string> m_Paths{
 		"Assets/texture/Skybox/right.jpg",
@@ -30,7 +33,11 @@ namespace Flame
 
 	void Renderer3D::Init()
 	{
-
+		FramebufferSpecification fbSpec;
+		fbSpec.Attachments = { FramebufferTextureFormat::DEPTH32F_TEX3D };
+		fbSpec.Width = ConfigManager::m_ViewportSize.x;
+		fbSpec.Height = ConfigManager::m_ViewportSize.y;
+		lightFBO = Framebuffer::Create(fbSpec);
 	}
 
 	void Renderer3D::Shutdown()
