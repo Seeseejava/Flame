@@ -232,15 +232,21 @@ namespace Flame
 				float cameraFarPlane = camera.GetFarPlane();
 				std::vector<float> shadowCascadeLevels{ cameraFarPlane / 50.0f, cameraFarPlane / 25.0f, cameraFarPlane / 10.0f, cameraFarPlane / 2.0f };
 
-				const auto lightMatrices = Utils::getLightSpaceMatrices(cameraNearPlane, cameraFarPlane, directionalLight.LightDir, camera.GetViewProjection(), shadowCascadeLevels);
+				const auto lightMatrices = Utils::getLightSpaceMatrices(cameraNearPlane, cameraFarPlane, glm::normalize(directionalLight.LightDir), camera.GetViewProjection(), shadowCascadeLevels);
 				Ref<UniformBuffer> lightMatricesUBO = Library<UniformBuffer>::GetInstance().Get("LightMatricesUniform");
 				for (size_t i = 0; i < lightMatrices.size(); i++)
 				{
 					lightMatricesUBO->SetData(&lightMatrices[i], sizeof(glm::mat4x4), i * sizeof(glm::mat4x4));
 				}
+
+				break; //?			
 			}
 		}
 
+		uint32_t mainFramebuffer = RenderCommand::GetDrawFrameBuffer();
+
+		// Light Depth pass
+		Renderer3D::lightFBO->Bind();
 		auto view = m_Scene->m_Registry.view<TransformComponent, MeshComponent>();
 		for (auto e : view)
 		{
@@ -249,6 +255,16 @@ namespace Flame
 			auto &transform = entity.GetComponent<TransformComponent>();
 			auto &mesh = entity.GetComponent<MeshComponent>();
 
+			mesh.m_Mesh->Draw(transform.GetTransform(), camera.GetPosition(), Library<Shader>::GetInstance().Get("CSM_Depth"), (int)e);
+		}
+
+		// Render pass
+		RenderCommand::BindFrameBuffer(mainFramebuffer);
+		for (auto e : view)
+		{
+			Entity entity = { e, m_Scene };
+			auto& transform = entity.GetComponent<TransformComponent>();
+			auto& mesh = entity.GetComponent<MeshComponent>();
 			if ((int)e == ConfigManager::selectedEntity)
 			{
 				RenderCommand::SetStencilFunc(StencilFunc::ALWAYS, 1, 0xFF);
