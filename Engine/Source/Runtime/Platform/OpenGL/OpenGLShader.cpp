@@ -212,6 +212,12 @@ namespace Flame {
 		glUseProgram(0);
 	}
 
+	void OpenGLShader::SetBool(const std::string& name, bool value)
+	{
+		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
+		glUniform1i(location, value);
+	}
+
 	void OpenGLShader::SetInt(const std::string& name, int value)
 	{
 		FLAME_PROFILE_FUNCTION();

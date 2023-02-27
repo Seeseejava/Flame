@@ -32,6 +32,16 @@ namespace Flame
         };
         Add("SkyBoxTexture", CubeMapTexture::Create(Paths));
 
+		std::vector<std::string> blackPaths{
+		   "Assets/texture/black.png",
+		   "Assets/texture/black.png",
+		   "Assets/texture/black.png",
+		   "Assets/texture/black.png",
+		   "Assets/texture/black.png",
+		   "Assets/texture/black.png",
+		};
+		Add("BlackCubeMap", CubeMapTexture::Create(blackPaths));
+
         // 创建出来一坨漆黑
 		//Add("EnvironmentHdr", CubeMapTexture::Create(512, 512));
 		//Add("EnvironmentIrradiance", CubeMapTexture::Create(32, 32));

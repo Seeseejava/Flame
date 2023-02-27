@@ -175,7 +175,7 @@ namespace Flame
 				glm::vec3 lightPos = transform.GetTranslation();
 				glm::vec3 lightColor = light.LightColor;
 
-				Ref<Shader> iblPbrStatic = Library<Shader>::GetInstance().Get("IBL_pbr_static");
+				Ref<Shader> iblPbrStatic = Library<Shader>::GetInstance().GetDefaultShader();
 				Ref<Shader> iblPbrAnim = Library<Shader>::GetInstance().Get("IBL_pbr_anim");
 				Ref<Shader> basePbrStatic = Library<Shader>::GetInstance().GetDefaultShader();
 				Ref<Shader> basePbrAnim = Library<Shader>::GetInstance().Get("BasePBR_anim");
@@ -200,7 +200,7 @@ namespace Flame
 			}
 			if (i == 0)
 			{
-				Ref<Shader> iblPbrStatic = Library<Shader>::GetInstance().Get("IBL_pbr_static");
+				Ref<Shader> iblPbrStatic = Library<Shader>::GetInstance().GetDefaultShader();
 				Ref<Shader> iblPbrAnim = Library<Shader>::GetInstance().Get("IBL_pbr_anim");
 				Ref<Shader> basePbrStatic = Library<Shader>::GetInstance().GetDefaultShader();
 				Ref<Shader> basePbrAnim = Library<Shader>::GetInstance().Get("BasePBR_anim");
@@ -226,7 +226,7 @@ namespace Flame
 		{
 			auto view = m_Scene->m_Registry.view<TransformComponent, DirectionalLightComponent>();
 
-			Ref<Shader> shader = Library<Shader>::GetInstance().Get("IBL_pbr_static");
+			Ref<Shader> shader = Library<Shader>::GetInstance().GetDefaultShader();
 			shader->Bind();
 			shader->SetInt("shadowMap", 8);
 

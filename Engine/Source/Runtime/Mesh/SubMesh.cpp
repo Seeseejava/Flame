@@ -114,15 +114,23 @@ namespace Flame {
 				shader->SetMat4("finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);
 		}
 
+		shader->SetMat4("model", transform);
+		shader->SetFloat3("camPos", cameraPos);
+
 		if (ModeManager::bHdrUse)
 		{
-			shader->SetMat4("model", transform);
-			shader->SetFloat3("camPos", cameraPos);
 
 			Library<CubeMapTexture>::GetInstance().Get("EnvironmentIrradiance")->Bind(0);
 			Library<CubeMapTexture>::GetInstance().Get("EnvironmentPrefilter")->Bind(1);
 			Library<Texture2D>::GetInstance().Get("BRDF_LUT")->Bind(2);
 
+		}
+		else
+		{
+			Library<CubeMapTexture>::GetInstance().Get("BlackCubeMap")->Bind(0);
+			Library<CubeMapTexture>::GetInstance().Get("BlackCubeMap")->Bind(1);
+			Library<Texture2D>::GetInstance().Get("BlackTexture")->Bind(2);
+		}
 			if (model->m_Material[m_MaterialIndex]->bUseAlbedoMap)
 				model->m_Material[m_MaterialIndex]->m_AlbedoMap->Bind(3);
 			else
@@ -148,52 +156,14 @@ namespace Flame {
 			else
 				Library<Texture2D>::GetInstance().GetWhiteTexture()->Bind(7);
 
-			shader->SetInt("irradianceMap", 0);
-			shader->SetInt("prefilterMap", 1);
-			shader->SetInt("brdfLUT", 2);
-			shader->SetInt("albedoMap", 3);
-			shader->SetInt("normalMap", 4);
-			shader->SetInt("metallicMap", 5);
-			shader->SetInt("roughnessMap", 6);
-			shader->SetInt("aoMap", 7);
-		}
-		else
-		{
-			shader->SetMat4("u_Model_transform", (transform)); // for static
-			shader->SetMat4("model", (transform)); // for animation
-			m_VertexArray->Bind();
-			if (model->m_Material[m_MaterialIndex]->bUseAlbedoMap)
-				model->m_Material[m_MaterialIndex]->m_AlbedoMap->Bind(0);
-			else
-				model->m_Material[m_MaterialIndex]->albedoRGBA->Bind(0);
-
-			if (model->m_Material[m_MaterialIndex]->bUseNormalMap)
-				model->m_Material[m_MaterialIndex]->m_NormalMap->Bind(1);
-			else
-				Library<Texture2D>::GetInstance().GetWhiteTexture()->Bind(1);
-
-			if (model->m_Material[m_MaterialIndex]->bUseMetallicMap)
-				model->m_Material[m_MaterialIndex]->m_MetallicMap->Bind(2);
-			else
-				model->m_Material[m_MaterialIndex]->metallicRGBA->Bind(2);
-
-			if (model->m_Material[m_MaterialIndex]->bUseRoughnessMap)
-				model->m_Material[m_MaterialIndex]->m_RoughnessMap->Bind(3);
-			else
-				model->m_Material[m_MaterialIndex]->roughnessRGBA->Bind(3);
-
-			if (model->m_Material[m_MaterialIndex]->bUseAoMap)
-				model->m_Material[m_MaterialIndex]->m_AoMap->Bind(4);
-			else
-				Library<Texture2D>::GetInstance().GetWhiteTexture()->Bind(4);
-
-			shader->SetInt("albedoMap", 0);
-			shader->SetInt("normalMap", 1);
-			shader->SetInt("metallicMap", 2);
-			shader->SetInt("roughnessMap", 3);
-			shader->SetInt("aoMap", 4);
-			shader->SetFloat3("u_Uniform.camPos", cameraPos);
-		}
+		shader->SetInt("irradianceMap", 0);
+		shader->SetInt("prefilterMap", 1);
+		shader->SetInt("brdfLUT", 2);
+		shader->SetInt("albedoMap", 3);
+		shader->SetInt("normalMap", 4);
+		shader->SetInt("metallicMap", 5);
+		shader->SetInt("roughnessMap", 6);
+		shader->SetInt("aoMap", 7);
 
 		RenderCommand::DrawIndexed(m_VertexArray, m_IndexBuffer->GetCount());
 	}

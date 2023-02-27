@@ -46,20 +46,13 @@ namespace Flame
 
 	void Renderer3D::DrawModel(const glm::mat4& transform, const glm::vec3& cameraPos, MeshComponent& MeshComponent, int EntityID)
 	{
-		if (ModeManager::bHdrUse)
-		{
-			if (MeshComponent.m_Mesh->bPlayAnim)
-				MeshComponent.m_Mesh->Draw(transform, cameraPos, Library<Shader>::GetInstance().Get("IBL_pbr_anim"), EntityID);
-			else
-				MeshComponent.m_Mesh->Draw(transform, cameraPos, Library<Shader>::GetInstance().Get("IBL_pbr_static"), EntityID);
-		}
+		Ref<Shader> defaultShader = Library<Shader>::GetInstance().GetDefaultShader();
+		defaultShader->Bind();
+		if (MeshComponent.m_Mesh->bPlayAnim)
+			defaultShader->SetBool("u_Animated", true);
 		else
-		{
-			if (MeshComponent.m_Mesh->bPlayAnim)
-				MeshComponent.m_Mesh->Draw(transform, cameraPos, Library<Shader>::GetInstance().Get("BasePBR_anim"), EntityID);
-			else
-				MeshComponent.m_Mesh->Draw(transform, cameraPos, Library<Shader>::GetInstance().Get("BasePBR"), EntityID);
-		}
+			defaultShader->SetBool("u_Animated", false);
+		MeshComponent.m_Mesh->Draw(transform, cameraPos, Library<Shader>::GetInstance().GetDefaultShader(), EntityID);
 	}
 
 
