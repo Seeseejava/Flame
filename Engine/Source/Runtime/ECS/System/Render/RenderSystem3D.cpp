@@ -243,6 +243,18 @@ namespace Flame
 					lightMatricesUBO->SetData(&lightMatrices[i], sizeof(glm::mat4x4), i * sizeof(glm::mat4x4));
 				}
 
+				Ref<Shader> shader = Library<Shader>::GetInstance().Get("IBL_pbr_static");
+				shader->Bind();
+				shader->SetMat4("view", camera.GetViewMatrix());
+				shader->SetFloat3("lightDir", glm::normalize(directionalLight.LightDir));
+				shader->SetFloat("farPlane", cameraFarPlane);
+				shader->SetInt("cascadeCount", shadowCascadeLevels.size());
+				shader->SetInt("shadowMap", 8);
+				for (size_t i = 0; i < shadowCascadeLevels.size(); ++i)
+				{
+					shader->SetFloat("cascadePlaneDistances[" + std::to_string(i) + "]", shadowCascadeLevels[i]);
+				}
+
 				break; // now we only support one directional light		
 			}
 		}
@@ -251,6 +263,7 @@ namespace Flame
 
 		// Light Depth pass
 		Renderer3D::lightFBO->Bind();
+		Renderer3D::lightFBO->BindDepthTex3D(8);
 		RenderCommand::Clear();
 		RenderCommand::CullFrontOrBack(true); // peter panning
 		auto view = m_Scene->m_Registry.view<TransformComponent, MeshComponent>();

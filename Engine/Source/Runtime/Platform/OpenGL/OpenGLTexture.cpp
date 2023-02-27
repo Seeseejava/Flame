@@ -125,18 +125,25 @@ namespace Flame {
    // TODO
 	OpenGLTexture3D::OpenGLTexture3D(uint32_t width, uint32_t height)
 	{
-		glGenTextures(1, &mRendererID);
-		glBindTexture(GL_TEXTURE_2D_ARRAY, mRendererID);
+		glGenTextures(1, &m_RendererID);
+		glBindTexture(GL_TEXTURE_2D_ARRAY, m_RendererID);
 	}
+
+	OpenGLTexture3D::OpenGLTexture3D(uint32_t rendererID, uint32_t width, uint32_t height)
+		: m_RendererID(rendererID), m_Width(width), m_Height(height)
+	{
+	}
+
 
 	OpenGLTexture3D::~OpenGLTexture3D()
 	{
-		glDeleteTextures(1, &mRendererID);
+		glDeleteTextures(1, &m_RendererID);
 	}
 
 	void OpenGLTexture3D::Bind(uint32_t slot) const
 	{
-		glBindTexture(GL_TEXTURE_2D_ARRAY, mRendererID);
+		glActiveTexture(GL_TEXTURE0 + slot);
+		glBindTexture(GL_TEXTURE_2D_ARRAY, m_RendererID);
 	}
 
 	void OpenGLTexture3D::UnBind() const

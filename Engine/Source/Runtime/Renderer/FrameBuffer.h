@@ -63,10 +63,14 @@ namespace Flame {
 		virtual void ClearAttachment(uint32_t attachmentIndex, int value) = 0;
 
 		virtual uint32_t GetColorAttachmentRendererID(uint32_t index = 0) const = 0;
+		virtual uint32_t GetDepthAttachmentRendererID() const = 0;
 
 		virtual const FramebufferSpecification& GetSpecification() const = 0;
 
 		virtual void FramebufferTexture2D(uint32_t cubemapIndex, uint32_t cubemapID, uint32_t slot = 0) = 0;
+
+		virtual Ref<class Texture3D> GetDepthTex3D() const = 0;
+		virtual void BindDepthTex3D(uint32_t slot) = 0;
 
 		static Ref<Framebuffer> Create(const FramebufferSpecification& spec);
 	};

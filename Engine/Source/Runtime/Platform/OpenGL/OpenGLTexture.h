@@ -39,23 +39,24 @@ namespace Flame {
 	{
 	public:
 		OpenGLTexture3D(uint32_t width, uint32_t height);
+		OpenGLTexture3D(uint32_t rendererID, uint32_t width, uint32_t height);
 		virtual ~OpenGLTexture3D();
 
-		virtual uint32_t GetWidth() const override { return mWidth; };
-		virtual uint32_t GetHeight() const override { return mHeight; };
-		virtual uint32_t GetRendererID() const override { return mRendererID; }
+		virtual uint32_t GetWidth() const override { return m_Width; };
+		virtual uint32_t GetHeight() const override { return m_Height; };
+		virtual uint32_t GetRendererID() const override { return m_RendererID; }
 
 		virtual void Bind(uint32_t slot = 0) const override;
 		virtual void UnBind() const override;
 
 		virtual bool operator==(const Texture& other) const override
 		{
-			return mRendererID == ((OpenGLTexture3D&)other).mRendererID;
+			return m_RendererID == ((OpenGLTexture3D&)other).m_RendererID;
 		}
 	private:
-		uint32_t mWidth, mHeight;
-		uint32_t mRendererID;
-		GLenum mInternalFormat, mDataFormat;
+		uint32_t m_Width, m_Height;
+		uint32_t m_RendererID;
+		//GLenum mInternalFormat, mDataFormat;
 	};
 
 	class OpenGLCubeMapTexture : public CubeMapTexture

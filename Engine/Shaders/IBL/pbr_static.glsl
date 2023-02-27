@@ -51,7 +51,7 @@ uniform samplerCube irradianceMap;
 uniform samplerCube prefilterMap;
 uniform sampler2D brdfLUT;
 
-// lights
+// Point lights
 uniform vec3 lightPositions[4];
 uniform vec3 lightColors[4];
 
@@ -60,7 +60,92 @@ uniform vec3 camPos;
 // HDR tonemapping
 uniform float exposure;
 
+// Shadow 
+uniform mat4 view;
+uniform float farPlane;
+uniform vec3 lightDir;
+uniform sampler2DArray shadowMap;
+layout (std140, binding = 1) uniform LightSpaceMatrices
+{
+    mat4 lightSpaceMatrices[16];
+};
+uniform float cascadePlaneDistances[16];
+uniform int cascadeCount;   // number of frusta - 1
+// End Shadow
+
+const float F0_NON_METAL = 0.04f;
 const float PI = 3.14159265359;
+
+// --------------------------Shadow Function-----------------------------------
+
+float ShadowCalculation(vec3 fragPosWorldSpace)
+{
+    // select cascade layer
+    vec4 fragPosViewSpace = view * vec4(fragPosWorldSpace, 1.0);
+    float depthValue = abs(fragPosViewSpace.z);
+
+    int layer = -1;
+    for (int i = 0; i < cascadeCount; ++i)
+    {
+        if (depthValue < cascadePlaneDistances[i])
+        {
+            layer = i;
+            break;
+        }
+    }
+    if (layer == -1)
+    {
+        layer = cascadeCount;
+    }
+
+    vec4 fragPosLightSpace = lightSpaceMatrices[layer] * vec4(fragPosWorldSpace, 1.0);
+    // perform perspective divide
+    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+    // transform to [0,1] range
+    projCoords = projCoords * 0.5 + 0.5;
+
+    // get depth of current fragment from light's perspective
+    float currentDepth = projCoords.z;
+
+    // keep the shadow at 0.0 when outside the far_plane region of the light's frustum.
+    if (currentDepth > 1.0)
+    {
+        return 0.0;
+    }
+    // calculate bias (based on depth map resolution and slope)
+    vec3 normal = normalize(Normal);
+    float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
+    const float biasModifier = 0.5f;
+    if (layer == cascadeCount)
+    {
+        bias *= 1 / (farPlane * biasModifier);
+    }
+    else
+    {
+        bias *= 1 / (cascadePlaneDistances[layer] * biasModifier);
+    }
+
+    // PCF
+    float shadow = 0.0;
+    vec2 texelSize = 1.0 / vec2(textureSize(shadowMap, 0));
+    for(int x = -1; x <= 1; ++x)
+    {
+        for(int y = -1; y <= 1; ++y)
+        {
+            float pcfDepth = texture(shadowMap, vec3(projCoords.xy + vec2(x, y) * texelSize, layer)).r;
+            shadow += (currentDepth - bias) > pcfDepth ? 1.0 : 0.0;        
+        }    
+    }
+    shadow /= 9.0;
+
+    return shadow;
+}
+
+// --------------------------End Shadow Function-------------------------------
+
+
+// --------------------------PBR Function--------------------------------------
+
 // ----------------------------------------------------------------------------
 // Easy trick to get tangent-normals to world-space to keep PBR code simplified.
 // Don't worry if you don't get what's going on; you generally want to do normal 
@@ -128,6 +213,32 @@ vec3 fresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness)
     return F0 + (max(vec3(1.0 - roughness), F0) - F0) * pow(clamp(1.0 - cosTheta, 0.0, 1.0), 5.0);
 }   
 // ----------------------------------------------------------------------------
+
+// Lambert diffuse
+vec3 LambertDiffuse(vec3 Ks, vec3 albedo, float metallic)
+{
+    vec3 Kd = (vec3(1.0f, 1.0f, 1.0f) - Ks) * (1 - metallic);
+    return (Kd * albedo / PI);
+}
+
+// Cook-Torrance Specular
+vec3 CookTorrance(vec3 n, vec3 l, vec3 v, float roughness, float metalness, vec3 f0, out vec3 kS)
+{
+    vec3 h = normalize(v + l);
+
+    float D = DistributionGGX(n, h, roughness);
+    float G = GeometrySmith(n, v, l, roughness);
+    vec3 F  = fresnelSchlick(max(dot(h, v), 0.0), f0);
+
+    // kS is equal to Fresnel  
+    kS = F;
+
+    float NdotV = max(dot(n, v), 0.0f);
+    float NdotL = max(dot(n, l), 0.0f);
+    return (D * G * F) / (4.0 * max(NdotV * NdotL, 0.01f));
+}
+
+// --------------------------End PBR Function----------------------------------
 void main()
 {		
     // material properties
@@ -143,11 +254,12 @@ void main()
 
     // calculate reflectance at normal incidence; if dia-electric (like plastic) use F0 
     // of 0.04 and if it's a metal, use the albedo color as F0 (metallic workflow)    
-    vec3 F0 = vec3(0.04); 
-    F0 = mix(F0, albedo, metallic);
+    vec3 F0 = mix(vec3(F0_NON_METAL), albedo, metallic);
 
     // reflectance equation
     vec3 Lo = vec3(0.0);
+
+    // Point Light PBR
     for(int i = 0; i < 4; ++i) 
     {
         // calculate per-light radiance
@@ -156,33 +268,37 @@ void main()
         float distance = length(lightPositions[i] - WorldPos);
         float attenuation = 1.0 / (distance * distance);
         vec3 radiance = lightColors[i] * attenuation;
+      
+        vec3 kS;
+        vec3 specularBRDF = CookTorrance(N, L, V, roughness, metallic, F0, kS);
 
-        // Cook-Torrance BRDF
-        float NDF = DistributionGGX(N, H, roughness);   
-        float G   = GeometrySmith(N, V, L, roughness);    
-        vec3 F    = fresnelSchlick(max(dot(H, V), 0.0), F0);        
-
-        vec3 numerator    = NDF * G * F;
-        float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.0001; // + 0.0001 to prevent divide by zero
-        vec3 specular = numerator / denominator;
-
-         // kS is equal to Fresnel
-        vec3 kS = F;
-        // for energy conservation, the diffuse and specular light can't
-        // be above 1.0 (unless the surface emits light); to preserve this
-        // relationship the diffuse component (kD) should equal 1.0 - kS.
-        vec3 kD = vec3(1.0) - kS;
-        // multiply kD by the inverse metalness such that only non-metals 
-        // have diffuse lighting, or a linear blend if partly metal (pure metals
-        // have no diffuse light).
-        kD *= 1.0 - metallic;	                
+        // kS is equal to Fresnel  
+        vec3 diffuseBRDF = LambertDiffuse(kS, albedo, metallic);
 
         // scale light by NdotL
         float NdotL = max(dot(N, L), 0.0);        
 
         // add to outgoing radiance Lo
-        Lo += (kD * albedo / PI + specular) * radiance * NdotL; // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
+         Lo += (diffuseBRDF + specularBRDF) * radiance * NdotL; // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
     }   
+
+     // Directional Light PBR
+    {
+        vec3 L = lightDir;
+
+        vec3 kS;
+        vec3 specularBRDF = CookTorrance(N, L, V, roughness, metallic, F0, kS);
+
+        // kS is equal to Fresnel  
+        vec3 diffuseBRDF = LambertDiffuse(kS, albedo, metallic);
+
+        // scale light by NdotL
+        float NdotL = max(dot(N, L), 0.0);   
+
+        vec3 radiance = vec3(10.0);
+
+        Lo += (diffuseBRDF + specularBRDF) * radiance * NdotL;
+    }
 
     // ambient lighting (we now use IBL as the ambient term)
     vec3 F = fresnelSchlickRoughness(max(dot(N, V), 0.0), F0, roughness);
@@ -202,7 +318,9 @@ void main()
 
     vec3 ambient = (kD * diffuse + specular) * ao;
 
-    vec3 color = ambient + Lo;
+    // calculate shadow
+    float shadow = ShadowCalculation(WorldPos);  
+    vec3 color = ambient + (1.0 - shadow) * Lo;
 
     // HDR tonemapping
     color = vec3(1.0) - exp(-color * exposure);
