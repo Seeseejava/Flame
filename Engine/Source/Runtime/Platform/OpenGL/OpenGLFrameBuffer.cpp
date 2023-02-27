@@ -234,7 +234,7 @@ namespace Flame {
 					Utils::AttachDepthRenderBuffer(m_DepthAttachment, m_Specification.Samples, GL_DEPTH24_STENCIL8, GL_DEPTH_STENCIL_ATTACHMENT, m_Specification.Width, m_Specification.Height);
 					break;
 				case FramebufferTextureFormat::DEPTH32F_TEX3D:
-					Utils::AttachDepthTexture3D(m_DepthAttachment, GL_DEPTH_COMPONENT32F, 2048, 2048); // to store the light depth map (CSM), we want the resolution to be height
+					Utils::AttachDepthTexture3D(m_DepthAttachment, GL_DEPTH_COMPONENT32F, 4096, 4096); // to store the light depth map (CSM), we want the resolution to be height
 					break;
 			}
 		}
