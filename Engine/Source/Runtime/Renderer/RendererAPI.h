@@ -69,9 +69,9 @@ namespace Flame {
 
 		//cull
 		virtual void Cull(int32_t Bit) = 0;
-		virtual void CullFrontOrBack(int32_t Bit) = 0;
+		virtual void CullFrontOrBack(bool bFront) = 0;
 
-		[[nodiscard]] virtual int GetDrawFrameBuffer() = 0;
+		virtual int GetDrawFrameBuffer() = 0;
 		virtual void BindFrameBuffer(uint32_t framebufferID) = 0;
 	private:
 		static API s_API;

@@ -181,10 +181,13 @@ namespace Flame {
 		{
 			glDeleteFramebuffers(1, &m_RendererID);
 			//glDeleteTextures(m_ColorAttachments.size(), m_ColorAttachments.data());
-			//glDeleteTextures(1, &m_DepthAttachment);
+			if (m_DepthAttachmentSpecification.TextureFormat == FramebufferTextureFormat::DEPTH32F_TEX3D)
+			{
+				glDeleteTextures(1, &m_DepthAttachment);
+				m_DepthAttachment = 0;
+			}
 
 			m_ColorAttachments.clear();
-			//m_DepthAttachment = 0;
 		}
 
 #if OLD_PATH

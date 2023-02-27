@@ -38,6 +38,9 @@ namespace Flame {
 		float GetNearPlane() const { return m_NearClip; }
 		float GetFarPlane()  const { return m_FarClip; }
 
+		float GetFOV()       const { return m_FOV; }
+		float GetAspect()    const { return m_AspectRatio; }
+
 		void SetCenter(const glm::vec3& center);
 	private:
 		void UpdateProjection();

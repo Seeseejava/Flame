@@ -104,9 +104,9 @@ namespace Flame {
 			s_RendererAPI->Cull(Bit);
 		}
 
-		inline static void CullFrontOrBack(int32_t Bit)
+		inline static void CullFrontOrBack(bool bFront)
 		{
-			s_RendererAPI->CullFrontOrBack(Bit);
+			s_RendererAPI->CullFrontOrBack(bFront);
 		}
 
 		// framebuffer
