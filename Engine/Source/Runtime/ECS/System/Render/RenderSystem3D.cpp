@@ -232,7 +232,7 @@ namespace Flame
 				{
 					shader->SetFloat("cascadePlaneDistances[" + std::to_string(i) + "]", shadowCascadeLevels[i]);
 				}
-
+				Renderer3D::lightFBO->UnBindDepthTex3D(8);
 				break; // now we only support one directional light		
 			}
 		}
@@ -241,7 +241,7 @@ namespace Flame
 
 		// Light Depth pass
 		Renderer3D::lightFBO->Bind();
-		Renderer3D::lightFBO->BindDepthTex3D(8);
+
 		RenderCommand::SetViewport(0, 0, 2048, 2048);
 		RenderCommand::Clear();
 		RenderCommand::CullFrontOrBack(true); // peter panning
