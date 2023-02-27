@@ -1,6 +1,7 @@
 #include "flamepch.h"
 
 #include "Runtime/ECS/System/Render/RenderSystem3D.h"
+#include "Runtime/ECS/System/Render/EnvironmentSystem.h"
 #include "Runtime/ECS/Component/ComponentGroup.h"
 #include "Runtime/ECS/Entity/Entity.h"
 
@@ -10,6 +11,7 @@
 #include "Runtime/Renderer/RenderCommand.h"
 #include "Runtime/Library/ShaderLibrary.h"
 #include "Runtime/Resource/ConfigManager/ConfigManager.h"
+#include "Runtime/Resource/ModeManager/ModeManager.h"
 
 namespace Flame
 {
@@ -163,6 +165,11 @@ namespace Flame
 	{
 		Renderer3D::BeginScene(camera);
 
+		Ref<Shader> defaultShader = Library<Shader>::GetInstance().GetDefaultShader();
+		if (ModeManager::bHdrUse)
+			defaultShader->SetFloat("exposure", EnvironmentSystem::environmentSettings.exposure);
+		else
+			defaultShader->SetFloat("exposure", 1.0f);
 
 		// Point Light
 		{
@@ -176,7 +183,6 @@ namespace Flame
 				float intensity = light.Intensity;
 				glm::vec3 lightColor = light.LightColor;
 
-				Ref<Shader> defaultShader = Library<Shader>::GetInstance().GetDefaultShader();
 
 				defaultShader->Bind();
 				defaultShader->SetFloat3("lightPositions[" + std::to_string(i) + "]", lightPos);
@@ -186,8 +192,6 @@ namespace Flame
 			}
 			if (i == 0)
 			{
-				Ref<Shader> defaultShader = Library<Shader>::GetInstance().GetDefaultShader();
-
 
 				for (size_t i = 0; i < 4; i++)
 				{
@@ -202,9 +206,9 @@ namespace Flame
 		{
 			auto view = m_Scene->m_Registry.view<TransformComponent, DirectionalLightComponent>();
 
-			Ref<Shader> shader = Library<Shader>::GetInstance().GetDefaultShader();
-			shader->Bind();
-			shader->SetInt("shadowMap", 8);
+
+			defaultShader->Bind();
+			defaultShader->SetInt("shadowMap", 8);
 
 			for (auto e : view)
 			{
@@ -224,14 +228,14 @@ namespace Flame
 					lightMatricesUBO->SetData(&lightMatrices[i], sizeof(glm::mat4x4), i * sizeof(glm::mat4x4));
 				}
 
+				defaultShader->SetMat4("view", camera.GetViewMatrix());
+				defaultShader->SetFloat3("lightDir", glm::normalize(directionalLight.LightDir));
+				defaultShader->SetFloat("farPlane", cameraFarPlane);
+				defaultShader->SetInt("cascadeCount", shadowCascadeLevels.size());
 
-				shader->SetMat4("view", camera.GetViewMatrix());
-				shader->SetFloat3("lightDir", glm::normalize(directionalLight.LightDir));
-				shader->SetFloat("farPlane", cameraFarPlane);
-				shader->SetInt("cascadeCount", shadowCascadeLevels.size());
 				for (size_t i = 0; i < shadowCascadeLevels.size(); ++i)
 				{
-					shader->SetFloat("cascadePlaneDistances[" + std::to_string(i) + "]", shadowCascadeLevels[i]);
+					defaultShader->SetFloat("cascadePlaneDistances[" + std::to_string(i) + "]", shadowCascadeLevels[i]);
 				}
 				Renderer3D::lightFBO->UnBindDepthTex3D(8);
 				break; // now we only support one directional light		
