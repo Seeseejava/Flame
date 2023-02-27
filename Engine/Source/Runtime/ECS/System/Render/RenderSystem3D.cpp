@@ -264,6 +264,7 @@ namespace Flame
 		// Light Depth pass
 		Renderer3D::lightFBO->Bind();
 		Renderer3D::lightFBO->BindDepthTex3D(8);
+		RenderCommand::SetViewport(0, 0, 2048, 2048);
 		RenderCommand::Clear();
 		RenderCommand::CullFrontOrBack(true); // peter panning
 		auto view = m_Scene->m_Registry.view<TransformComponent, MeshComponent>();
@@ -281,6 +282,7 @@ namespace Flame
 
 		// Render pass
 		RenderCommand::BindFrameBuffer(mainFramebuffer);
+		RenderCommand::SetViewport(0, 0, ConfigManager::m_ViewportSize.x, ConfigManager::m_ViewportSize.y);
 		for (auto e : view)
 		{
 			Entity entity = { e, m_Scene };
