@@ -14,5 +14,6 @@ namespace Flame
 		{}
 
 		std::string Path;
+		static bool UseScript;
 	};
 }

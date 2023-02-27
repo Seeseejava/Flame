@@ -84,15 +84,20 @@ namespace Flame
 		}
 
 		auto view = m_Scene->m_Registry.view<TransformComponent, PythonScriptComponent>();
-		for (auto entity : view)
+		for (auto e : view)
 		{
 
-			auto [transform, script] = view.get<TransformComponent, PythonScriptComponent>(entity);
+			Entity entity = { e, m_Scene };
+			auto& transform = entity.GetComponent<TransformComponent>();
+			auto& script = entity.GetComponent<PythonScriptComponent>();
 
 			if (script.Path.empty())
 			{
 				return;
 			}
+
+			if (!script.UseScript)
+				return;
 
 			std::string pyScript = std::string("Scripts.") + script.Path.substr(0, script.Path.find_last_of("."));
 
@@ -100,7 +105,8 @@ namespace Flame
 			{
 				auto testModule = py::module::import(pyScript.c_str());
 				auto func = testModule.attr("OnUpdateEditor");
-				float re = func(transform).cast<float>();
+				TransformComponent reTrans = func(transform).cast<TransformComponent>();
+				transform.Translation = reTrans.Translation;
 			}
 			catch (py::error_already_set& e)
 			{
