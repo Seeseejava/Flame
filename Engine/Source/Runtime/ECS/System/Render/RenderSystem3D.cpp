@@ -253,7 +253,14 @@ namespace Flame
 			auto &transform = entity.GetComponent<TransformComponent>();
 			auto &mesh = entity.GetComponent<MeshComponent>();
 
-			mesh.m_Mesh->Draw(transform.GetTransform(), camera.GetPosition(), Library<Shader>::GetInstance().Get("CSM_Depth"), (int)e);
+			Ref<Shader> csmShader = Library<Shader>::GetInstance().Get("CSM_Depth");
+			csmShader->Bind();
+			if (mesh.m_Mesh->bPlayAnim)
+				csmShader->SetBool("u_Animated", true);
+			else
+				csmShader->SetBool("u_Animated", false);
+
+			mesh.m_Mesh->Draw(transform.GetTransform(), camera.GetPosition(), csmShader, (int)e);
 		}
 
 		RenderCommand::CullFrontOrBack(false);
