@@ -326,6 +326,7 @@ namespace Flame {
 			out << YAML::BeginMap;
 
 			auto& pointLightComponent = entity.GetComponent<PointLightComponent>();
+			out << YAML::Key << "Intensity" << YAML::Value << pointLightComponent.Intensity;
 			out << YAML::Key << "Color" << YAML::Value << pointLightComponent.LightColor;
 
 			out << YAML::EndMap;
@@ -507,8 +508,9 @@ namespace Flame {
 				auto pointLightComponent = entity["PointLightComponent"];
 				if (pointLightComponent)
 				{
+					float intensity = pointLightComponent["Intensity"].as<float>();
 					glm::vec3 color = pointLightComponent["Color"].as<glm::vec3>();
-					auto& src = deserializedEntity.AddComponent<PointLightComponent>(color);
+					auto& src = deserializedEntity.AddComponent<PointLightComponent>(intensity, color);
 				}
 			}
 		}
