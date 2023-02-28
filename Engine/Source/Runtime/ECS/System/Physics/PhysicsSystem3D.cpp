@@ -134,6 +134,17 @@ namespace Flame
 			(*transform).Rotation.y = pitchY;
 			(*transform).Rotation.z = yawZ;
 		}
+
+		if (ModeManager::bShowPhysicsColliders)
+		{
+			Entity camera = m_Scene->GetPrimaryCameraEntity();
+			Renderer2D::BeginScene(camera.GetComponent<CameraComponent>().Camera, camera.GetComponent<TransformComponent>().GetTransform());
+
+			mDynamicsWorld->setDebugDrawer(&mDebugDrawer);
+			mDynamicsWorld->debugDrawWorld();
+
+			Renderer2D::EndScene();
+		}
 	}
 
 	void PhysicsSystem3D::OnRuntimeStop()
