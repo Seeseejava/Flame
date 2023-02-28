@@ -64,8 +64,8 @@ namespace Flame
 		float m_AnimPlaySpeed = 1.0f;
 
 		std::vector<Ref<Material>> m_Material;
-	private:
 		std::vector<SubMesh> m_SubMeshes;
+	private:
 		std::string m_Directory;
 
 		// Animation

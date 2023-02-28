@@ -374,4 +374,9 @@ namespace Flame {
 	void Scene::OnComponentAdded<DirectionalLightComponent>(Entity entity, DirectionalLightComponent& component)
 	{
 	}
+
+	template<>
+	void Scene::OnComponentAdded<ConvexHullComponent>(Entity entity, ConvexHullComponent& component)
+	{
+	}
 }

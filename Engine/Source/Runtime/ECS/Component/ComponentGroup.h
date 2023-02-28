@@ -8,6 +8,7 @@
 #include "Runtime/ECS/Component/Physics/2D/Rigidbody2DComponent.h"
 #include "Runtime/ECS/Component/Physics/3D/BoxCollider3DComponent.h"
 #include "Runtime/ECS/Component/Physics/3D/Rigidbody3DComponent.h"
+#include "Runtime/ECS/Component/Physics/3D/ConvexHullComponent.h"
 #include "Runtime/ECS/Component/Physics/3D/SphereCollider3DComponent.h"
 #include "Runtime/ECS/Component/Script/NativeScriptComponent.h"
 #include "Runtime/ECS/Component/Script/PythonScriptComponent.h"
@@ -36,6 +37,6 @@ namespace Flame
 
 	using AllComponents = ComponentGroup<TransformComponent, CircleRendererComponent, SpriteRendererComponent,
 		CameraComponent, NativeScriptComponent, PythonScriptComponent, Rigidbody2DComponent, BoxCollider2DComponent,
-		CircleCollider2DComponent, Rigidbody3DComponent, BoxCollider3DComponent, SphereCollider3DComponent, 
+		CircleCollider2DComponent, Rigidbody3DComponent, BoxCollider3DComponent, SphereCollider3DComponent, ConvexHullComponent,
 		MeshComponent, PointLightComponent, DirectionalLightComponent>;
 }

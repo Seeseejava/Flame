@@ -52,10 +52,10 @@ namespace Flame
 
 	public:
 		uint32_t m_MaterialIndex;
-	private:
 		std::vector<StaticVertex> m_StaticVertices;
 		std::vector<SkinnedVertex> m_SkinnedVertices;
 
+	private:
 		std::vector<uint32_t> m_Indices;
 		std::vector<MaterialTexture> m_Textures;
 

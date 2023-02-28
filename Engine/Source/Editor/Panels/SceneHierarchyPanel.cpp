@@ -375,6 +375,15 @@ namespace Flame {
 				}
 			}
 
+			if (!m_SelectionContext.HasComponent<ConvexHullComponent>())
+			{
+				if (ImGui::MenuItem("ConvexHull Collider"))
+				{
+					m_SelectionContext.AddComponent<ConvexHullComponent>();
+					ImGui::CloseCurrentPopup();
+				}
+			}
+
 			if (!m_SelectionContext.HasComponent<PointLightComponent>())
 			{
 				if (ImGui::MenuItem("Point Light"))
@@ -550,6 +559,24 @@ namespace Flame {
 		ImGui::DragFloat("Friction", &component.Friction, 0.01f, 0.0f, 1.0f);
 		ImGui::DragFloat("Restitution", &component.Restitution, 0.01f, 0.0f, 1.0f);
 		ImGui::DragFloat("Restitution Threshold", &component.RestitutionThreshold, 0.01f, 0.0f);
+			});
+
+		DrawComponent<ConvexHullComponent>("ConvexHull Collider", entity, [](auto& component)
+			{
+				const auto& floatValueUI = [](const char* name, float& value) {
+				ImGui::Columns(2, nullptr, false);
+				ImGui::SetColumnWidth(0, 100.0f);
+				ImGui::Text(name);
+				ImGui::NextColumn();
+				std::string label = std::string("##") + std::string(name);
+				ImGui::SliderFloat(label.c_str(), &value, 0.0f, 1.0f, "%.2f");
+				ImGui::EndColumns();
+			};
+
+		floatValueUI("linearDamping", component.linearDamping);
+		floatValueUI("angularDamping", component.angularDamping);
+		floatValueUI("restitution", component.restitution);
+		floatValueUI("friction", component.friction);
 			});
 
 		DrawComponent<MeshComponent>("Mesh Renderer", entity, [](MeshComponent& component)
