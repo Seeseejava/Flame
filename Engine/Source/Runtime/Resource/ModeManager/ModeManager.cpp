@@ -8,4 +8,5 @@ namespace Flame
 	bool ModeManager::bHdrUse = false;
 	SceneMode ModeManager::m_SceneMode = SceneMode::None;
 	EditMode ModeManager::m_EditMode = EditMode::Select;
+	bool ModeManager::bShowPhysicsColliders = false;
 }

@@ -399,7 +399,7 @@ namespace Flame {
 
 			if (ImGuiWrapper::TreeNodeExStyle1((void*)"Physics Settings", "Physics Settings"))
 			{
-				ImGui::Checkbox("Show physics colliders", &m_ShowPhysicsColliders);
+				ImGui::Checkbox("Show physics colliders", &ModeManager::bShowPhysicsColliders);
 				ImGui::TreePop();
 			}
 
@@ -802,7 +802,7 @@ namespace Flame {
 			Renderer2D::BeginScene(camera.GetComponent<CameraComponent>().Camera, camera.GetComponent<TransformComponent>().GetTransform());
 		}
 
-		if (m_ShowPhysicsColliders)
+		if (ModeManager::bShowPhysicsColliders)
 		{
 			{
 				auto view = m_ActiveScene->GetAllEntitiesWith<TransformComponent, BoxCollider2DComponent>();

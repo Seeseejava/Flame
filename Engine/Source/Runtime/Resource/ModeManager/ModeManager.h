@@ -32,6 +32,7 @@ namespace Flame
 		static int b3DMode;  // 0 for 2D, 1 for 3D
 		static bool bHdrUse;
 		static SceneMode m_SceneMode;
+		static bool bShowPhysicsColliders;
 	private:
 		static bool bEditState;
 		static EditMode m_EditMode;

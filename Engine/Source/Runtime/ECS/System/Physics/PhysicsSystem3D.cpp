@@ -3,6 +3,7 @@
 #include "Runtime/ECS/System/Physics/PhysicsSystem3D.h"
 #include "Runtime/ECS/Component/ComponentGroup.h"
 #include "Runtime/ECS/Entity/Entity.h"
+#include "Runtime/Resource/ModeManager/ModeManager.h"
 
 namespace Flame
 {
@@ -143,5 +144,23 @@ namespace Flame
 		delete mDispatcher;
 		delete mCollisionConfiguration;
 		delete mBroadphase;
+	}
+
+	void PhysicsSystem3D::OnUpdateEditor(Timestep ts, EditorCamera& camera)
+	{
+		if (ModeManager::bShowPhysicsColliders)
+		{
+			// TEMP
+			OnRuntiemStart();
+
+			Renderer2D::BeginScene(camera);
+
+			mDynamicsWorld->setDebugDrawer(&mDebugDrawer);
+			mDynamicsWorld->debugDrawWorld();
+
+			Renderer2D::EndScene();
+
+			OnRuntimeStop();
+		}
 	}
 }

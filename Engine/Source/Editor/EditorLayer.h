@@ -86,8 +86,6 @@ namespace Flame {
 
 		int m_GizmoType = -1;
 
-		bool m_ShowPhysicsColliders = false;
-
 		// Panels
 		SceneHierarchyPanel m_SceneHierarchyPanel;
 		ContentBrowserPanel m_ContentBrowserPanel;
