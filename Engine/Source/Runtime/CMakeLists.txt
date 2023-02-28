@@ -46,6 +46,7 @@ target_link_libraries(Flame-Runtime
     PUBLIC Bullet3Common 
     PUBLIC LinearMath  # ？
     PUBLIC pybind11::embed pybind11::module pybind11::pybind11
+    PUBLIC magic_enum
 )
 
 

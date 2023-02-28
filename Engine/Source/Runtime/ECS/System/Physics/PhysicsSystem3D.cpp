@@ -7,14 +7,16 @@
 
 namespace Flame
 {
+	Utils::BulletDrawer PhysicsSystem3D::m_DebugDrawer;
+
 	void PhysicsSystem3D::OnRuntiemStart()
 	{
-		mBroadphase = new btDbvtBroadphase();
-		mCollisionConfiguration = new btDefaultCollisionConfiguration();
-		mDispatcher = new btCollisionDispatcher(mCollisionConfiguration);
-		mSolver = new btSequentialImpulseConstraintSolver();
-		mDynamicsWorld = new btDiscreteDynamicsWorld(mDispatcher, mBroadphase, mSolver, mCollisionConfiguration);
-		mDynamicsWorld->setGravity(btVector3(0.0f, -9.8f, 0.0f));
+		m_Broadphase = new btDbvtBroadphase();
+		m_CollisionConfiguration = new btDefaultCollisionConfiguration();
+		m_Dispatcher = new btCollisionDispatcher(m_CollisionConfiguration);
+		m_Solver = new btSequentialImpulseConstraintSolver();
+		m_DynamicsWorld = new btDiscreteDynamicsWorld(m_Dispatcher, m_Broadphase, m_Solver, m_CollisionConfiguration);
+		m_DynamicsWorld->setGravity(btVector3(0.0f, -9.8f, 0.0f));
 		//mDynamicsWorld->setForceUpdateAllAabbs(true);
 
 		auto view = m_Scene->m_Registry.view<TransformComponent, Rigidbody3DComponent>();
@@ -63,7 +65,7 @@ namespace Flame
 				}
 
 				rb3d.RuntimeBody = body;
-				mDynamicsWorld->addRigidBody(body);
+				m_DynamicsWorld->addRigidBody(body);
 			}
 			else if (entity.HasComponent<SphereCollider3DComponent>())
 			{
@@ -105,14 +107,14 @@ namespace Flame
 				}
 
 				rb3d.RuntimeBody = body;
-				mDynamicsWorld->addRigidBody(body);
+				m_DynamicsWorld->addRigidBody(body);
 			}
 		}
 	}
 
 	void PhysicsSystem3D::OnUpdateRuntime(Timestep ts)
 	{
-		mDynamicsWorld->stepSimulation(ts, 10);
+		m_DynamicsWorld->stepSimulation(ts, 10);
 
 		auto view = m_Scene->m_Registry.view<TransformComponent, Rigidbody3DComponent>();
 		for (auto e : view)
@@ -140,8 +142,8 @@ namespace Flame
 			Entity camera = m_Scene->GetPrimaryCameraEntity();
 			Renderer2D::BeginScene(camera.GetComponent<CameraComponent>().Camera, camera.GetComponent<TransformComponent>().GetTransform());
 
-			mDynamicsWorld->setDebugDrawer(&mDebugDrawer);
-			mDynamicsWorld->debugDrawWorld();
+			m_DynamicsWorld->setDebugDrawer(&m_DebugDrawer);
+			m_DynamicsWorld->debugDrawWorld();
 
 			Renderer2D::EndScene();
 		}
@@ -150,11 +152,11 @@ namespace Flame
 	void PhysicsSystem3D::OnRuntimeStop()
 	{
 		
-		delete mDynamicsWorld;
-		delete mSolver;
-		delete mDispatcher;
-		delete mCollisionConfiguration;
-		delete mBroadphase;
+		delete m_DynamicsWorld;
+		delete m_Solver;
+		delete m_Dispatcher;
+		delete m_CollisionConfiguration;
+		delete m_Broadphase;
 	}
 
 	void PhysicsSystem3D::OnUpdateEditor(Timestep ts, EditorCamera& camera)
@@ -166,8 +168,8 @@ namespace Flame
 
 			Renderer2D::BeginScene(camera);
 
-			mDynamicsWorld->setDebugDrawer(&mDebugDrawer);
-			mDynamicsWorld->debugDrawWorld();
+			m_DynamicsWorld->setDebugDrawer(&m_DebugDrawer);
+			m_DynamicsWorld->debugDrawWorld();
 
 			Renderer2D::EndScene();
 

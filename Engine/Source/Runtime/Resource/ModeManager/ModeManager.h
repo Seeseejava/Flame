@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Runtime/Core/PublicSingleton.h"
-
+#include <magic_enum.hpp>
 namespace Flame
 {
 	// From UE4.27.2
@@ -22,6 +22,28 @@ namespace Flame
 		SkyBox = 2,
 	};
 
+	enum class PhysicsDebugDrawModeFlag
+	{
+		FLAME_NoDebug = 0,
+		FLAME_DrawWireframe = 1,
+		FLAME_DrawAabb = 2,
+		FLAME_DrawFeaturesText = 4,
+		FLAME_DrawContactPoints = 8,
+		FLAME_NoDeactivation = 16,
+		FLAME_NoHelpText = 32,
+		FLAME_DrawText = 64,
+		FLAME_ProfileTimings = 128,
+		FLAME_EnableSatComparison = 256,
+		FLAME_DisableBulletLCP = 512,
+		FLAME_EnableCCD = 1024,
+		FLAME_DrawConstraints = (1 << 11),
+		FLAME_DrawConstraintLimits = (1 << 12),
+		FLAME_FastWireframe = (1 << 13),
+		FLAME_DrawNormals = (1 << 14),
+		FLAME_DrawFrames = (1 << 15),
+		FLAME_MAX_DEBUG_DRAW_MODE
+	};
+
 
 	class ModeManager final : public PublicSingleton<ModeManager>
 	{
@@ -33,6 +55,7 @@ namespace Flame
 		static bool bHdrUse;
 		static SceneMode m_SceneMode;
 		static bool bShowPhysicsColliders;
+		static PhysicsDebugDrawModeFlag m_PhysicsDebugDrawModeFlag;
 	private:
 		static bool bEditState;
 		static EditMode m_EditMode;

@@ -37,11 +37,11 @@ namespace Flame
 
 			virtual void draw3dText(const btVector3& location, const char* textString) {};
 
-			virtual void setDebugMode(int debugMode) { debugMode = debugMode; };
+			virtual void setDebugMode(int debugMode) { m_DebugMode = debugMode; };
 
-			virtual int getDebugMode() const override { return debugMode; }
+			virtual int getDebugMode() const override { return m_DebugMode; }
 
-			int debugMode = DebugDrawModes::DBG_DrawWireframe;
+			int m_DebugMode = DebugDrawModes::DBG_DrawWireframe;
 		};
 	}
 
@@ -55,12 +55,14 @@ namespace Flame
 		void OnUpdateRuntime(Timestep ts) override;
 		void OnRuntimeStop() override;
 		void OnUpdateEditor(Timestep ts, EditorCamera& camera) override;
+
+		static void SetDebugMode(int flags) { m_DebugDrawer.setDebugMode(flags); }
 	private:
-		btBroadphaseInterface* mBroadphase;
-		btDefaultCollisionConfiguration* mCollisionConfiguration;
-		btCollisionDispatcher* mDispatcher;
-		btSequentialImpulseConstraintSolver* mSolver;
-		btDiscreteDynamicsWorld* mDynamicsWorld;
-		Utils::BulletDrawer mDebugDrawer;
+		btBroadphaseInterface* m_Broadphase;
+		btDefaultCollisionConfiguration* m_CollisionConfiguration;
+		btCollisionDispatcher* m_Dispatcher;
+		btSequentialImpulseConstraintSolver* m_Solver;
+		btDiscreteDynamicsWorld* m_DynamicsWorld;
+		static Utils::BulletDrawer m_DebugDrawer;
     };
 }

@@ -9,4 +9,5 @@ namespace Flame
 	SceneMode ModeManager::m_SceneMode = SceneMode::None;
 	EditMode ModeManager::m_EditMode = EditMode::Select;
 	bool ModeManager::bShowPhysicsColliders = false;
+	PhysicsDebugDrawModeFlag ModeManager::m_PhysicsDebugDrawModeFlag = PhysicsDebugDrawModeFlag::FLAME_DrawWireframe;
 }

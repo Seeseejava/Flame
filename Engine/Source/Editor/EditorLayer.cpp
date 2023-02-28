@@ -7,6 +7,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "Runtime/ECS/System/Physics/PhysicsSystem3D.h"
 #include "Runtime/Resource/ModeManager/ModeManager.h"
 #include "Runtime/ECS/Serializer/SceneSerializer.h"
 #include "Runtime/Utils/PlatformUtils.h"
@@ -399,6 +400,24 @@ namespace Flame {
 			if (ImGuiWrapper::TreeNodeExStyle1((void*)"Physics Settings", "Physics Settings"))
 			{
 				ImGui::Checkbox("Show physics colliders", &ModeManager::bShowPhysicsColliders);
+
+				if (ImGui::BeginMenu("Show physics colliders modes"))
+				{
+					using namespace magic_enum::bitwise_operators;
+
+					constexpr auto flags = magic_enum::enum_values<PhysicsDebugDrawModeFlag>();
+					for (auto flag : flags)
+					{
+						if (ImGui::MenuItem(magic_enum::enum_name(flag).data(), NULL, (bool)(ModeManager::m_PhysicsDebugDrawModeFlag & flag)))
+						{
+							(bool)(ModeManager::m_PhysicsDebugDrawModeFlag & flag) ?
+								ModeManager::m_PhysicsDebugDrawModeFlag &= ~flag : ModeManager::m_PhysicsDebugDrawModeFlag |= flag;
+							PhysicsSystem3D::SetDebugMode((int)ModeManager::m_PhysicsDebugDrawModeFlag);
+						}
+					}
+
+					ImGui::EndMenu();
+				}
 				ImGui::TreePop();
 			}
 
