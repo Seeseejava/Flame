@@ -259,7 +259,7 @@ namespace Flame
 		// Light Depth pass
 		Renderer3D::lightFBO->Bind();
 
-		RenderCommand::SetViewport(0, 0, 4096, 4096);
+		RenderCommand::SetViewport(0, 0, Renderer3D::lightFBO->GetSpecification().Width, Renderer3D::lightFBO->GetSpecification().Height);
 		RenderCommand::Clear();
 		RenderCommand::CullFrontOrBack(true); // peter panning
 		auto view = m_Scene->m_Registry.view<TransformComponent, MeshComponent>();

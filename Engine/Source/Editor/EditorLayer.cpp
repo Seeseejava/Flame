@@ -156,7 +156,6 @@ namespace Flame {
 			m_EditorCamera.SetViewportSize(ConfigManager::m_ViewportSize.x, ConfigManager::m_ViewportSize.y);
 			m_ActiveScene->OnViewportResize((uint32_t)ConfigManager::m_ViewportSize.x, (uint32_t)ConfigManager::m_ViewportSize.y);
 			PostProcessing::m_Framebuffer->Resize((uint32_t)ConfigManager::m_ViewportSize.x, (uint32_t)ConfigManager::m_ViewportSize.y);
-			Renderer3D::lightFBO->Resize((uint32_t)ConfigManager::m_ViewportSize.x, (uint32_t)ConfigManager::m_ViewportSize.y);
 		}
 
 
@@ -655,7 +654,7 @@ namespace Flame {
 	void EditorLayer::LoadDefaultEditorConfig()
 	{
 		const std::filesystem::path CurrentEditorConfigPath{ AssetManager::GetFullPath("imgui.ini") };
-		const std::filesystem::path DefaultEditorConfigPath{ AssetManager::GetFullPath("Assets/Config/imgui.ini") };
+		const std::filesystem::path DefaultEditorConfigPath{ AssetManager::GetFullPath("Config/imgui.ini") };
 		FLAME_CORE_ASSERT(std::filesystem::exists(DefaultEditorConfigPath), "No imgui.ini");
 		if (std::filesystem::exists(CurrentEditorConfigPath))
 			std::filesystem::remove(CurrentEditorConfigPath);
@@ -663,13 +662,19 @@ namespace Flame {
 		// TODO:fix the bug
 		std::filesystem::copy(DefaultEditorConfigPath, std::filesystem::current_path());
 
+		// Window
 		bShowViewport = true;
 		bShowContentBrowser = true;
 		bShowSceneHierachy = true;
 		bShowProperties = true;
-		bShowStats = true;
+		bShowStats = false;
 		bShowEngineSettings = true;
 		bShowSceneSettings = true;
+
+		// Help
+		bShowTutorial = false;
+		bShowAboutMe = false;
+		bShowDemoImGui = false;
 
 		// seems imgui docking branch has some bugs with load ini file?
 
