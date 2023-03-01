@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Runtime/Core/PublicSingleton.h"
-#include <magic_enum.hpp>
+
 namespace Flame
 {
 	// From UE4.27.2

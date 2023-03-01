@@ -13,6 +13,7 @@
 #include "Runtime/Utils/PlatformUtils.h"
 #include "Runtime/Math/Math.h"
 #include "Runtime/Resource/AssetManager/AssetManager.h"
+#include <magic_enum.hpp>
 
 #include "ImGuizmo.h"
 
@@ -428,28 +429,17 @@ namespace Flame {
 
 				if (ImGui::BeginPopup("AddPostProcessing"))
 				{
-					if (ImGui::MenuItem("Outline"))
-					{
-						m_RenderPass->AddPostProcessing(PostProcessingType::Outline);
-						ImGui::CloseCurrentPopup();
-					}
+					constexpr auto postTypes = magic_enum::enum_values<PostProcessingType>();
 
-					if (ImGui::MenuItem("Cartoon"))
+					// Skip None and MSAA
+					for (size_t i = 2; i < postTypes.size(); i++)
 					{
-						m_RenderPass->AddPostProcessing(PostProcessingType::Cartoon);
-						ImGui::CloseCurrentPopup();
-					}
-
-					if (ImGui::MenuItem("GrayScale"))
-					{
-						m_RenderPass->AddPostProcessing(PostProcessingType::GrayScale);
-						ImGui::CloseCurrentPopup();
-					}
-
-					if (ImGui::MenuItem("GaussianBlur"))
-					{
-						m_RenderPass->AddPostProcessing(PostProcessingType::GaussianBlur);
-						ImGui::CloseCurrentPopup();
+						if (ImGui::MenuItem(magic_enum::enum_name(postTypes[i]).data()))
+						{
+							m_RenderPass->AddPostProcessing(postTypes[i]);
+							ImGui::CloseCurrentPopup();
+						}
+						
 					}
 
 					ImGui::EndPopup();
@@ -457,7 +447,7 @@ namespace Flame {
 
 				for (size_t i = 1; i < m_RenderPass->m_PostProcessings.size(); i++)
 				{
-					ImGui::Selectable(PostProcessing::PostTypeToString(m_RenderPass->m_PostProcessings[i]->m_Type).c_str());
+					ImGui::Selectable(magic_enum::enum_name(m_RenderPass->m_PostProcessings[i]->m_Type).data());
 
 					// imgui demo: Drag to reorder items (simple)
 					if (ImGui::IsItemActive() && !ImGui::IsItemHovered())

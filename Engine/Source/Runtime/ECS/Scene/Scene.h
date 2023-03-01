@@ -48,9 +48,6 @@ namespace Flame {
 	public:
 		entt::registry m_Registry;
 	private:
-
-		b2World* m_PhysicsWorld = nullptr;
-
 		std::vector<Scope<class System>> m_Systems;
 
 		friend class Entity;

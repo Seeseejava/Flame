@@ -69,6 +69,9 @@ namespace Flame
 			break;
 		case PostProcessingType::GaussianBlur:
 			re = DoPostWithShader(fb, Library<Shader>::GetInstance().Get("Post_GaussianBlur"));
+		case PostProcessingType::FxaaConsole:
+			re = DoPostWithShader(fb, Library<Shader>::GetInstance().Get("Post_FxaaConsole"));
+			break;
 		default:
 			return 0;
 			break;
