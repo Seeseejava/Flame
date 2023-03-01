@@ -13,7 +13,7 @@ macro(EDITOR_ADD_SOURCE)
 endmacro(EDITOR_ADD_SOURCE)
 # end from
 
-set(EditorSourceFiles ${CMAKE_CURRENT_SOURCE_DIR}/EditorLayer.h ${CMAKE_CURRENT_SOURCE_DIR}/EditorLayer.cpp ${CMAKE_CURRENT_SOURCE_DIR}/FlameEditorApp.cpp)
+set(EditorSourceFiles "${CMAKE_CURRENT_SOURCE_DIR}/EditorLayer.h" "${CMAKE_CURRENT_SOURCE_DIR}/EditorLayer.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/FlameEditorApp.cpp")
 
 add_subdirectory(Panels)
 add_subdirectory(ImGuiWrapper)

@@ -16,8 +16,8 @@
 #include "Runtime/ECS/Component/Shape/SpriteRendererComponent.h"
 #include "Runtime/ECS/Component/Transform/TransformComponent.h" 
 #include "Runtime/ECS/Component/Mesh/MeshComponent.h"
-#include "Runtime/ECS/Component/Renderer/PointLightComponent.h"
-#include "Runtime/ECS/Component/Renderer/DirectionalLightComponent.h"
+#include "Runtime/ECS/Component/Light/PointLightComponent.h"
+#include "Runtime/ECS/Component/Light/DirectionalLightComponent.h"
 #include "Runtime/ECS/Component/Audio/SoundComponent.h"
 
 #include <concepts>

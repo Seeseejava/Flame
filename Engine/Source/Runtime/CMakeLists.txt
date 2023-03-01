@@ -1,10 +1,39 @@
-file(GLOB_RECURSE RuntimeHeaderFiles CONFIGUE_DEPENDS "*.h")
-file(GLOB_RECURSE RuntimeSourceFiles CONFIGUE_DEPENDS "*.cpp")
+macro(RUNTIME_ADD_SOURCE)
+	set(SOURCE_FILES "")
+    foreach(SOURCE_FILE ${ARGN})
+        if(SOURCE_FILE MATCHES "^/.*")
+            list(APPEND SOURCE_FILES ${SOURCE_FILE})
+        else()
+            list(APPEND SOURCE_FILES
+                 "${CMAKE_CURRENT_SOURCE_DIR}/${SOURCE_FILE}")
+        endif()
+    endforeach()
+    set(RuntimeSourceFiles ${RuntimeSourceFiles} ${SOURCE_FILES} PARENT_SCOPE)
+endmacro(RUNTIME_ADD_SOURCE)
 
-source_group(TREE "${EngineRuntimeDir}" FILES ${RuntimeHeaderFiles} ${RuntimeSourceFiles})
+set(RuntimeSourceFiles "${CMAKE_CURRENT_SOURCE_DIR}/Flame.h" "${CMAKE_CURRENT_SOURCE_DIR}/flamepch.h" "${CMAKE_CURRENT_SOURCE_DIR}/flamepch.cpp")
 
 
-add_library(Flame-Runtime STATIC ${RuntimeHeaderFiles} ${RuntimeSourceFiles})
+add_subdirectory(Animation)
+add_subdirectory(Camera)
+add_subdirectory(Core)
+add_subdirectory(Debug)
+add_subdirectory(ECS)
+add_subdirectory(Events)
+add_subdirectory(ImGui)
+add_subdirectory(Library)
+add_subdirectory(Math)
+add_subdirectory(Mesh)
+add_subdirectory(Platform)
+add_subdirectory(Renderer)
+add_subdirectory(Resource)
+add_subdirectory(Utils)
+
+message(${RuntimeSourceFiles})
+
+source_group(TREE "${EngineRuntimeDir}" FILES ${RuntimeSourceFiles})
+
+add_library(Flame-Runtime STATIC ${RuntimeSourceFiles})
 
 #链接了Flame的模块，不会包含这些文件
 target_include_directories(Flame-Runtime 
