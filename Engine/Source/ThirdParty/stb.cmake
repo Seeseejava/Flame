@@ -1,8 +1,8 @@
 set(StbSourceDir ${ThirdPartyDir}/stb_image)
 
-file(GLOB_RECURSE box2dSrc 
-    "${StbSourceDir}/*.h"
-    "${StbSourceDir}/*.cpp"
+set(stbSrc 
+    "${StbSourceDir}/stb_image.h"
+    "${StbSourceDir}/stb_image.cpp"
 )
-add_library(stb STATIC ${box2dSrc})
+add_library(stb STATIC ${stbSrc})
 target_include_directories(stb PUBLIC "${StbSourceDir}")
