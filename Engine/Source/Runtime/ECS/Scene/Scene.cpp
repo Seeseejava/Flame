@@ -385,4 +385,9 @@ namespace Flame {
 	void Scene::OnComponentAdded<AudioScriptSystem>(Entity entity, AudioScriptSystem& component)
 	{
 	}
+
+	template<>
+	void Scene::OnComponentAdded<SoundComponent>(Entity entity, SoundComponent& component)
+	{
+	}
 }

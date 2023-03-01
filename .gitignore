@@ -1,12 +1,21 @@
-# Directories
-
-.vs/
-bin/
+# Binaries
+**/bin/
 bin-int/
+out/
 build/
 
-# Files
 
-*.user
+# Flame files
+*.log
 
-*.json
+
+# Visual Studio files and folder
+.vs/
+**.sln
+**.vcxproj
+**.vcxproj.filters
+**.vcxproj.user
+**.vcxproj.user
+
+Engine/Source/Editor/*.dll
+Engine/Source/Editor/*.ini

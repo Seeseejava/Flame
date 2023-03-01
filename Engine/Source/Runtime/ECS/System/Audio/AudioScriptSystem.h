@@ -4,6 +4,7 @@
 #include "Runtime/ECS/Scene/Scene.h"
 
 #include <fmod.hpp>
+#include <fmod.h>
 
 namespace Flame
 {
@@ -18,8 +19,7 @@ namespace Flame
 		void OnRuntimeStop() override;
 		void OnUpdateEditor(Timestep ts, EditorCamera& camera) override;
 	private:
-		FMOD::System* mFmodSystem;
-		FMOD::Sound* mSound1;
-		FMOD::Channel* mChannel = 0;
+		FMOD::System* m_FmodSystem;
+		FMOD_SYSTEM* m_FmodSystem2;
 	};
 }

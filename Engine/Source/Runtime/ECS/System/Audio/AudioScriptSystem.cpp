@@ -3,6 +3,7 @@
 #include "Runtime/ECS/System/Audio/AudioScriptSystem.h"
 #include "Runtime/ECS/Component/ComponentGroup.h"
 #include "Runtime/Resource/AssetManager/AssetManager.h"
+#include "Runtime/ECS/Entity/Entity.h"
 
 namespace Flame
 {
@@ -13,25 +14,32 @@ namespace Flame
 
 	void AudioScriptSystem::OnRuntiemStart()
 	{
-		FMOD::System_Create(&mFmodSystem);
-		mFmodSystem->init(32, FMOD_INIT_NORMAL, 0);
+		FMOD::System_Create(&m_FmodSystem);
+		m_FmodSystem->init(32, FMOD_INIT_NORMAL, 0);
 
-		mFmodSystem->createSound(AssetManager::GetFullPath("Assets/Audios/singing.wav").string().c_str(), FMOD_DEFAULT, 0, &mSound1);
+		auto view = m_Scene->m_Registry.view<TransformComponent, SoundComponent>();
+		for (auto e : view)
+		{
+			Entity entity = { e, m_Scene };
+			auto& sc = entity.GetComponent<SoundComponent>();
+
+			m_FmodSystem->createSound(AssetManager::GetFullPath(sc.Path).string().c_str(), FMOD_DEFAULT, 0, &sc.Sound);
+
+			m_FmodSystem->playSound(sc.Sound, nullptr, false, &sc.Channel);
+		}
 	}
 
 	void AudioScriptSystem::OnUpdateRuntime(Timestep ts)
 	{
-		mFmodSystem->playSound(mSound1, 0, false, &mChannel);
 
-		mFmodSystem->update();
+		m_FmodSystem->update();
 	}
 
 	void AudioScriptSystem::OnRuntimeStop()
 	{
-		mSound1->release();
 
-		mFmodSystem->close();
-		mFmodSystem->release();
+		m_FmodSystem->close();
+		m_FmodSystem->release();
 	}
 
 	void AudioScriptSystem::OnUpdateEditor(Timestep ts, EditorCamera& camera)

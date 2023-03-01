@@ -18,6 +18,7 @@
 #include "Runtime/ECS/Component/Mesh/MeshComponent.h"
 #include "Runtime/ECS/Component/Renderer/PointLightComponent.h"
 #include "Runtime/ECS/Component/Renderer/DirectionalLightComponent.h"
+#include "Runtime/ECS/Component/Audio/SoundComponent.h"
 
 #include <concepts>
 #include <type_traits>
@@ -38,5 +39,5 @@ namespace Flame
 	using AllComponents = ComponentGroup<TransformComponent, CircleRendererComponent, SpriteRendererComponent,
 		CameraComponent, NativeScriptComponent, PythonScriptComponent, Rigidbody2DComponent, BoxCollider2DComponent,
 		CircleCollider2DComponent, Rigidbody3DComponent, BoxCollider3DComponent, SphereCollider3DComponent, ConvexHullComponent,
-		MeshComponent, PointLightComponent, DirectionalLightComponent>;
+		MeshComponent, PointLightComponent, DirectionalLightComponent, SoundComponent>;
 }

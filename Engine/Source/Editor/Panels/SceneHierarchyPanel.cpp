@@ -57,10 +57,18 @@ namespace Flame {
 						entity.AddComponent<PointLightComponent>();
 						SetSelectedEntity(entity);
 					}
+
 					if (ImGui::MenuItem("Create Directional Light"))
 					{
 						auto entity = m_Context->CreateEntity("Directional Light");
 						entity.AddComponent<DirectionalLightComponent>();
+						SetSelectedEntity(entity);
+					}
+
+					if (ImGui::MenuItem("Create Audio"))
+					{
+						auto entity = m_Context->CreateEntity("Audio");
+						entity.AddComponent<SoundComponent>();
 						SetSelectedEntity(entity);
 					}
 
@@ -411,6 +419,15 @@ namespace Flame {
 				}
 			}
 
+			if (!m_SelectionContext.HasComponent<SoundComponent>())
+			{
+				if (ImGui::MenuItem("Sound"))
+				{
+					m_SelectionContext.AddComponent<SoundComponent>();
+					ImGui::CloseCurrentPopup();
+				}
+			}
+
 			ImGui::EndPopup();
 		}
 		ImGui::PopItemWidth();
@@ -418,10 +435,10 @@ namespace Flame {
 		DrawComponent<TransformComponent>("Transform", entity, [](auto& component)
 			{
 				DrawVec3Control("Translation", component.Translation);
-		glm::vec3 rotation = glm::degrees(component.Rotation);
-		DrawVec3Control("Rotation", rotation);
-		component.Rotation = glm::radians(rotation);
-		DrawVec3Control("Scale", component.Scale, 1.0f);
+				glm::vec3 rotation = glm::degrees(component.Rotation);
+				DrawVec3Control("Rotation", rotation);
+				component.Rotation = glm::radians(rotation);
+				DrawVec3Control("Scale", component.Scale, 1.0f);
 			});
 
 		DrawComponent<CameraComponent>("Camera", entity, [](auto& component)
@@ -910,6 +927,38 @@ namespace Flame {
 					[]() { ImGui::Text("Use"); },
 					[&component = component]() { ImGui::Checkbox("##Py Script Use", &component.UseScript); }
 				);
+			});
+
+		DrawComponent<SoundComponent>("Sound", entity, [](auto& component)
+			{
+				ImGui::Columns(2, nullptr, false);
+				ImGui::SetColumnWidth(0, 100.0f);
+				ImGui::Text("Sound Path");
+				ImGui::NextColumn();
+
+				std::string standardPath = std::regex_replace(component.Path, std::regex("\\\\"), "/");
+				ImGui::Text(std::string_view(standardPath.c_str() + standardPath.find_last_of("/") + 1, standardPath.length()).data());
+
+				ImGui::SameLine();
+				if (ImGui::Button("..."))
+				{
+					std::string filepath = FileDialogs::OpenFile("Sound (*.wav *.mp3)\0");
+					if (filepath.find("Assets") != std::string::npos)
+					{
+						filepath = filepath.substr(filepath.find("Assets"), filepath.length());
+					}
+					else
+					{
+						// TODO: Import Mesh
+						//HE_CORE_ASSERT(false, "HEngine Now Only support the model from Assets!");
+						//filepath = "";
+					}
+					if (!filepath.empty())
+					{
+						component.Path = filepath;
+					}
+				}
+				ImGui::EndColumns();
 			});
 	}
 }
