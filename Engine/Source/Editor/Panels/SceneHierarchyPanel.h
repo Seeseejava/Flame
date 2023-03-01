@@ -17,6 +17,8 @@ namespace Flame {
 		Entity GetSelectedEntity() const { return m_SelectionContext; }
 		void SetSelectedEntity(Entity entity);
 	private:
+		template <typename componentType>
+		void MenuAddComponent(const char* menuName, const char* menuItemName);
 		void DrawEntityNode(Entity entity);
 		void DrawComponents(Entity entity);
 	private:

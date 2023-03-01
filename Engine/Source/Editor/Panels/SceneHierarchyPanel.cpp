@@ -6,11 +6,13 @@
 #include "Editor/Panels/SceneHierarchyPanel.h"
 #include "Editor/IconManager/IconManager.h"
 
+
 #include <magic_enum.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
 #include <filesystem>
 #include "Runtime/Resource/ConfigManager/ConfigManager.h"
+#include "Runtime/Resource/ModeManager/ModeManager.h"
 #include "Runtime/Utils/PlatformUtils.h"
 
 namespace Flame {
@@ -269,6 +271,22 @@ namespace Flame {
 		}
 	}
 
+	template <typename componentType>
+	void SceneHierarchyPanel::MenuAddComponent(const char* menuName, const char* menuItemName)
+	{
+		if (!m_SelectionContext.HasComponent<componentType>())
+		{
+			if (ImGui::BeginMenu(menuName))
+			{
+				if (ImGui::MenuItem(menuItemName))
+				{
+					m_SelectionContext.AddComponent<componentType>();
+					ImGui::CloseCurrentPopup();
+				}
+				ImGui::EndMenu();
+			}
+		}
+	}
 
 	void SceneHierarchyPanel::DrawComponents(Entity entity)
 	{
@@ -293,113 +311,29 @@ namespace Flame {
 
 		if (ImGui::BeginPopup("AddComponent"))
 		{
-			if (!m_SelectionContext.HasComponent<CameraComponent>())
+			MenuAddComponent<CameraComponent>("Camera", "Camera");
+			if (ModeManager::b3DMode)
 			{
-				if (ImGui::MenuItem("Camera"))
+				MenuAddComponent<MeshComponent>("Mesh", "Mesh Renderer");
+				if (m_SelectionContext.HasComponent<MeshComponent>())
+					MenuAddComponent<Rigidbody3DComponent>("Physic", "Rigidbody");
+				MenuAddComponent<PointLightComponent>("Light", "Point Light");
+				MenuAddComponent<DirectionalLightComponent>("Light", "Directional Light");
+			}
+			else
+			{
+				MenuAddComponent<SpriteRendererComponent>("Renderer", "Sprite Renderer");
+				MenuAddComponent<CircleRendererComponent>("Renderer", "Circle Renderer");
+				if (m_SelectionContext.HasComponent<SpriteRendererComponent>() || m_SelectionContext.HasComponent<CircleRendererComponent>())
 				{
-					m_SelectionContext.AddComponent<CameraComponent>();
-					ImGui::CloseCurrentPopup();
+					MenuAddComponent<Rigidbody2DComponent>("Physic", "Rigidbody");
+					MenuAddComponent<BoxCollider2DComponent>("Physic", "Box Collider");
+					MenuAddComponent<CircleCollider2DComponent>("Physic", "Circle Collider");
 				}
 			}
 
-			if (!m_SelectionContext.HasComponent<SpriteRendererComponent>())
-			{
-				if (ImGui::MenuItem("Sprite Renderer"))
-				{
-					m_SelectionContext.AddComponent<SpriteRendererComponent>();
-					ImGui::CloseCurrentPopup();
-				}
-			}
-
-			if (!m_SelectionContext.HasComponent<CircleRendererComponent>())
-			{
-				if (ImGui::MenuItem("Circle Renderer"))
-				{
-					m_SelectionContext.AddComponent<CircleRendererComponent>();
-					ImGui::CloseCurrentPopup();
-				}
-			}
-
-			if (!m_SelectionContext.HasComponent<Rigidbody2DComponent>())
-			{
-				if (ImGui::MenuItem("Rigidbody 2D"))
-				{
-					m_SelectionContext.AddComponent<Rigidbody2DComponent>();
-					ImGui::CloseCurrentPopup();
-				}
-			}
-
-			if (!m_SelectionContext.HasComponent<BoxCollider2DComponent>())
-			{
-				if (ImGui::MenuItem("Box Collider 2D"))
-				{
-					m_SelectionContext.AddComponent<BoxCollider2DComponent>();
-					ImGui::CloseCurrentPopup();
-				}
-			}
-
-			if (!m_SelectionContext.HasComponent<CircleCollider2DComponent>())
-			{
-				if (ImGui::MenuItem("Circle Collider 2D"))
-				{
-					m_SelectionContext.AddComponent<CircleCollider2DComponent>();
-					ImGui::CloseCurrentPopup();
-				}
-			}
-
-			if (!m_SelectionContext.HasComponent<MeshComponent>())
-			{
-				if (ImGui::MenuItem("Mesh Renderer"))
-				{
-					m_SelectionContext.AddComponent<MeshComponent>();
-					ImGui::CloseCurrentPopup();
-				}
-			}
-
-			if (!m_SelectionContext.HasComponent<Rigidbody3DComponent>())
-			{
-				if (ImGui::MenuItem("Rigidbody 3D"))
-				{
-					m_SelectionContext.AddComponent<Rigidbody3DComponent>();
-					ImGui::CloseCurrentPopup();
-				}
-			}
-
-			if (!m_SelectionContext.HasComponent<PointLightComponent>())
-			{
-				if (ImGui::MenuItem("Point Light"))
-				{
-					m_SelectionContext.AddComponent<PointLightComponent>();
-					ImGui::CloseCurrentPopup();
-				}
-			}
-
-			if (!m_SelectionContext.HasComponent<DirectionalLightComponent>())
-			{
-				if (ImGui::MenuItem("Directional Light"))
-				{
-					m_SelectionContext.AddComponent<DirectionalLightComponent>();
-					ImGui::CloseCurrentPopup();
-				}
-			}
-
-			if (!m_SelectionContext.HasComponent<PythonScriptComponent>())
-			{
-				if (ImGui::MenuItem("Python Script"))
-				{
-					m_SelectionContext.AddComponent<PythonScriptComponent>();
-					ImGui::CloseCurrentPopup();
-				}
-			}
-
-			if (!m_SelectionContext.HasComponent<SoundComponent>())
-			{
-				if (ImGui::MenuItem("Sound"))
-				{
-					m_SelectionContext.AddComponent<SoundComponent>();
-					ImGui::CloseCurrentPopup();
-				}
-			}
+			MenuAddComponent<PythonScriptComponent>("Script", "Python Script");
+			MenuAddComponent<SoundComponent>("Audio", "Sound");
 
 			ImGui::EndPopup();
 		}
