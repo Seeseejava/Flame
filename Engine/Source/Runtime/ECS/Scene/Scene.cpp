@@ -89,6 +89,7 @@ namespace Flame {
 			m_Systems.emplace_back(std::make_unique<PhysicsSystem3D>(this));
 			m_Systems.emplace_back(CreateScope<EnvironmentSystem>(this));
 			m_Systems.emplace_back(CreateScope<PythonScriptSystem>(this));
+			m_Systems.emplace_back(CreateScope<AudioScriptSystem>(this));
 		}
 		else
 		{
@@ -377,6 +378,11 @@ namespace Flame {
 
 	template<>
 	void Scene::OnComponentAdded<ConvexHullComponent>(Entity entity, ConvexHullComponent& component)
+	{
+	}
+
+	template<>
+	void Scene::OnComponentAdded<AudioScriptSystem>(Entity entity, AudioScriptSystem& component)
 	{
 	}
 }

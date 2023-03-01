@@ -10,3 +10,4 @@
 
 #include "Runtime/ECS/System/Script/NativeScriptSystem.h"
 #include "Runtime/ECS/System/Script/PythonScriptSystem.h"
+#include "Runtime/ECS/System/Audio/AudioScriptSystem.h"
