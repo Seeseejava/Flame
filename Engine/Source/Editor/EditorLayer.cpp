@@ -1,5 +1,5 @@
 #include "EditorLayer.h"
-#include "ImGuiWrapper.h"
+#include "Editor/ImGuiWrapper/ImGuiWrapper.h"
 #include "imgui/imgui.h"
 #include <imgui/imgui_internal.h>
 #include "Editor/IconManager/IconManager.h"
@@ -123,16 +123,6 @@ namespace Flame {
 		m_TextureStair = SubTexture2D::CreateFromCoords(m_SpriteSheet, { 7, 6 }, { 128, 128 });
 		m_TextureGrass = SubTexture2D::CreateFromCoords(m_SpriteSheet, { 2 , 3 }, { 128, 128 });
 		m_TextureTree = SubTexture2D::CreateFromCoords(m_SpriteSheet, { 2 , 1 }, { 128, 128 }, { 1, 2 });
-
-		// Init here
-		m_Particle.ColorBegin = { 254 / 255.0f, 212 / 255.0f, 123 / 255.0f, 1.0f };
-		m_Particle.ColorEnd = { 254 / 255.0f, 109 / 255.0f, 41 / 255.0f, 1.0f };
-		m_Particle.SizeBegin = 0.5f, m_Particle.SizeVariation = 0.3f, m_Particle.SizeEnd = 0.0f;
-		m_Particle.LifeTime = 1.0f;
-		m_Particle.Velocity = { 0.0f, 0.0f };
-		m_Particle.VelocityVariation = { 3.0f, 1.0f };
-		m_Particle.Position = { 0.0f, 0.0f };
-
 
 	}
 

@@ -1,8 +1,6 @@
 #pragma once
 #include "Flame.h"
 
-#include "ParticleSystem.h"
-
 #include "Panels/SceneHierarchyPanel.h"
 #include "Panels/ContentBrowserPanel.h"
 #include "Panels/SceneSettingsPanel.h"
@@ -72,8 +70,6 @@ namespace Flame {
 
 		glm::vec4 m_SquareColor = { 0.2f, 0.3f, 0.8f, 1.0f };
 
-		ParticleSystem m_ParticleSystem;
-		ParticleProperties m_Particle;
 
 		uint32_t m_MapHeight, m_MapWidth;
 		std::unordered_map<char, Ref<SubTexture2D>> s_TextureMap;

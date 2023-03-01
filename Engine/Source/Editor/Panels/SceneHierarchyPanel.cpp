@@ -2,7 +2,7 @@
 
 #include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>
-#include "Editor/ImGuiWrapper.h"
+#include "Editor/ImGuiWrapper/ImGuiWrapper.h"
 #include "Editor/Panels/SceneHierarchyPanel.h"
 #include "Editor/IconManager/IconManager.h"
 

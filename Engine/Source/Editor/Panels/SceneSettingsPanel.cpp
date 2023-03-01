@@ -1,6 +1,6 @@
 #include "Editor/Panels/SceneSettingsPanel.h"
 #include "Editor/IconManager/IconManager.h"
-#include "Editor/ImGuiWrapper.h"
+#include "Editor/ImGuiWrapper/ImGuiWrapper.h"
 #include "Runtime/Resource/ModeManager/ModeManager.h"
 #include "Runtime/Resource/ConfigManager/ConfigManager.h"
 #include "Runtime/Resource/AssetManager/AssetManager.h"
