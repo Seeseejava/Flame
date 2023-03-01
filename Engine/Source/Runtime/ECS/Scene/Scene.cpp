@@ -346,20 +346,12 @@ namespace Flame {
 	{
 	}
 
-	template<>
-	void Scene::OnComponentAdded<BoxCollider3DComponent>(Entity entity, BoxCollider3DComponent& component)
-	{
-	}
 
 	template<>
 	void Scene::OnComponentAdded<Rigidbody3DComponent>(Entity entity, Rigidbody3DComponent& component)
 	{
 	}
 
-	template<>
-	void Scene::OnComponentAdded<SphereCollider3DComponent>(Entity entity, SphereCollider3DComponent& component)
-	{
-	}
 
 	template<>
 	void Scene::OnComponentAdded<PointLightComponent>(Entity entity, PointLightComponent& component)
@@ -373,11 +365,6 @@ namespace Flame {
 
 	template<>
 	void Scene::OnComponentAdded<DirectionalLightComponent>(Entity entity, DirectionalLightComponent& component)
-	{
-	}
-
-	template<>
-	void Scene::OnComponentAdded<ConvexHullComponent>(Entity entity, ConvexHullComponent& component)
 	{
 	}
 
