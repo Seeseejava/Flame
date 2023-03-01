@@ -14,5 +14,6 @@ namespace Flame::Math {
 	// eValues/eVectors [0] [1] [2] for three axes
 	void JacobiSolver(glm::mat3 matrix, glm::vec3& eValues, glm::mat3& eVectors);
 
+	// v2 may be zero vector
 	void SchmidtOrthogonalization(glm::vec3& v0, glm::vec3& v1, glm::vec3& v2);
 }

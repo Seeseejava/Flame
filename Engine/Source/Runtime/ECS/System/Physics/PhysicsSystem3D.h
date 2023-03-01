@@ -17,6 +17,12 @@ namespace Flame
 			return glm::vec3(src.x(), src.y(), src.z());
 		}
 
+		inline btVector3 GlmToBtVec3(const glm::vec3& src)
+		{
+			return btVector3(src.x, src.y, src.z);
+		}
+
+
 		class BulletDrawer : public btIDebugDraw
 		{
 		public:

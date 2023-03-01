@@ -64,24 +64,14 @@ namespace Flame
 				glm::mat3 eVectors;
 				Math::JacobiSolver(covMat, eValues, eVectors);
 
-				// sort to obtain eValue[0] <= eValue[1] <= eValue[2] (eVectors with the same order of eValues)
-				//for (int i = 0; i < 2; i++)
-				//{
-				//	for (int j = 0; j < 2 - i; j++)
-				//	{
-				//		if (eValues[j] > eValues[j + 1])
-				//		{
-				//			float temp = eValues[j];
-				//			eValues[j] = eValues[j + 1];
-				//			eValues[j + 1] = temp;
-
-				//			glm::vec3 tempVec = eVectors[j];
-				//			eVectors[j] = eVectors[j + 1];
-				//			eVectors[j + 1] = tempVec;
-				//		}
-				//	}
-				//}
-				Math::SchmidtOrthogonalization(eVectors[0], eVectors[1], eVectors[2]);
+				for (int i = 0; i < 3; i++)
+				{
+					if (eValues[i] == 0 || i == 2)
+					{
+						Math::SchmidtOrthogonalization(eVectors[(i + 1) % 3], eVectors[(i + 2) % 3], eVectors[i]);
+						break;
+					}
+				}
 
 				constexpr float infinity = std::numeric_limits<float>::infinity();
 				glm::vec3 minExtents(infinity, infinity, infinity);
@@ -89,28 +79,45 @@ namespace Flame
 
 				for (const glm::vec3& displacement : vertices)
 				{
-					minExtents.x = std::min(minExtents.x, glm::dot(displacement, eVectors[0]));
-					minExtents.y = std::min(minExtents.y, glm::dot(displacement, eVectors[1]));
-					minExtents.z = std::min(minExtents.z, glm::dot(displacement, eVectors[2]));
+					minExtents[0] = std::min(minExtents[0], glm::dot(displacement, eVectors[0]));
+					minExtents[1] = std::min(minExtents[1], glm::dot(displacement, eVectors[1]));
+					minExtents[2] = std::min(minExtents[2], glm::dot(displacement, eVectors[2]));
 
-					maxExtents.x = std::max(maxExtents.x, glm::dot(displacement, eVectors[0]));
-					maxExtents.y = std::max(maxExtents.y, glm::dot(displacement, eVectors[1]));
-					maxExtents.z = std::max(maxExtents.z, glm::dot(displacement, eVectors[2]));
+					maxExtents[0] = std::max(maxExtents[0], glm::dot(displacement, eVectors[0]));
+					maxExtents[1] = std::max(maxExtents[1], glm::dot(displacement, eVectors[1]));
+					maxExtents[2] = std::max(maxExtents[2], glm::dot(displacement, eVectors[2]));
 				}
 
 				glm::vec3 halfExtent = (maxExtents - minExtents) / 2.0f;
 				glm::vec3 offset = halfExtent + minExtents;
 				originPos += offset.x * eVectors[0] + offset.y * eVectors[1] + offset.z * eVectors[2];
+				glm::vec3 offsetScale = originPos * (transform.Scale - 1.0f);
+				originPos += offsetScale;
+				originPos = glm::mat3(transform.GetRotationMatrix()) * originPos;
+				originPos += transform.Translation;
 
-				shape = new btBoxShape(btVector3(halfExtent.x, halfExtent.y, halfExtent.z));
+
+				shape = new btBoxShape(btVector3(halfExtent.x * transform.Scale.x, halfExtent.y * transform.Scale.y, halfExtent.z * transform.Scale.z));
 				if (rb3d.mass > 0.0f) shape->calculateLocalInertia(rb3d.mass, inertia);
 
-				trans.setOrigin(btVector3(originPos.x, originPos.y, originPos.z));
+				trans.setOrigin(Utils::GlmToBtVec3(originPos));
+
+				auto comQuat = glm::quat(transform.Rotation) * glm::quat(glm::mat4(eVectors));
+				btQuaternion btQuat;
+				btQuat.setValue(comQuat.x, comQuat.y, comQuat.z, comQuat.w);
+				trans.setRotation(btQuat);
 			}
 			else if (rb3d.Shape == CollisionShape::Sphere)
 			{
 				shape = new btSphereShape(transform.Scale.x);
 				if (rb3d.mass > 0.0f) shape->calculateLocalInertia(rb3d.mass, inertia);
+
+				trans.setOrigin(btVector3(transform.Translation.x, transform.Translation.y, transform.Translation.z));
+
+				auto comQuat = glm::quat(transform.Rotation);
+				btQuaternion btQuat;
+				btQuat.setValue(comQuat.x, comQuat.y, comQuat.z, comQuat.w);
+				trans.setRotation(btQuat);
 			}
 			else if (rb3d.Shape == CollisionShape::ConvexHull && entity.HasComponent<MeshComponent>())
 			{
@@ -131,14 +138,16 @@ namespace Flame
 						static_cast<btConvexHullShape*>(shape)->addPoint(btVector3(vertex.Pos.x * transform.Scale.x, vertex.Pos.y * transform.Scale.y, vertex.Pos.z * transform.Scale.z));
 					}
 				}
+				if (rb3d.mass > 0.0f) shape->calculateLocalInertia(rb3d.mass, inertia);
+
+				trans.setOrigin(btVector3(transform.Translation.x, transform.Translation.y, transform.Translation.z));
+
+				auto comQuat = glm::quat(transform.Rotation);
+				btQuaternion btQuat;
+				btQuat.setValue(comQuat.x, comQuat.y, comQuat.z, comQuat.w);
+				trans.setRotation(btQuat);
 			}
 
-			if (rb3d.mass > 0.0f) shape->calculateLocalInertia(rb3d.mass, inertia);
-			//trans.setOrigin(btVector3(transform.Translation.x, transform.Translation.y, transform.Translation.z));
-			auto comQuat = glm::quat(transform.Rotation);
-			btQuaternion btQuat;
-			btQuat.setValue(comQuat.x, comQuat.y, comQuat.z, comQuat.w);
-			trans.setRotation(btQuat);
 			btDefaultMotionState* motion = new btDefaultMotionState(trans);
 			btRigidBody::btRigidBodyConstructionInfo rbInfo(rb3d.mass, motion, shape, inertia);
 			rbInfo.m_linearDamping = rb3d.linearDamping;
@@ -219,7 +228,7 @@ namespace Flame
 		static bool initFlag = true;
 		if (ModeManager::bShowPhysicsColliders)
 		{
-			if (initFlag)
+			//if (initFlag)
 				OnRuntiemStart();
 
 			Renderer2D::BeginScene(camera);
@@ -228,13 +237,14 @@ namespace Flame
 			m_DynamicsWorld->debugDrawWorld();
 
 			Renderer2D::EndScene();
-			initFlag = false;
+			OnRuntimeStop();
+			//initFlag = false;
 		}
 		else
 		{
-			if (!initFlag)
+			/*if (!initFlag)
 				OnRuntimeStop();
-			initFlag = true;
+			initFlag = true;*/
 
 		}
 	}
