@@ -17,6 +17,6 @@ namespace Flame
 		}
 
 		Ref<Mesh> m_Mesh;
-		std::string Path;
+		std::string Path = "None";
 	};
 }

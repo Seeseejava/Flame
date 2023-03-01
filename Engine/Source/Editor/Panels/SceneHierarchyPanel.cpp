@@ -606,6 +606,18 @@ namespace Flame {
 		std::string standardPath = std::regex_replace(component.Path, std::regex("\\\\"), "/");
 		ImGui::Text(std::string_view(standardPath.c_str() + standardPath.find_last_of("/") + 1, standardPath.length()).data());
 
+
+		if (ImGui::BeginDragDropTarget())
+		{
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+			{
+				auto path = (const wchar_t*)payload->Data;
+				component.Path = (std::filesystem::path("Assets") / path).string();
+				component.m_Mesh = CreateRef<Mesh>(component.Path);
+			}
+			ImGui::EndDragDropTarget();
+		}
+
 		ImGui::SameLine();
 		if (ImGui::Button("..."))
 		{
@@ -938,6 +950,16 @@ namespace Flame {
 
 				std::string standardPath = std::regex_replace(component.Path, std::regex("\\\\"), "/");
 				ImGui::Text(std::string_view(standardPath.c_str() + standardPath.find_last_of("/") + 1, standardPath.length()).data());
+
+				if (ImGui::BeginDragDropTarget())
+				{
+					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+					{
+						auto path = (const wchar_t*)payload->Data;
+						component.Path = (std::filesystem::path("Assets") / path).string();
+					}
+					ImGui::EndDragDropTarget();
+				}
 
 				ImGui::SameLine();
 				if (ImGui::Button("..."))

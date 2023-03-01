@@ -30,6 +30,16 @@ namespace Flame {
 			return false;
 		}
 
+		static bool IsMusicFormat(std::string filePath)
+		{
+			std::string extension = filePath.substr(filePath.find_last_of(".") + 1);
+			if (extension == "mp3" || extension == "wma" || extension == "wav")
+			{
+				return true;
+			}
+			return false;
+		}
+
 	}
 
 	ContentBrowserPanel::ContentBrowserPanel()
@@ -184,6 +194,10 @@ namespace Flame {
 				std::string texturePath = "Assets\\" + relativePath.string();
 				Ref<Texture2D> img = IconManager::GetInstance().LoadOrFindTexture(texturePath);
 				ImGui::ImageButton((ImTextureID)img->GetRendererID(), { thumbnailSize, thumbnailSize }, { 0, 1 }, { 1, 0 });
+			}
+			else if (Utils::IsMusicFormat(path.string()))
+			{
+				ImGui::ImageButton((ImTextureID)IconManager::GetInstance().Get("MusicIcon")->GetRendererID(), { thumbnailSize, thumbnailSize }, { 0, 1 }, { 1, 0 });
 			}
 			else
 			{

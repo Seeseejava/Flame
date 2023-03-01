@@ -15,7 +15,7 @@ namespace Flame
 			: Path(path)
 		{}
 
-		std::string Path;
+		std::string Path = "None";
 		bool Play;
 
 		FMOD::Sound* Sound;

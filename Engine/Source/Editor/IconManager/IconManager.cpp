@@ -15,5 +15,6 @@ namespace Flame
 		Add("TransIcon", Texture2D::Create(std::string(("Resources/Icon/Trans.png"))));
 		Add("RotateIcon", Texture2D::Create(std::string(("Resources/Icon/Rotate.png"))));
 		Add("ScaleIcon", Texture2D::Create(std::string(("Resources/Icon/Scale.png"))));
+		Add("MusicIcon", Texture2D::Create(std::string(("Resources/Icon/Music.png"))));
     }
 }
