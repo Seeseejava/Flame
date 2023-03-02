@@ -9,6 +9,9 @@ namespace Flame::ImGuiWrapper
     bool TreeNodeExStyle1(const void* str_id, const std::string& name, ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding);
 	bool TreeNodeExStyle2(const void* str_id, const std::string& name, ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding);
 
+	// from https://github.com/ocornut/imgui/issues/1643
+	void CenteredSeparator(float width = 0.0);
+
 	template<typename UIFunc1, typename UIFunc2>
 	void DrawTwoUI(UIFunc1 func1, UIFunc2 func2, float ColumnWidth = 100.0f)
 	{

@@ -290,6 +290,8 @@ namespace Flame {
 		{
 			if (ImGui::BeginMenu("Options"))
 			{
+
+
 				// Disabling full screen would allow the window to be moved to the front of other windows,
 				// which we can't undo at the moment without finer window depth/z control.
 				if (ImGui::MenuItem("New", "Ctrl+N"))
@@ -309,6 +311,15 @@ namespace Flame {
 				
 			if (ImGui::BeginMenu("Window"))
 			{
+				const float lineSize = 300.0f;
+				const float separatorTextGray = 0.5f;
+				auto SeparatorWithText = [&lineSize, &separatorTextGray](const char* text) {
+					ImGui::TextColored(ImColor(separatorTextGray, separatorTextGray, separatorTextGray, 1.0f), text);
+					ImGui::SameLine();
+					ImGuiWrapper::CenteredSeparator(lineSize - ImGui::CalcTextSize(text).x);
+				};
+				SeparatorWithText("PANEL  ");
+
 				ImGui::MenuItem("Viewport", NULL, &bShowViewport);
 				ImGui::MenuItem("Content Browser", NULL, &bShowContentBrowser);
 				ImGui::MenuItem("Scene Hierachy", NULL, &bShowSceneHierachy);
@@ -316,6 +327,12 @@ namespace Flame {
 				ImGui::MenuItem("Stats", NULL, &bShowStats);
 				ImGui::MenuItem("Engine Settings", NULL, &bShowEngineSettings);
 				ImGui::MenuItem("Environment Settings", NULL, &bShowSceneSettings);
+
+				SeparatorWithText("LOG  ");
+
+				ImGui::MenuItem("Output Log", NULL, &bShowSceneSettings);
+
+				SeparatorWithText("LAYOUT  ");
 
 				if (ImGui::MenuItem("Load Default Layout"))
 				{
