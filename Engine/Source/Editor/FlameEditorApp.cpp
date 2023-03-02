@@ -2,6 +2,7 @@
 
 
 #include "EditorLayer.h"
+#include "Editor/RawRenderTest/RawLayer.h"
 
 
 namespace Flame {
@@ -10,6 +11,7 @@ namespace Flame {
 	{
 		app.Init();
 		app.PushLayer(new EditorLayer());
+		//app.PushLayer(new RawLayer());
 	}
 
 }

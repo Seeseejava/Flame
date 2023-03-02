@@ -34,18 +34,13 @@ namespace Flame
 	PythonScriptSystem::PythonScriptSystem(Scene* scene)
 		: System(scene)
 	{
-		if (std::getenv("PYTHONPATH") && std::getenv("PYTHONHOME"))
-		{
-			bLoadPython = true;
-		}
 	}
 
     void PythonScriptSystem::OnUpdateRuntime(Timestep ts)
     {
-		if (!bLoadPython)
-		{
-			return;
-		}
+#ifndef WITH_PYTHON
+		return;
+#endif
 
 		auto view = m_Scene->m_Registry.view<TransformComponent, PythonScriptComponent>();
 		for (auto e : view)
@@ -78,10 +73,9 @@ namespace Flame
 
 	void PythonScriptSystem::OnUpdateEditor(Timestep ts, EditorCamera& camera)
 	{
-		if (!bLoadPython)
-		{
-			return;
-		}
+#ifndef WITH_PYTHON
+		return;
+#endif
 
 		auto view = m_Scene->m_Registry.view<TransformComponent, PythonScriptComponent>();
 		for (auto e : view)
