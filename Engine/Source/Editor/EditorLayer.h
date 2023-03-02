@@ -4,16 +4,38 @@
 #include "Panels/SceneHierarchyPanel.h"
 #include "Panels/ContentBrowserPanel.h"
 #include "Panels/SceneSettingsPanel.h"
+#include "Log/OutputLog.h"
 
 #include "Runtime/Camera/EditorCamera.h"
 #include "Runtime/Renderer/RenderPass.h"
 
+#include <spdlog/sinks/base_sink.h>
 namespace Flame {
+
 	class EditorLayer : public Layer
 	{
+	private:
+		template<typename Mutex>
+		class my_sink : public spdlog::sinks::base_sink <Mutex>
+		{
+		protected:
+			void sink_it_(const spdlog::details::log_msg& msg) override
+			{
+				spdlog::memory_buf_t formatted;
+				spdlog::sinks::base_sink<Mutex>::formatter_->format(msg, formatted);
+				m_OutputLog.AddLog(fmt::to_string(formatted).c_str());
+			}
+
+			void flush_() override
+			{
+				std::cout << std::flush;
+			}
+		};
 	public:
 		EditorLayer();
 		virtual ~EditorLayer() = default;
+
+		static void EditorLogInit();
 
 		virtual void OnAttach() override;
 		virtual void OnDetach() override;
@@ -86,6 +108,8 @@ namespace Flame {
 		SceneHierarchyPanel m_SceneHierarchyPanel;
 		ContentBrowserPanel m_ContentBrowserPanel;
 		SceneSettingsPanel m_SceneSettingsPanel;
+
+		static OutputLog m_OutputLog;
 
 	};
 }

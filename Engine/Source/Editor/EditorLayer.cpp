@@ -77,6 +77,7 @@ namespace Flame {
 	static bool bShowEngineSettings = true;
 	static bool bShowSceneSettings = true;
 	static bool bShowSRT = true;
+	static bool bShowOutputLog = true;
 
 
 	// Help
@@ -84,10 +85,18 @@ namespace Flame {
 	static bool bShowDemoImGui = false;
 	static bool bShowAboutMe = false;
 
+	OutputLog EditorLayer::m_OutputLog;
 
 	EditorLayer::EditorLayer()
 		:Layer("EditorLayer")
 	{
+	}
+
+	void EditorLayer::EditorLogInit()
+	{
+		using my_sink_st = my_sink<spdlog::details::null_mutex>;
+		Log::GetCoreLogger() = CreateRef<spdlog::logger>("HEngine", CreateRef<my_sink_st>());
+		Log::GetCoreLogger()->set_level(spdlog::level::trace);
 	}
 
 	void EditorLayer::OnAttach()
@@ -330,7 +339,7 @@ namespace Flame {
 
 				SeparatorWithText("LOG  ");
 
-				ImGui::MenuItem("Output Log", NULL, &bShowSceneSettings);
+				ImGui::MenuItem("Output Log", NULL, &bShowOutputLog);
 
 				SeparatorWithText("LAYOUT  ");
 
@@ -503,6 +512,11 @@ namespace Flame {
 			ImGui::Begin("Scene Settings", &bShowSceneSettings);
 
 			ImGui::End();
+		}
+
+		if (bShowOutputLog)
+		{
+			m_OutputLog.OnImGuiRender(&bShowOutputLog);
 		}
 
 		if (bShowViewport)

@@ -16,6 +16,7 @@ endmacro(EDITOR_ADD_SOURCE)
 set(EditorSourceFiles "${CMAKE_CURRENT_SOURCE_DIR}/EditorLayer.h" "${CMAKE_CURRENT_SOURCE_DIR}/EditorLayer.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/FlameEditorApp.cpp")
 
 add_subdirectory(Panels)
+add_subdirectory(Log)
 add_subdirectory(ImGuiWrapper)
 add_subdirectory(IconManager)
 add_subdirectory(RawRenderTest)
@@ -41,6 +42,10 @@ target_compile_definitions(Flame-Editor PRIVATE
 )
 
 set_target_properties(Flame-Editor PROPERTIES FOLDER "Engine")
+
+if(WIN32)
+	set_target_properties(Flame-Editor PROPERTIES LINK_FLAGS "/ENTRY:mainCRTStartup /SUBSYSTEM:WINDOWS")
+endif()
 
 if(MSVC)
 	set_target_properties(

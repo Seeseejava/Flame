@@ -12,8 +12,12 @@ namespace Flame {
 	{
 		spdlog::set_pattern("%^[%T] %n: %v%$"); //Color Time Name Actually_Message
 
-		s_CoreLogger = spdlog::stdout_color_mt("FLAME"); // mt means multi threaded
-		s_CoreLogger->set_level(spdlog::level::trace);
+		if (s_CoreLogger == nullptr)
+		{
+			// may define in Editor
+			s_CoreLogger = spdlog::stdout_color_mt("FLAME");// mt means multi threaded
+			s_CoreLogger->set_level(spdlog::level::trace);
+		}
 
 		s_ClientLogger = spdlog::stdout_color_mt("APP");
 		s_ClientLogger->set_level(spdlog::level::trace);

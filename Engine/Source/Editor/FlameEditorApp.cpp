@@ -9,6 +9,7 @@ namespace Flame {
 
 	void MyAppInitialize(Application& app)
 	{
+		EditorLayer::EditorLogInit();
 		app.Init();
 		app.PushLayer(new EditorLayer());
 		//app.PushLayer(new RawLayer());
