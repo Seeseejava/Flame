@@ -25,6 +25,7 @@ namespace Flame {
 		bool OnKeyPressed(KeyPressedEvent& e);
 		bool OnMouseButtonPressed(MouseButtonPressedEvent& e);
 
+		void UpdateSettings();
 
 		void NewScene();
 		void OpenScene();

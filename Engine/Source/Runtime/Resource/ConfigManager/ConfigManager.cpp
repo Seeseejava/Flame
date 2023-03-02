@@ -8,43 +8,50 @@ namespace Flame
 
 	ConfigManager::ConfigManager()
 	{
-		mRootFolder = { FLAME_XSTRING(ENGINE_ROOT_DIR) };
-		std::string s = mRootFolder.string();
+		m_RootFolder = { FLAME_XSTRING(ENGINE_ROOT_DIR) };
+		std::string s = m_RootFolder.string();
 		std::string s1 = FLAME_STRING(ENGINE_ROOT_DIR);
-		mAssetsFolder = mRootFolder / "Assets";
-		mShadersFolder = mRootFolder / "Shaders";
-		mResourcesFolder = mRootFolder / "Resources";
+		m_AssetsFolder = m_RootFolder / "Assets";
+		m_ConfigFolder = m_RootFolder / "Config";
+		m_ShadersFolder = m_RootFolder / "Shaders";
+		m_ResourcesFolder = m_RootFolder / "Resources";
 	}
 
 	void ConfigManager::Clear()
 	{
-		mRootFolder.clear();
-		mAssetsFolder.clear();
-		mShadersFolder.clear();
-		mResourcesFolder.clear();
+		m_RootFolder.clear();
+		m_AssetsFolder.clear();
+		m_ShadersFolder.clear();
+		m_ResourcesFolder.clear();
 	}
 
 	const std::filesystem::path& ConfigManager::GetRootFolder() const
 	{
-		FLAME_CORE_ASSERT(std::filesystem::exists(mRootFolder), "No such file!");
-		return mRootFolder;
+		FLAME_CORE_ASSERT(std::filesystem::exists(m_RootFolder), "No such file!");
+		return m_RootFolder;
 	}
 
 	const std::filesystem::path& ConfigManager::GetAssetsFolder() const
 	{
-		FLAME_CORE_ASSERT(std::filesystem::exists(mAssetsFolder), "No such file!");
-		return mAssetsFolder;
+		FLAME_CORE_ASSERT(std::filesystem::exists(m_AssetsFolder), "No such file!");
+		return m_AssetsFolder;
+	}
+
+	const std::filesystem::path& ConfigManager::GetConfigFolder() const
+	{
+		FLAME_CORE_ASSERT(std::filesystem::exists(m_ConfigFolder), "No such file!");
+		return m_ConfigFolder;
 	}
 
 	const std::filesystem::path& ConfigManager::GetShadersFolder() const
 	{
-		FLAME_CORE_ASSERT(std::filesystem::exists(mShadersFolder), "No such file!");
-		return mShadersFolder;
+		FLAME_CORE_ASSERT(std::filesystem::exists(m_ShadersFolder), "No such file!");
+		return m_ShadersFolder;
 	}
 
 	const std::filesystem::path& ConfigManager::GetResourcesFolder() const
 	{
-		FLAME_CORE_ASSERT(std::filesystem::exists(mResourcesFolder), "No such file!");
-		return mResourcesFolder;
+		FLAME_CORE_ASSERT(std::filesystem::exists(m_ResourcesFolder), "No such file!");
+		return m_ResourcesFolder;
 	}
 }

@@ -94,6 +94,10 @@ namespace Flame {
 	{
 		FLAME_PROFILE_FUNCTION();
 
+		ImGuiContext& g = *GImGui;
+#define IMGUI_INI_FILE FLAME_XSTRING(ENGINE_ROOT_DIR) "/Config/EditorLayout.ini"
+		g.IO.IniFilename = IMGUI_INI_FILE;
+
 		m_CheckerboardTexture = Texture2D::Create(AssetManager::GetFullPath("Assets/texture/Checkerboard.png"));
 		m_SpriteSheet = Texture2D::Create(AssetManager::GetFullPath("Assets/RPGGame/texture/RPGpack_sheet_2X.png"));
 
@@ -224,6 +228,8 @@ namespace Flame {
 	{
 		FLAME_PROFILE_FUNCTION();
 
+		UpdateSettings();
+
 		static bool bChangeDim = false;
 
 		// ----DockSpace Begin----
@@ -312,7 +318,13 @@ namespace Flame {
 				ImGui::MenuItem("Environment Settings", NULL, &bShowSceneSettings);
 
 				if (ImGui::MenuItem("Load Default Layout"))
+				{
 					LoadDefaultEditorConfig();
+					ImGui::EndMenu();
+					ImGui::EndMenuBar();
+					ImGui::End();
+					return;
+				}
 
 				ImGui::EndMenu();
 			}
@@ -636,6 +648,7 @@ namespace Flame {
 			ImGui::End();
 		}
 		// ----Help End----
+
 		UI_Toolbar();
 
 		ImGui::End();
@@ -651,11 +664,10 @@ namespace Flame {
 
 	void EditorLayer::LoadDefaultEditorConfig()
 	{
-		const std::filesystem::path CurrentEditorConfigPath{ AssetManager::GetFullPath("imgui.ini") };
-		const std::filesystem::path DefaultEditorConfigPath{ AssetManager::GetFullPath("Config/imgui.ini") };
+		const std::filesystem::path DefaultEditorConfigPath{ AssetManager::GetFullPath("Config/EditorLayoutDefault.ini") };
 		FLAME_CORE_ASSERT(std::filesystem::exists(DefaultEditorConfigPath), "No imgui.ini");
-		if (std::filesystem::exists(CurrentEditorConfigPath))
-			std::filesystem::remove(CurrentEditorConfigPath);
+		ImGui::LoadIniSettingsFromDisk(DefaultEditorConfigPath.string().c_str());
+
 
 		// TODO:fix the bug
 		std::filesystem::copy(DefaultEditorConfigPath, std::filesystem::current_path());
@@ -674,12 +686,6 @@ namespace Flame {
 		bShowAboutMe = false;
 		bShowDemoImGui = false;
 
-		// seems imgui docking branch has some bugs with load ini file?
-
-		//auto& io = ImGui::GetIO();
-		//io.IniFilename = DefaultEditorConfigPath.string().c_str();
-		//ImGui::LoadIniSettingsFromDisk(DefaultEditorConfigPath.string().c_str());
-		//ImGui::DockContextRebuildNodes(ImGui::GetCurrentContext());
 	}
 
 	void EditorLayer::UI_Toolbar()
@@ -800,6 +806,33 @@ namespace Flame {
 		return false;
 	}
 
+	void EditorLayer::UpdateSettings()
+	{
+		// from imgui.cpp
+		// Load settings on first frame (if not explicitly loaded manually before)
+		ImGuiContext& g = *GImGui;
+		if (!g.SettingsLoaded)
+		{
+			IM_ASSERT(g.SettingsWindows.empty());
+			if (g.IO.IniFilename)
+				ImGui::LoadIniSettingsFromDisk(g.IO.IniFilename);
+			g.SettingsLoaded = true;
+		}
+
+		// Save settings (with a delay after the last modification, so we don't spam disk too much)
+		if (g.SettingsDirtyTimer > 0.0f)
+		{
+			g.SettingsDirtyTimer -= g.IO.DeltaTime;
+			if (g.SettingsDirtyTimer <= 0.0f)
+			{
+				if (g.IO.IniFilename != NULL)
+					ImGui::SaveIniSettingsToDisk(g.IO.IniFilename);
+				else
+					g.IO.WantSaveIniSettings = true;  // Let user know they can call SaveIniSettingsToMemory(). user will need to clear io.WantSaveIniSettings themselves.
+				g.SettingsDirtyTimer = 0.0f;
+			}
+		}
+	}
 
 	void EditorLayer::NewScene()
 	{

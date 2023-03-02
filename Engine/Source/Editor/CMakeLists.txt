@@ -25,7 +25,7 @@ source_group(TREE ${EngineEditorDir} FILES ${EditorSourceFiles})
 add_executable(Flame-Editor ${EditorSourceFiles})
 
 
-#add_compile_definitions("ENGINE_ROOT_DIR=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}") #预定义
+add_compile_definitions("ENGINE_ROOT_DIR=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}") #预定义
 
 target_link_libraries(Flame-Editor PRIVATE Flame-Runtime)
 
@@ -47,9 +47,3 @@ if(MSVC)
 	Flame-Editor PROPERTIES
 	VS_DEBUGGER_WORKING_DIRECTORY "${EngineEditorDir}")
 endif()
-
-add_custom_command(TARGET Flame-Editor POST_BUILD
-				   COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIG>/"
-                   COMMAND "${CMAKE_COMMAND}" -E copy_if_different "${EngineConfigDir}/imgui.ini" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}"
-                   COMMAND "${CMAKE_COMMAND}" -E copy_if_different "${EngineConfigDir}/imgui.ini" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIG>/"
-)
