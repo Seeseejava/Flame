@@ -40,6 +40,8 @@ target_compile_definitions(Flame-Editor PRIVATE
 	_CRT_SECURE_NO_WARNINGS
 )
 
+set_target_properties(Flame-Editor PROPERTIES FOLDER "Engine")
+
 if(MSVC)
 	set_target_properties(
 	Flame-Editor PROPERTIES

@@ -78,4 +78,6 @@ target_link_libraries(Flame-Runtime
     PUBLIC FMOD::Core FMOD::Fsbank FMOD::Studio
 )
 
+set_target_properties(Flame-Runtime PROPERTIES FOLDER "Engine")
+
 
