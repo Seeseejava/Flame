@@ -397,7 +397,7 @@ namespace Flame {
 			ImGui::SetColumnWidth(0, 100.0f);
 			ImGui::Text("Camera Speed");
 			ImGui::NextColumn();
-			ImGui::SliderFloat("##Camera Speed", &m_EditorCamera.m_CameraSpeed, 0.1f, 5.0f);
+			ImGui::SliderFloat("##Camera Speed", &m_EditorCamera.m_CameraSpeed, 0.1f, 100.0f);
 			ImGui::EndColumns();
 
 			if (ImGuiWrapper::TreeNodeExStyle1((void*)"Physics Settings", "Physics Settings"))

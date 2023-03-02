@@ -126,6 +126,13 @@ namespace Flame {
 
 	bool EditorCamera::OnMouseScroll(MouseScrolledEvent& e)
 	{
+		if (Input::IsMouseButtonPressed(FLAME_MOUSE_BUTTON_RIGHT))
+		{
+			float delta = e.GetYOffset() * 0.1f;
+			m_CameraSpeed += delta;
+			m_CameraSpeed = std::clamp(m_CameraSpeed, 0.1f, 100.0f);
+			return false;
+		}
 		float delta = e.GetYOffset() * 0.1f;
 		MouseZoom(delta);
 		UpdateView();
