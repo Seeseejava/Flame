@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Flame.h"
+#include "Runtime/ECS/Component/ComponentConcept.h"
 
 namespace Flame {
 
@@ -17,7 +18,7 @@ namespace Flame {
 		Entity GetSelectedEntity() const { return m_SelectionContext; }
 		void SetSelectedEntity(Entity entity);
 	private:
-		template <typename componentType>
+		template <Component componentType>
 		void MenuAddComponent(const char* menuName, const char* menuItemName);
 		void DrawEntityNode(Entity entity);
 		void DrawComponents(Entity entity);

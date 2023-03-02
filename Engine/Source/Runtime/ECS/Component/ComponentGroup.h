@@ -1,5 +1,5 @@
 #pragma once
-#include "Runtime/ECS/Component/ComponentBase.h"
+#include "Runtime/ECS/Component/ComponentConcept.h"
 #include "Runtime/ECS/Component/Basic/IDComponent.h"
 #include "Runtime/ECS/Component/Basic/TagComponent.h"
 #include "Runtime/ECS/Component/Camera/CameraComponent.h"
@@ -17,15 +17,11 @@
 #include "Runtime/ECS/Component/Light/DirectionalLightComponent.h"
 #include "Runtime/ECS/Component/Audio/SoundComponent.h"
 
-#include <concepts>
-#include <type_traits>
 
 namespace Flame
 {
 	// Every Component Class should be registered in this file
 
-	template<class T>
-	concept Component = std::is_base_of_v<ComponentBase, T>; //约束必须是ComponentBase的子类
 
 	template<Component... C>
 	struct ComponentGroup
@@ -33,6 +29,7 @@ namespace Flame
 
 	};
 
+	// Component to be copied
 	using AllComponents = ComponentGroup<TransformComponent, CircleRendererComponent, SpriteRendererComponent,
 		CameraComponent, NativeScriptComponent, PythonScriptComponent, Rigidbody2DComponent, BoxCollider2DComponent,
 		CircleCollider2DComponent, Rigidbody3DComponent,

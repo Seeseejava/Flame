@@ -9,5 +9,5 @@ add_subdirectory(Shape)
 add_subdirectory(Transform)
 
 RUNTIME_ADD_SOURCE(
-    ComponentBase.h ComponentGroup.h
+    ComponentBase.h ComponentGroup.h ComponentConcept.h
 )

@@ -271,7 +271,7 @@ namespace Flame {
 		}
 	}
 
-	template <typename componentType>
+	template <Component componentType>
 	void SceneHierarchyPanel::MenuAddComponent(const char* menuName, const char* menuItemName)
 	{
 		if (!m_SelectionContext.HasComponent<componentType>())
