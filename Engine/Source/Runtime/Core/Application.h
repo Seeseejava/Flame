@@ -1,20 +1,14 @@
-#pragma once
 
+#pragma once
 #include "Runtime/Core/Core.h"
-#include "Runtime/Events/Event.h"
 #include "Runtime/Core/Window.h"
 #include "Runtime/Core/LayerStack.h"
-
-#include "Runtime/Events/ApplicationEvent.h"
-
-#include "Runtime/ImGui/ImGuiLayer.h"
-
-
-#include "Runtime/Renderer/OrthographicCamera.h"
-
 #include "Runtime/Core/Timestep.h"
-
 #include "Runtime/Core/PublicSingleton.h"
+#include "Runtime/Events/Event.h"
+#include "Runtime/Events/ApplicationEvent.h"
+#include "Runtime/ImGui/ImGuiLayer.h"
+#include "Runtime/Renderer/OrthographicCamera.h"
 
 int main(int argc, char** argv); //非常重要
 
@@ -45,7 +39,7 @@ namespace Flame {
 		bool OnWindowClose(WindowCloseEvent& e);
 		bool OnWindowResize(WindowResizeEvent& e);
 
-		void Init(const ApplicationProps& props = { "Flame Engine", 1280, 720 });
+		void Init(const ApplicationProps& props = { "Flame Engine", 1920, 1080 });
 		void Run();
 		void Clean();
 	private:

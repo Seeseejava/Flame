@@ -235,12 +235,6 @@ namespace Flame {
 
 			ImGui::PopID();
 		}
-
 		ImGui::Columns(1);
-
-		//ImGui::SliderFloat("Thumbnail Size", &thumbnailSize, 16, 512);
-		//ImGui::SliderFloat("Padding", &padding, 0, 32);
-
 	}
-
 }

@@ -33,7 +33,7 @@ namespace Flame {
 
 	void EditorCamera::UpdateView()
 	{
-		// m_Yaw = m_Pitch = 0.0f; // Lock tFLAME camera's rotation
+		// m_Yaw = m_Pitch = 0.0f; // Lock the camera's rotation
 		m_Position = CalculatePosition();
 
 		glm::quat orientation = GetOrientation();
@@ -115,8 +115,8 @@ namespace Flame {
 			bInit = true;
 		}
 
-		UpdateView();
-	}
+			UpdateView();
+	}	
 
 	void EditorCamera::OnEvent(Event& e)
 	{
@@ -185,7 +185,7 @@ namespace Flame {
 
 	glm::quat EditorCamera::GetOrientation() const
 	{
-		return glm::quat(glm::vec3(-m_Pitch, -m_Yaw, 0.0f));
+		return glm::quat(glm::vec3(-m_Pitch, -m_Yaw, 0.0f));  // ËÄÔªÊý
 	}
 
 }

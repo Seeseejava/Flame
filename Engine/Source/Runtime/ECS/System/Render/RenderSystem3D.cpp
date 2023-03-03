@@ -244,13 +244,13 @@ namespace Flame
 				defaultShader->SetFloat("farPlane", cameraFarPlane);
 				defaultShader->SetInt("cascadeCount", shadowCascadeLevels.size());
 				defaultShader->SetFloat("dirLightIntensity", directionalLight.Intensity);
-
 				for (size_t i = 0; i < shadowCascadeLevels.size(); ++i)
 				{
 					defaultShader->SetFloat("cascadePlaneDistances[" + std::to_string(i) + "]", shadowCascadeLevels[i]);
 				}
-				Renderer3D::lightFBO->UnBindDepthTex3D(8);
-				break; // now we only support one directional light		
+				Renderer3D::lightFBO->BindDepthTex3D(8);
+
+				break; // now we only support one directional light
 			}
 		}
 

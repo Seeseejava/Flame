@@ -86,8 +86,8 @@ namespace Flame {
 		if (ModeManager::b3DMode)
 		{
 			m_Systems.clear();
-			m_Systems.emplace_back(std::make_unique<RenderSystem3D>(this));
-			m_Systems.emplace_back(std::make_unique<PhysicsSystem3D>(this));
+			m_Systems.emplace_back(CreateScope<RenderSystem3D>(this));
+			m_Systems.emplace_back(CreateScope<PhysicsSystem3D>(this));
 			m_Systems.emplace_back(CreateScope<EnvironmentSystem>(this));
 #ifdef WITH_PYTHON
 			m_Systems.emplace_back(CreateScope<PythonScriptSystem>(this));
@@ -97,9 +97,9 @@ namespace Flame {
 		else
 		{
 			m_Systems.clear();
-			m_Systems.emplace_back(std::make_unique<PhysicsSystem2D>(this));
-			m_Systems.emplace_back(std::make_unique<NativeScriptSystem>(this));
-			m_Systems.emplace_back(std::make_unique<RenderSystem2D>(this));
+			m_Systems.emplace_back(CreateScope<PhysicsSystem2D>(this));
+			m_Systems.emplace_back(CreateScope<NativeScriptSystem>(this));
+			m_Systems.emplace_back(CreateScope<RenderSystem2D>(this));
 			m_Systems.emplace_back(CreateScope<EnvironmentSystem>(this));
 		}
 	}
@@ -133,7 +133,7 @@ namespace Flame {
 
 	Ref<Scene> Scene::Copy(Ref<Scene> other)
 	{
-		Ref<Scene> newScene = std::make_shared<Scene>();
+		Ref<Scene> newScene = CreateRef<Scene>();
 
 		auto& srcSceneRegistry = other->m_Registry;
 		auto& dstSceneRegistry = newScene->m_Registry;
@@ -167,21 +167,21 @@ namespace Flame {
 		if (nowDimMode)
 		{
 			m_Systems.clear();
-			m_Systems.emplace_back(std::make_unique<RenderSystem3D>(this));
-			m_Systems.emplace_back(std::make_unique<PhysicsSystem3D>(this));
-			m_Systems.emplace_back(CreateScope<EnvironmentSystem>(this));
-		}
-		else
-		{
-			m_Systems.clear();
-			m_Systems.emplace_back(std::make_unique<PhysicsSystem2D>(this));
-			m_Systems.emplace_back(std::make_unique<NativeScriptSystem>(this));
-			m_Systems.emplace_back(std::make_unique<RenderSystem2D>(this));
+			m_Systems.emplace_back(CreateScope<RenderSystem3D>(this));
+			m_Systems.emplace_back(CreateScope<PhysicsSystem3D>(this));
 			m_Systems.emplace_back(CreateScope<EnvironmentSystem>(this));
 #ifdef WITH_PYTHON
 			m_Systems.emplace_back(CreateScope<PythonScriptSystem>(this));
 #endif
 			m_Systems.emplace_back(CreateScope<AudioScriptSystem>(this));
+		}
+		else
+		{
+			m_Systems.clear();
+			m_Systems.emplace_back(CreateScope<PhysicsSystem2D>(this));
+			m_Systems.emplace_back(CreateScope<NativeScriptSystem>(this));
+			m_Systems.emplace_back(CreateScope<RenderSystem2D>(this));
+			m_Systems.emplace_back(CreateScope<EnvironmentSystem>(this));
 		}
 	}
 
@@ -211,7 +211,6 @@ namespace Flame {
 		{
 			system->OnRuntiemStart();
 		}
-		
 	}
 
 	void Scene::OnRuntimeStop()
@@ -237,19 +236,6 @@ namespace Flame {
 		{
 			system->OnUpdateEditor(ts, camera);
 		}
-
-		//Renderer3D::BeginScene(camera);
-
-		//auto group = m_Registry.group<TransformComponent>(entt::get<StaticMeshComponent>);
-
-		//for (auto entity : group)
-		//{
-		//	auto [transform, mesh] = group.get<TransformComponent, StaticMeshComponent>(entity);
-
-		//	Renderer3D::DrawModel(transform.GetTransform(), camera.GetPosition(), mesh, (int)entity);
-		//}
-
-		//Renderer3D::EndScene();
 	}
 
 	void Scene::OnViewportResize(uint32_t width, uint32_t height)
@@ -331,7 +317,7 @@ namespace Flame {
 	// 在Flame里写了个模板类，然后再在EditorLayer里调用这个模板类，
 	// 但问题在于，目前在引擎内部没有调用到AddComponent代码，导致该模板没有被生成出来，此时EditorLayer调用OnComponentAdded会失败，所以需要手动让该OnComponentAdded可以编译。
 	// 不过正常情况下不需要用到这个功能，正常情况下，模板应该被定义在header文件里
-	// 注意, 这里不是模板特化, 而是让编译器生成这几个特定类型的模板函数而已   ?
+	// 注意, 这里不是模板特化, 而是让编译器生成这几个特定类型的模板函数而已   
 
 	template<>
 	void Scene::OnComponentAdded<Rigidbody2DComponent>(Entity entity, Rigidbody2DComponent& component)

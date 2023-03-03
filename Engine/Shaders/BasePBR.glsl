@@ -99,7 +99,6 @@ uniform vec3 camPos;
 // HDR tonemapping
 uniform float exposure;
 
-
 // Directional light
 uniform vec3 lightDir;
 uniform float dirLightIntensity;
@@ -114,6 +113,7 @@ uniform float farPlane;
 uniform sampler2DArray shadowMap;
 uniform float cascadePlaneDistances[16];
 uniform int cascadeCount;   // number of frusta - 1
+
 // End Shadow
 
 const float F0_NON_METAL = 0.04f;

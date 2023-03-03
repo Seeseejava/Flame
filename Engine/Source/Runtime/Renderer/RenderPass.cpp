@@ -11,7 +11,7 @@ namespace Flame
 		switch (Renderer::GetAPI())
 		{
 		case RendererAPI::API::None:    FLAME_CORE_ASSERT(false, "RendererAPI::None is currently not supported!"); return;
-		case RendererAPI::API::OpenGL:  m_PostProcessings.emplace_back(std::make_unique<OpenGLPostProcessing>(type)); return;
+		case RendererAPI::API::OpenGL:  m_PostProcessings.emplace_back(CreateScope<OpenGLPostProcessing>(type)); return;
 		}
 
 		FLAME_CORE_ASSERT(false, "Unknown RendererAPI!");

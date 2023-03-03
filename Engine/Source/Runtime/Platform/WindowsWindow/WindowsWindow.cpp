@@ -26,8 +26,6 @@ namespace Flame {
 
 	WindowsWindow::WindowsWindow(const WindowProps& props)
 	{
-		FLAME_PROFILE_FUNCTION();
-
 		Init(props);
 	}
 
@@ -40,8 +38,6 @@ namespace Flame {
 
 	void WindowsWindow::Init(const WindowProps& props)
 	{
-		FLAME_PROFILE_FUNCTION();
-
 		m_Data.Title = props.Title;
 		m_Data.Width = props.Width;
 		m_Data.Height = props.Height;
@@ -178,9 +174,7 @@ namespace Flame {
 
 	void WindowsWindow::OnUpdate()
 	{
-		FLAME_PROFILE_FUNCTION();
-
-		glfwPollEvents(); 
+		glfwPollEvents(); // 处理的什么消息？
 		m_Context->SwapBuffers();
 	}
 

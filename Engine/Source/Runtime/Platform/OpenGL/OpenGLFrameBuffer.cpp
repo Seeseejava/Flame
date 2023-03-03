@@ -291,14 +291,11 @@ namespace Flame {
 	{
 		FLAME_CORE_ASSERT(attachmentIndex < m_ColorAttachments.size(), "Index Error");
 
-		// TODO: Remove the intermediate code
-		// First, Copy the framebuffer to the intermediateFBO (must do this if multisample)
 
 		uint32_t width = m_Specification.Width;
 		uint32_t height = m_Specification.Height;
-		//unsigned int intermediateFBO;
-		//glGenFramebuffers(1, &intermediateFBO);
 
+		// Copy the framebuffer to the intermediateFBO (must do this if multisample)
 		static bool bInit = true;
 		static unsigned int intermediateFBO;
 		static unsigned int tempTex;
@@ -309,15 +306,16 @@ namespace Flame {
 			glGenRenderbuffers(1, &tempTex); // 为什么要这样做
 			bInit = false;
 		}
-		glBindFramebuffer(GL_FRAMEBUFFER, intermediateFBO);
 
-		//unsigned int tempTex;
-		//glGenRenderbuffers(1, &tempTex);
+		glBindFramebuffer(GL_FRAMEBUFFER, intermediateFBO);
 		glBindRenderbuffer(GL_RENDERBUFFER, tempTex);
+
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_R32I, width, height);
 		glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + attachmentIndex, GL_RENDERBUFFER, tempTex);
 
+		// 交换帧缓冲内容
 		glBindFramebuffer(GL_FRAMEBUFFER, m_RendererID);
 		glReadBuffer(GL_COLOR_ATTACHMENT0 + attachmentIndex);
 
@@ -337,6 +335,7 @@ namespace Flame {
 		glBindFramebuffer(GL_FRAMEBUFFER, m_RendererID);
 		glReadBuffer(GL_COLOR_ATTACHMENT0);
 
+		// 读取intermediateFBO像素值
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, intermediateFBO);
 		glReadBuffer(GL_COLOR_ATTACHMENT0 + attachmentIndex);
 		int pixelData;
@@ -357,7 +356,6 @@ namespace Flame {
 		{
 			case FramebufferTextureFormat::RED_INTEGER:
 				glClearBufferiv(GL_COLOR, attachmentIndex, &value);
-				//glClearTexImage(m_ColorAttachments[attachmentIndex], 0, GL_RED_INTEGER, GL_INT, &value);
 				break;
 			case FramebufferTextureFormat::RGBA8:
 				glClearTexImage(m_ColorAttachments[attachmentIndex], 0, GL_RGBA8, GL_INT, &value);

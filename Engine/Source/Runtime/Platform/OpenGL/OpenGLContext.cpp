@@ -39,8 +39,6 @@ namespace Flame {
 	}
 	void OpenGLContext::SwapBuffers()
 	{
-		FLAME_PROFILE_FUNCTION();
-
 		glfwSwapBuffers(m_WindowHandle);
 	}
 }

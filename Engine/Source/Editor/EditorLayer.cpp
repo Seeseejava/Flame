@@ -101,55 +101,37 @@ namespace Flame {
 
 	void EditorLayer::OnAttach()
 	{
-		FLAME_PROFILE_FUNCTION();
-
 		ImGuiContext& g = *GImGui;
 #define IMGUI_INI_FILE FLAME_XSTRING(ENGINE_ROOT_DIR) "/Config/EditorLayout.ini"
-		g.IO.IniFilename = IMGUI_INI_FILE;
+		g.IO.IniFilename = IMGUI_INI_FILE;   // imgui.ini所在位置
 
 		m_CheckerboardTexture = Texture2D::Create(AssetManager::GetFullPath("Assets/texture/Checkerboard.png"));
 		m_SpriteSheet = Texture2D::Create(AssetManager::GetFullPath("Assets/RPGGame/texture/RPGpack_sheet_2X.png"));
 
 		FramebufferSpecification fbSpec;
 		fbSpec.Attachments = { FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::RED_INTEGER, FramebufferTextureFormat::DEPTH24STENCIL8 };
-		fbSpec.Width = 1280;
-		fbSpec.Height = 720;
+		fbSpec.Width = 1920;
+		fbSpec.Height = 1080;
 		fbSpec.Samples = 4;
 		m_Framebuffer = Framebuffer::Create(fbSpec);
 
 		RenderPassSpecification rpSpec = { m_Framebuffer, "MainPass" };
-		m_RenderPass = std::make_shared<RenderPass>(rpSpec);
+		m_RenderPass = CreateRef<RenderPass>(rpSpec);
 		m_RenderPass->AddPostProcessing(PostProcessingType::MSAA); //default
 
-
-		m_ActiveScene = std::make_shared<Scene>();
+		m_ActiveScene = CreateRef<Scene>();
 
 		m_EditorCamera = EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
-
-
-		m_MapWidth = s_MapWidth;
-		m_MapHeight = strlen(s_MapTiles) / s_MapWidth;
-		s_TextureMap['D'] = SubTexture2D::CreateFromCoords(m_SpriteSheet, { 6 , 11 }, { 128, 128 });
-		s_TextureMap['W'] = SubTexture2D::CreateFromCoords(m_SpriteSheet, { 11 , 11 }, { 128, 128 });
-		s_TextureMap['S'] = SubTexture2D::CreateFromCoords(m_SpriteSheet, { 1 , 11 }, { 128, 128 });
-
-		m_TextureStair = SubTexture2D::CreateFromCoords(m_SpriteSheet, { 7, 6 }, { 128, 128 });
-		m_TextureGrass = SubTexture2D::CreateFromCoords(m_SpriteSheet, { 2 , 3 }, { 128, 128 });
-		m_TextureTree = SubTexture2D::CreateFromCoords(m_SpriteSheet, { 2 , 1 }, { 128, 128 }, { 1, 2 });
 
 	}
 
 	void EditorLayer::OnDetach()
 	{
-		FLAME_PROFILE_FUNCTION();
-
 	}
 
 
 	void EditorLayer::OnUpdate(Timestep ts)
 	{
-		FLAME_PROFILE_FUNCTION();
-
 		// Resize
 		// 改变Viewport窗口大小，竖直方向的区域会随着缩放，但竖直方向的视野不变；水平方向的区域也会缩放，但水平方向的区域视野也会变化
 		FramebufferSpecification spec = m_Framebuffer->GetSpecification();
@@ -167,12 +149,11 @@ namespace Flame {
 		// Render
 		Renderer2D::ResetStats();
 		{
-			FLAME_PROFILE_SCOPE("Renderer Prep");
 			//清除默认frambuffer
 			Flame::RenderCommand::SetClearColor(glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));// 默认窗口颜色仍为magenta(这一句好像没用）
 			Flame::RenderCommand::Clear();
 			m_Framebuffer->Bind();
-			// clear我的Framebuffer
+			// clear m_Framebuffer
 			RenderCommand::SetClearColor({ 0.4f, 0.4f, 0.4f, 1 });
 			//RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 			RenderCommand::Clear();
@@ -182,16 +163,11 @@ namespace Flame {
 		}
 
 		{
-			FLAME_PROFILE_SCOPE("Renderer Draw");
-
-
 			if (ModeManager::IsEditState())
 			{
-
 				m_EditorCamera.OnUpdate(ts);
 
 				m_ActiveScene->OnUpdateEditor(ts, m_EditorCamera);
-
 			}
 			else
 			{
@@ -208,12 +184,10 @@ namespace Flame {
 
 			if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)viewportSize.x && mouseY < (int)viewportSize.y)
 			{
-				//FLAME_CORE_WARN("{0}, {1}", mouseX, mouseY);
 				int pixelData = m_Framebuffer->ReadPixel(1, mouseX, mouseY);
-				//FLAME_CORE_WARN("Pixel data = {0}", pixelData);
+
 				m_HoveredEntity = pixelData == -1 ? Entity() : Entity((entt::entity)pixelData, m_ActiveScene.get());
 			}
-
 		}
 
 		Entity selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();
@@ -235,7 +209,6 @@ namespace Flame {
 
 	void EditorLayer::OnImGuiRender()
 	{
-		FLAME_PROFILE_FUNCTION();
 
 		UpdateSettings();
 
@@ -299,8 +272,6 @@ namespace Flame {
 		{
 			if (ImGui::BeginMenu("Options"))
 			{
-
-
 				// Disabling full screen would allow the window to be moved to the front of other windows,
 				// which we can't undo at the moment without finer window depth/z control.
 				if (ImGui::MenuItem("New", "Ctrl+N"))
@@ -675,7 +646,7 @@ namespace Flame {
 		if (bShowAboutMe)
 		{
 			ImGui::Begin("About Me", &bShowAboutMe, helpMenuFlags);
-			ImGui::Text("This project is learned from Cherno!");
+			ImGui::Text("This project is learned from Hazel and HEngine!");
 			ImGui::End();
 		}
 		// ----Help End----
@@ -867,7 +838,7 @@ namespace Flame {
 
 	void EditorLayer::NewScene()
 	{
-		m_ActiveScene = std::make_shared<Scene>();
+		m_ActiveScene = CreateRef<Scene>();
 		m_ActiveScene->OnViewportResize((uint32_t)ConfigManager::m_ViewportSize.x, (uint32_t)ConfigManager::m_ViewportSize.y);
 		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
 
@@ -898,7 +869,7 @@ namespace Flame {
 			return;
 		}
 
-		Ref<Scene> newScene = std::make_shared<Scene>();
+		Ref<Scene> newScene = CreateRef<Scene>();
 		newScene->OnViewportResize((uint32_t)ConfigManager::m_ViewportSize.x, (uint32_t)ConfigManager::m_ViewportSize.y); //至关重要，hazelnut里面没有
 		SceneSerializer serializer(newScene);
 		if (serializer.Deserialize(path.string()))
