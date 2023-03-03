@@ -153,7 +153,7 @@ namespace Flame
 				{
 					auto [transform, mesh] = view.get<TransformComponent, MeshComponent>(entity);
 
-					Renderer3D::DrawModel(transform.GetTransform(),cameraPos, mesh, (int)entity);
+					Renderer3D::DrawModel(transform.GetTransform(), cameraPos, mesh, (int)entity);
 				}
 			}
 
