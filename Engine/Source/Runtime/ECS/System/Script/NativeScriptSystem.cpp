@@ -13,7 +13,7 @@ namespace Flame
 		
 		m_Scene->m_Registry.view<NativeScriptComponent>().each([=](auto entity, auto& nsc)  // nsc: native script component
 		{
-			// TODO: Move to Level::OnScenePlay
+			// TODO: Move to Scene::OnScenePlay
 			if (!nsc.Instance)
 			{
 				nsc.Instance = nsc.InstantiateScript();

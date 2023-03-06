@@ -10,12 +10,17 @@ namespace Flame
 {
 	Utils::BulletDrawer PhysicsSystem3D::m_DebugDrawer;
 
-	void PhysicsSystem3D::OnRuntiemStart()
+	void PhysicsSystem3D::OnRuntimeStart()
 	{
+		//Broad-Phase，使用AABB的BVH快速检测碰撞
 		m_Broadphase = new btDbvtBroadphase();
+		//碰撞配置，物理世界存在柔体的话，使用btSoftBodyRigidBodyCollisionConfiguration，不存在则使用btDefaultCollisionConfiguration
 		m_CollisionConfiguration = new btDefaultCollisionConfiguration();
+		//Narrow-Phase，碰撞调度，精确检测碰撞
 		m_Dispatcher = new btCollisionDispatcher(m_CollisionConfiguration);
+		//解算器
 		m_Solver = new btSequentialImpulseConstraintSolver();
+		//创建物理世界，柔体需要使用btSoftRigidDynamicsWorld
 		m_DynamicsWorld = new btDiscreteDynamicsWorld(m_Dispatcher, m_Broadphase, m_Solver, m_CollisionConfiguration);
 		m_DynamicsWorld->setGravity(btVector3(0.0f, -9.8f, 0.0f));
 		//mDynamicsWorld->setForceUpdateAllAabbs(true);
@@ -149,6 +154,7 @@ namespace Flame
 			}
 
 			btDefaultMotionState* motion = new btDefaultMotionState(trans);
+
 			btRigidBody::btRigidBodyConstructionInfo rbInfo(rb3d.mass, motion, shape, inertia);
 			rbInfo.m_linearDamping = rb3d.linearDamping;
 			rbInfo.m_angularDamping = rb3d.angularDamping;
@@ -159,6 +165,10 @@ namespace Flame
 			body->setSleepingThresholds(0.01f, glm::radians(0.1f));
 			body->setActivationState(DISABLE_DEACTIVATION);
 
+			//setCollisionFlags可以设置一些碰撞flag，
+			//Bullet3默认(dynamic)会进行物理计算会调用motionState的get和set刚体Transform，
+			//把flag设置成btCollisionObject::CF_STATIC_OBJECT后，motionState的get和set都不会一直被调用，只在初始化时被调用，
+			//flag设置成btCollisionObject::CF_KINEMATIC_OBJECT，motionState的set的不会被调用，get会被调用。
 			if (rb3d.Type == Rigidbody3DComponent::Body3DType::Static)
 			{
 				body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_STATIC_OBJECT);
@@ -228,8 +238,7 @@ namespace Flame
 		static bool initFlag = true;
 		if (ModeManager::bShowPhysicsColliders)
 		{
-			//if (initFlag)
-				OnRuntiemStart();
+			OnRuntimeStart();
 
 			Renderer2D::BeginScene(camera);
 
@@ -238,13 +247,9 @@ namespace Flame
 
 			Renderer2D::EndScene();
 			OnRuntimeStop();
-			//initFlag = false;
 		}
 		else
 		{
-			/*if (!initFlag)
-				OnRuntimeStop();
-			initFlag = true;*/
 
 		}
 	}

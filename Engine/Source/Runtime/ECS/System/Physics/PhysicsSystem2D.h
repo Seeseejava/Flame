@@ -11,7 +11,7 @@ namespace Flame
 		PhysicsSystem2D(Scene* scene) : System(scene) {}
 		virtual ~PhysicsSystem2D() = default;
 	public:
-		void OnRuntiemStart() override;
+		void OnRuntimeStart() override;
 		void OnUpdateRuntime(Timestep ts) override;
 		void OnRuntimeStop() override;
 		void OnUpdateEditor(Timestep ts, EditorCamera& camera) override;

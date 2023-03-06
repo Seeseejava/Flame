@@ -213,7 +213,7 @@ namespace Flame {
 	{
 		for (auto& system : m_Systems)
 		{
-			system->OnRuntiemStart();
+			system->OnRuntimeStart();
 		}
 	}
 

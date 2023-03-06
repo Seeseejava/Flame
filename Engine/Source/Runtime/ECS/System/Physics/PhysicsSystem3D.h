@@ -57,7 +57,7 @@ namespace Flame
 		PhysicsSystem3D(Scene* Scene) : System(Scene) {}
 		virtual ~PhysicsSystem3D() = default;
     public:
-		void OnRuntiemStart() override;
+		void OnRuntimeStart() override;
 		void OnUpdateRuntime(Timestep ts) override;
 		void OnRuntimeStop() override;
 		void OnUpdateEditor(Timestep ts, EditorCamera& camera) override;

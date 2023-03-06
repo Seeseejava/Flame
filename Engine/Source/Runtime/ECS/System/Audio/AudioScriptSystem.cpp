@@ -12,7 +12,7 @@ namespace Flame
 	{
 	}
 
-	void AudioScriptSystem::OnRuntiemStart()
+	void AudioScriptSystem::OnRuntimeStart()
 	{
 		FMOD::System_Create(&m_FmodSystem);
 		m_FmodSystem->init(32, FMOD_INIT_NORMAL, 0);

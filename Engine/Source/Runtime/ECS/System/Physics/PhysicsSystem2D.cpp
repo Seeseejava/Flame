@@ -20,9 +20,9 @@ namespace Flame
 	{
 		switch (bodyType)
 		{
-		case Flame::Rigidbody2DComponent::BodyType::Static:		return b2_staticBody;
+		case Flame::Rigidbody2DComponent::BodyType::Static:			return b2_staticBody;
 		case Flame::Rigidbody2DComponent::BodyType::Dynamic:		return b2_dynamicBody;
-		case Flame::Rigidbody2DComponent::BodyType::Kinematic:	return b2_kinematicBody;
+		case Flame::Rigidbody2DComponent::BodyType::Kinematic:		return b2_kinematicBody;
 		default:													break;
 		}
 
@@ -30,7 +30,7 @@ namespace Flame
 		return b2_staticBody;
 	}
 
-	void PhysicsSystem2D::OnRuntiemStart()
+	void PhysicsSystem2D::OnRuntimeStart()
 	{
 		m_PhysicsWorld = new b2World({ 0.0f, -9.8f });
 
@@ -114,7 +114,6 @@ namespace Flame
 		{
 			Entity camera = m_Scene->GetPrimaryCameraEntity();
 			Renderer2D::BeginScene(camera.GetComponent<CameraComponent>().Camera, camera.GetComponent<TransformComponent>().GetTransform());
-
 			{
 				auto view = m_Scene->GetAllEntitiesWith<TransformComponent, BoxCollider2DComponent>();
 				for (auto entity : view)

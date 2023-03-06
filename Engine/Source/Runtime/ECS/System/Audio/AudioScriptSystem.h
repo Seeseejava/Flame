@@ -14,12 +14,11 @@ namespace Flame
 		AudioScriptSystem(Scene* scene);
 		virtual ~AudioScriptSystem() = default;
 	public:
-		void OnRuntiemStart() override;
+		void OnRuntimeStart() override;
 		void OnUpdateRuntime(Timestep ts) override;
 		void OnRuntimeStop() override;
 		void OnUpdateEditor(Timestep ts, EditorCamera& camera) override;
 	private:
 		FMOD::System* m_FmodSystem;
-		FMOD_SYSTEM* m_FmodSystem2;
 	};
 }
