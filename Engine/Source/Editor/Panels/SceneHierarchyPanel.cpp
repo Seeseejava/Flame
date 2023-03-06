@@ -496,7 +496,7 @@ namespace Flame {
 					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
 					{
 						auto path = (const wchar_t*)payload->Data;
-						component.Path = (std::filesystem::path("Assets") / path).string();
+						component.Path = (std::filesystem::path("Asset") / path).string();
 						component.m_Mesh = CreateRef<Mesh>(component.Path);
 					}
 					ImGui::EndDragDropTarget();
@@ -506,9 +506,9 @@ namespace Flame {
 				if (ImGui::Button("..."))
 				{
 					std::string filepath = FileDialogs::OpenFile("Model (*.obj *.fbx *.dae *.gltf)\0");
-					if (filepath.find("Assets") != std::string::npos)
+					if (filepath.find("Asset") != std::string::npos)
 					{
-						filepath = filepath.substr(filepath.find("Assets"), filepath.length());
+						filepath = filepath.substr(filepath.find("Asset"), filepath.length());
 					}
 					else
 					{
@@ -541,7 +541,7 @@ namespace Flame {
 								if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
 								{
 									auto path = (const wchar_t*)payload->Data;
-									std::string relativePath = (std::filesystem::path("Assets") / path).string();
+									std::string relativePath = (std::filesystem::path("Asset") / path).string();
 									std::filesystem::path texturePath = ConfigManager::GetInstance().GetAssetsFolder() / path;
 									relativePath = std::regex_replace(relativePath, std::regex("\\\\"), "/");
 									tex = IconManager::GetInstance().LoadOrFindTexture(relativePath);
@@ -848,7 +848,7 @@ namespace Flame {
 					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
 					{
 						auto path = (const wchar_t*)payload->Data;
-						component.Path = (std::filesystem::path("Assets") / path).string();
+						component.Path = (std::filesystem::path("Asset") / path).string();
 					}
 					ImGui::EndDragDropTarget();
 				}
@@ -857,9 +857,9 @@ namespace Flame {
 				if (ImGui::Button("..."))
 				{
 					std::string filepath = FileDialogs::OpenFile("Sound (*.wav *.mp3)\0");
-					if (filepath.find("Assets") != std::string::npos)
+					if (filepath.find("Asset") != std::string::npos)
 					{
-						filepath = filepath.substr(filepath.find("Assets"), filepath.length());
+						filepath = filepath.substr(filepath.find("Asset"), filepath.length());
 					}
 					else
 					{

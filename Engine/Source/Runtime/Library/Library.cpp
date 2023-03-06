@@ -16,29 +16,29 @@ namespace Flame
     template<>
     Library<Mesh>::Library()
     {
-        Add("Box", CreateRef<Mesh>("Assets/Models/Box.obj"));
+        Add("Box", CreateRef<Mesh>("Asset/Model/Box.obj"));
     }
 
     template<>
     Library<CubeMapTexture>::Library()
     {
         std::vector<std::string> Paths{
-            "Assets/texture/Skybox/right.jpg",
-            "Assets/texture/Skybox/left.jpg",
-            "Assets/texture/Skybox/top.jpg",
-            "Assets/texture/Skybox/bottom.jpg",
-            "Assets/texture/Skybox/front.jpg",
-            "Assets/texture/Skybox/back.jpg",
+            "Asset/Texture/Skybox/right.jpg",
+            "Asset/Texture/Skybox/left.jpg",
+            "Asset/Texture/Skybox/top.jpg",
+            "Asset/Texture/Skybox/bottom.jpg",
+            "Asset/Texture/Skybox/front.jpg",
+            "Asset/Texture/Skybox/back.jpg",
         };
         Add("SkyBoxTexture", CubeMapTexture::Create(Paths));
 
 		std::vector<std::string> blackPaths{
-		   "Assets/texture/black.png",
-		   "Assets/texture/black.png",
-		   "Assets/texture/black.png",
-		   "Assets/texture/black.png",
-		   "Assets/texture/black.png",
-		   "Assets/texture/black.png",
+		   "Asset/Texture/black.png",
+		   "Asset/Texture/black.png",
+		   "Asset/Texture/black.png",
+		   "Asset/Texture/black.png",
+		   "Asset/Texture/black.png",
+		   "Asset/Texture/black.png",
 		};
 		Add("BlackCubeMap", CubeMapTexture::Create(blackPaths));
 

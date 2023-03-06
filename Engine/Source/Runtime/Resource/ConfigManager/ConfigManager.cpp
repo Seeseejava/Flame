@@ -11,10 +11,10 @@ namespace Flame
 		m_RootFolder = { FLAME_XSTRING(ENGINE_ROOT_DIR) };
 		std::string s = m_RootFolder.string();
 		std::string s1 = FLAME_STRING(ENGINE_ROOT_DIR);
-		m_AssetsFolder = m_RootFolder / "Assets";
+		m_AssetsFolder = m_RootFolder / "Asset";
 		m_ConfigFolder = m_RootFolder / "Config";
-		m_ShadersFolder = m_RootFolder / "Shaders";
-		m_ResourcesFolder = m_RootFolder / "Resources";
+		m_ShadersFolder = m_RootFolder / "Shader";
+		m_ResourcesFolder = m_RootFolder / "Resource";
 	}
 
 	void ConfigManager::Clear()

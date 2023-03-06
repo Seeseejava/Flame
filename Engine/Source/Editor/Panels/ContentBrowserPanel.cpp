@@ -191,7 +191,7 @@ namespace Flame {
 
 			if (Utils::IsImageFormat(path.string()))
 			{
-				std::string texturePath = "Assets\\" + relativePath.string();
+				std::string texturePath = "Asset\\" + relativePath.string();
 				Ref<Texture2D> img = IconManager::GetInstance().LoadOrFindTexture(texturePath);
 				ImGui::ImageButton((ImTextureID)img->GetRendererID(), { thumbnailSize, thumbnailSize }, { 0, 1 }, { 1, 0 });
 			}

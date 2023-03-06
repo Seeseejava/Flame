@@ -95,7 +95,7 @@ namespace Flame {
 	void EditorLayer::EditorLogInit()
 	{
 		using my_sink_st = my_sink<spdlog::details::null_mutex>;
-		Log::GetCoreLogger() = CreateRef<spdlog::logger>("HEngine", CreateRef<my_sink_st>());
+		Log::GetCoreLogger() = CreateRef<spdlog::logger>("Flame", CreateRef<my_sink_st>());
 		Log::GetCoreLogger()->set_level(spdlog::level::trace);
 	}
 
@@ -105,8 +105,8 @@ namespace Flame {
 #define IMGUI_INI_FILE FLAME_XSTRING(ENGINE_ROOT_DIR) "/Config/EditorLayout.ini"
 		g.IO.IniFilename = IMGUI_INI_FILE;   // imgui.iniÀ˘‘⁄Œª÷√
 
-		m_CheckerboardTexture = Texture2D::Create(AssetManager::GetFullPath("Assets/texture/Checkerboard.png"));
-		m_SpriteSheet = Texture2D::Create(AssetManager::GetFullPath("Assets/RPGGame/texture/RPGpack_sheet_2X.png"));
+		m_CheckerboardTexture = Texture2D::Create(AssetManager::GetFullPath("Asset/Texture/Checkerboard.png"));
+		m_SpriteSheet = Texture2D::Create(AssetManager::GetFullPath("Asset/RPGGame/Texture/RPGpack_sheet_2X.png"));
 
 		FramebufferSpecification fbSpec;
 		fbSpec.Attachments = { FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::RED_INTEGER, FramebufferTextureFormat::DEPTH24STENCIL8 };

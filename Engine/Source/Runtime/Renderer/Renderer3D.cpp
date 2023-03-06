@@ -22,12 +22,12 @@ namespace Flame
 	Ref<Framebuffer> Renderer3D::lightFBO = nullptr;
 
 	std::vector<std::string> m_Paths{
-		"Assets/texture/Skybox/right.jpg",
-		"Assets/texture/Skybox/left.jpg",
-		"Assets/texture/Skybox/top.jpg",
-		"Assets/texture/Skybox/bottom.jpg",
-		"Assets/texture/Skybox/front.jpg",
-		"Assets/texture/Skybox/back.jpg"
+		"Asset/Texture/Skybox/right.jpg",
+		"Asset/Texture/Skybox/left.jpg",
+		"Asset/Texture/Skybox/top.jpg",
+		"Asset/Texture/Skybox/bottom.jpg",
+		"Asset/Texture/Skybox/front.jpg",
+		"Asset/Texture/Skybox/back.jpg"
 	};
 
 

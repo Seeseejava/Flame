@@ -71,7 +71,7 @@ namespace Flame {
 		SetVSync(true);
 
 		GLFWimage images[1];
-		images[0].pixels = stbi_load(AssetManager::GetFullPath("Resources/Icon/Flame2.jpg").string().c_str(), &images[0].width, &images[0].height, 0, 4); //rgba channels 
+		images[0].pixels = stbi_load(AssetManager::GetFullPath("Resource/Icon/Flame2.jpg").string().c_str(), &images[0].width, &images[0].height, 0, 4); //rgba channels 
 		glfwSetWindowIcon(m_Window, 1, images);
 		stbi_image_free(images[0].pixels);
 

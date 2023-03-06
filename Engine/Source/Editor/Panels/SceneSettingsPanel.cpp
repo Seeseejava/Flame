@@ -54,7 +54,7 @@ namespace Flame
 					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
 					{
 						auto path = (const wchar_t*)payload->Data;
-						std::string relativePath = (std::filesystem::path("Assets") / path).string();
+						std::string relativePath = (std::filesystem::path("Asset") / path).string();
 						std::filesystem::path texturePath = ConfigManager::GetInstance().GetAssetsFolder() / path;
 						m_Paths[pathIndex] = texturePath.string();
 						relativePath = std::regex_replace(relativePath, std::regex("\\\\"), "/");
@@ -97,7 +97,7 @@ namespace Flame
 					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
 					{
 						auto path = (const wchar_t*)payload->Data;
-						std::string relativePath = (std::filesystem::path("Assets") / path).string();
+						std::string relativePath = (std::filesystem::path("Asset") / path).string();
 						std::filesystem::path texturePath = ConfigManager::GetInstance().GetAssetsFolder() / path;
 						relativePath = std::regex_replace(relativePath, std::regex("\\\\"), "/");
 						Library<Texture2D>::GetInstance().Set("DefaultHdr", IconManager::GetInstance().LoadOrFindTexture(relativePath));

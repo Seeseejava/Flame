@@ -1,8 +1,8 @@
 set(EngineRootDir "${ProjectRootDir}/Engine")
-set(EngineAssetsDir "${EngineRootDir}/Assets")
+set(EngineAssetsDir "${EngineRootDir}/Asset")
 set(EngineConfigDir "${EngineRootDir}/Config")
-set(EngineResourcesDir "${EngineRootDir}/Resources")
-set(EngineShadersDir "${EngineRootDir}/Shaders")
+set(EngineResourcesDir "${EngineRootDir}/Resource")
+set(EngineShadersDir "${EngineRootDir}/Shader")
 set(EngineSourceDir "${EngineRootDir}/Source")
 
 if (NOT CMAKE_SIZEOF_VOID_P EQUAL 8)

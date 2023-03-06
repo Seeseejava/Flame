@@ -7,11 +7,11 @@ namespace Flame
 {
     Library<Texture2D>::Library()
     {
-        Add("DefaultTexture", Texture2D::Create(std::string("Assets/texture/checkerboard.png")));
-        Add("DefaultNormal", Texture2D::Create(std::string("Assets/texture/DefaultNormal.png")));
-        Add("DefaultMetallicRoughness", Texture2D::Create(std::string("Assets/texture/black.png")));
-        Add("DefaultHdr", Texture2D::Create(std::string("Assets/texture/checkerboard.png")));
-        Add("BRDF_LUT", Texture2D::Create(std::string("Assets/texture/BRDF_LUT.tga")));
+        Add("DefaultTexture", Texture2D::Create(std::string("Asset/Texture/checkerboard.png")));
+        Add("DefaultNormal", Texture2D::Create(std::string("Asset/Texture/DefaultNormal.png")));
+        Add("DefaultMetallicRoughness", Texture2D::Create(std::string("Asset/Texture/black.png")));
+        Add("DefaultHdr", Texture2D::Create(std::string("Asset/Texture/checkerboard.png")));
+        Add("BRDF_LUT", Texture2D::Create(std::string("Asset/Texture/BRDF_LUT.tga")));
 
         Ref<Texture2D> whiteTexture = Texture2D::Create(1, 1);
         uint32_t whiteTextureData = 0xffffffff;

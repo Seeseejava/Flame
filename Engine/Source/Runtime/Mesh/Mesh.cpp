@@ -271,7 +271,7 @@ namespace Flame
 				catch (...)
 				{
 					FLAME_CORE_WARN("Load Texture failed!");
-					texture.texture2d = Texture2D::Create(AssetManager::GetFullPath("Assets/texture/checkerboard.png"));
+					texture.texture2d = Texture2D::Create(AssetManager::GetFullPath("Asset/Texture/checkerboard.png"));
 				}
 
 				switch (type)
