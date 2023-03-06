@@ -18,7 +18,7 @@ Entities:
       Rotation: [0.133393392, -0.0371291824, -1.07175966e-08]
       Scale: [2.09152508, 2.09153152, 2.09153724]
     MeshComponent:
-      Path: Assets\Models\dancing-stormtrooper\source\silly_dancing.fbx
+      Path: Asset\Model\dancing-stormtrooper\source\silly_dancing.fbx
       bUseAlbedoMap: true
       col: [1, 1, 1, 1]
       bUseNormalMap: true

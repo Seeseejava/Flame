@@ -25,7 +25,7 @@ Entities:
       restitution: 1
       friction: 1
     MeshComponent:
-      Path: Assets\Models\Sphere.obj
+      Path: Asset\Model\Sphere.obj
       bUseAlbedoMap: false
       col: [1, 1, 1, 1]
       bUseNormalMap: false
@@ -50,7 +50,7 @@ Entities:
       restitution: 1
       friction: 1
     MeshComponent:
-      Path: Assets//Models//Box.obj
+      Path: Asset//Model//Box.obj
       bUseAlbedoMap: false
       col: [1, 1, 1, 1]
       bUseNormalMap: false
@@ -93,7 +93,7 @@ Entities:
       restitution: 0
       friction: 0.150000006
     MeshComponent:
-      Path: Assets//Models//Box.obj
+      Path: Asset//Model//Box.obj
       bUseAlbedoMap: false
       col: [0, 0.601780295, 0.67181468, 1]
       bUseNormalMap: true
@@ -118,7 +118,7 @@ Entities:
       restitution: 1
       friction: 1
     MeshComponent:
-      Path: Assets//Models//Box.obj
+      Path: Asset//Model//Box.obj
       bUseAlbedoMap: false
       col: [1, 1, 1, 1]
       bUseNormalMap: false
@@ -143,7 +143,7 @@ Entities:
       restitution: 1
       friction: 1
     MeshComponent:
-      Path: Assets\Models\Sphere.obj
+      Path: Asset\Model\Sphere.obj
       bUseAlbedoMap: false
       col: [1, 1, 1, 1]
       bUseNormalMap: false
