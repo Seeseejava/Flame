@@ -18,7 +18,7 @@ layout(location = 0) out vec3 v_TexCoords;
 void main()
 {
 	v_TexCoords = a_Pos;
-	vec4 pos = u_ViewProjection * vec4(a_Pos, 1.0f);
+	vec4 pos = u_ViewProjection * vec4(a_Pos, 1.0f);  // 使得Z值为1
 	gl_Position = pos.xyww;
 }
 

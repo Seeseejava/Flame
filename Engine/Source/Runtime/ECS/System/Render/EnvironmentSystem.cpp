@@ -81,18 +81,18 @@ namespace Flame
 	void EnvironmentSystem::DrawSkyBox(const glm::mat4& ViewMatrix, const glm::mat4& ProjectMatrix)
 	{
 		Ref<UniformBuffer> cameraUniform = Library<UniformBuffer>::GetInstance().GetCameraUniformBuffer();
-		glm::mat4 ViewProjection = ProjectMatrix * glm::mat4(glm::mat3(ViewMatrix));
+		glm::mat4 ViewProjection = ProjectMatrix * glm::mat4(glm::mat3(ViewMatrix)); // 这样平移不会使得天空盒在视角中移动
 		cameraUniform->SetData(&ViewProjection, sizeof(ViewProjection));
 
 		RenderCommand::Cull(0);
 
-		RenderCommand::DepthFunc(DepthComp::LEQUAL);
-
-		Library<Shader>::GetInstance().GetSkyBoxShader()->Bind();
-		Library<CubeMapTexture>::GetInstance().Get("SkyBoxTexture")->Bind(0);
-		Library<Shader>::GetInstance().GetSkyBoxShader()->SetInt("SkyBox", 0);
-		Library<Mesh>::GetInstance().Get("Box")->Draw();
-
+		RenderCommand::DepthFunc(DepthComp::LEQUAL); // 深度缓冲将会填充上天空盒的1.0值
+		{
+			Library<Shader>::GetInstance().GetSkyBoxShader()->Bind();
+			Library<CubeMapTexture>::GetInstance().Get("SkyBoxTexture")->Bind(0);
+			Library<Shader>::GetInstance().GetSkyBoxShader()->SetInt("SkyBox", 0);
+			Library<Mesh>::GetInstance().Get("Box")->Draw();
+		}
 		RenderCommand::DepthFunc(DepthComp::LESS);
 	}
 
@@ -142,7 +142,7 @@ namespace Flame
 			glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
 			glBindRenderbuffer(GL_RENDERBUFFER, captureRBO);
 			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 512, 512);
-			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, captureRBO);
+			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, captureRBO);   // 将渲染缓冲区作为颜色缓冲区附加到fbo 
 
 			hdrTex->Bind();
 			glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
@@ -157,16 +157,12 @@ namespace Flame
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 			// End temp
 
-
-
 			envCubemap->Bind(0);
 			envCubemap->GenerateMipmap();
 
 			// irradiance map
 			Ref<CubeMapTexture> irradianceMap = Library<CubeMapTexture>::GetInstance().Get("EnvironmentIrradiance");
 			Ref<Shader> irradianceShader = Library<Shader>::GetInstance().Get("IBL_irradiance");
-
-
 
 			//Temp
 			// pbr: create an irradiance cubemap, and re-scale capture FBO to irradiance scale.
@@ -258,15 +254,15 @@ namespace Flame
 		RenderCommand::SetViewport(0, 0, ConfigManager::m_ViewportSize.x, ConfigManager::m_ViewportSize.y);
 
 		RenderCommand::DepthFunc(DepthComp::LEQUAL);
+		{
+			Ref<Shader> backgroundShader = Library<Shader>::GetInstance().Get("IBL_background");
+			backgroundShader->Bind();
 
-
-		Ref<Shader> backgroundShader = Library<Shader>::GetInstance().Get("IBL_background");
-		backgroundShader->Bind();
-
-		backgroundShader->SetInt("environmentMap", 0);
-		backgroundShader->SetFloat("SkyBoxLod", environmentSettings.SkyBoxLod);
-		backgroundShader->SetFloat("exposure", environmentSettings.exposure);
-		Library<Mesh>::GetInstance().Get("Box")->Draw();
+			backgroundShader->SetInt("environmentMap", 0);
+			backgroundShader->SetFloat("SkyBoxLod", environmentSettings.SkyBoxLod);
+			backgroundShader->SetFloat("exposure", environmentSettings.exposure);
+			Library<Mesh>::GetInstance().Get("Box")->Draw();
+		}
 		RenderCommand::DepthFunc(DepthComp::LESS);
 	}
 }

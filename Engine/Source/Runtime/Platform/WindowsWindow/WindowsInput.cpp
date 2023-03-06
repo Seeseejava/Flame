@@ -51,7 +51,7 @@ namespace Flame {
 	{
 		auto v = GetMousePosition();
 
-		return std::get<0>(v);//C++14
+		return std::get<1>(v);//C++14
 	}
 
 	

@@ -20,7 +20,7 @@ namespace Flame
     {
     public:
         Library();
-        [[nodiscard]] Ref<UniformBuffer> GetCameraUniformBuffer();
+        Ref<UniformBuffer> GetCameraUniformBuffer();
     };
 
 }
