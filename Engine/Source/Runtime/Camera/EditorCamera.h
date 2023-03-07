@@ -72,7 +72,7 @@ namespace Flame {
 		float m_Distance = 10.0f; // 这个比较重要，不然不能在添加sprite后里面能够看到
 		float m_Pitch = 0.0f, m_Yaw = 0.0f;
 
-		float m_ViewportWidth = 1280, m_ViewportHeight = 720;
+		float m_ViewportWidth = 1920, m_ViewportHeight = 1080;
 
 		bool bInit = true;
 	};
