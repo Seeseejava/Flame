@@ -102,6 +102,9 @@
     <ClInclude Include="src\Flame\Core\Timestep.h">
       <Filter>src\Flame\Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\Flame\Core\UUID.h">
+      <Filter>src\Flame\Core</Filter>
+    </ClInclude>
     <ClInclude Include="src\Flame\Core\Window.h">
       <Filter>src\Flame\Core</Filter>
     </ClInclude>
@@ -1470,9 +1473,6 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
-    <ClInclude Include="src\Flame\Core\UUID.h">
-      <Filter>src\Flame\Core</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Flame\Core\Application.cpp">
@@ -1485,6 +1485,9 @@
       <Filter>src\Flame\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Flame\Core\Log.cpp">
+      <Filter>src\Flame\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Flame\Core\UUID.cpp">
       <Filter>src\Flame\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Flame\ImGui\ImGuiBuild.cpp">
@@ -1585,9 +1588,6 @@
     </ClCompile>
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Flame\Core\UUID.cpp">
-      <Filter>src\Flame\Core</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

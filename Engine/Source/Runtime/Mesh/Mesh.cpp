@@ -40,7 +40,7 @@ namespace Flame
 
 	void Mesh::LoadModel(const std::string& path)
 	{
-		m_Material.resize(200);
+		m_Material.resize(20000);
 
 		Assimp::Importer importer;
 
