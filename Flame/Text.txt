@@ -1,2 +1,0 @@
- what I learned now is that the Libraries should be set to /MD or /MDd (debug) and Sandbox to /MT or /MTd (debug). 
- I don't think premake does this well but it could be my setup file is wrong :) I keep changing it manually.
