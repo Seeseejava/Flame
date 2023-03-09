@@ -2,14 +2,15 @@
 #include <Flame/Core/EntryPoint.h>
 
 #include "EditorLayer.h"
+#include "EditorLayer3D.h"
 
 namespace Flame {
 
 	class FlameEditor : public Application
 	{
 	public:
-		FlameEditor()
-			: Application("Flame Editor")
+		FlameEditor(const ApplicationProps& props)
+			: Application(props)
 		{
 			PushLayer(new EditorLayer());
 		}
@@ -21,7 +22,7 @@ namespace Flame {
 
 	Application* CreateApplication()
 	{
-		return new FlameEditor();
+		return new FlameEditor({ "Flame Editor", 1600, 900 });
 	}
 
 }

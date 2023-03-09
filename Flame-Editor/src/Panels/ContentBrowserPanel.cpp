@@ -15,9 +15,15 @@ namespace Flame {
 		m_FileIcon = Texture2D::Create("Resources/ContentBrowser/FileIcon.png");
 	}
 
-	void ContentBrowserPanel::OnImGuiRender()
+	void ContentBrowserPanel::OnImGuiRender(bool* pOpen)
 	{
-		ImGui::Begin("Content Browser");
+
+		// from imgui_demo.cpp: ShowAboutWindow function, should we add flag ImGuiWindowFlags_AlwaysAutoResize?
+		if (!ImGui::Begin("Content Browser", pOpen))
+		{
+			ImGui::End();
+			return;
+		}
 
 		if (m_CurrentDirectory != std::filesystem::path(g_AssetPath))
 		{

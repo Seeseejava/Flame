@@ -1,0 +1,37 @@
+#pragma once
+#include "Runtime/ECS/Component/ComponentConcept.h"
+#include "Runtime/ECS/Component/Basic/IDComponent.h"
+#include "Runtime/ECS/Component/Basic/TagComponent.h"
+#include "Runtime/ECS/Component/Camera/CameraComponent.h"
+#include "Runtime/ECS/Component/Physics/2D/BoxCollider2DComponent.h"
+#include "Runtime/ECS/Component/Physics/2D/CircleCollider2DComponent.h"
+#include "Runtime/ECS/Component/Physics/2D/Rigidbody2DComponent.h"
+#include "Runtime/ECS/Component/Physics/3D/Rigidbody3DComponent.h"
+#include "Runtime/ECS/Component/Script/NativeScriptComponent.h"
+#include "Runtime/ECS/Component/Script/PythonScriptComponent.h"
+#include "Runtime/ECS/Component/Shape/CircleRendererComponent.h"
+#include "Runtime/ECS/Component/Shape/SpriteRendererComponent.h"
+#include "Runtime/ECS/Component/Transform/TransformComponent.h" 
+#include "Runtime/ECS/Component/Mesh/MeshComponent.h"
+#include "Runtime/ECS/Component/Light/PointLightComponent.h"
+#include "Runtime/ECS/Component/Light/DirectionalLightComponent.h"
+#include "Runtime/ECS/Component/Audio/SoundComponent.h"
+
+
+namespace Flame
+{
+	// Every Component Class should be registered in this file
+
+
+	template<Component... C>
+	struct ComponentGroup
+	{
+
+	};
+
+	// Component to be copied
+	using AllComponents = ComponentGroup<TransformComponent, CircleRendererComponent, SpriteRendererComponent,
+		CameraComponent, NativeScriptComponent, PythonScriptComponent, Rigidbody2DComponent, BoxCollider2DComponent,
+		CircleCollider2DComponent, Rigidbody3DComponent,
+		MeshComponent, PointLightComponent, DirectionalLightComponent, SoundComponent>;
+}

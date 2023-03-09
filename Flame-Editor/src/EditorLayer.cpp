@@ -1,5 +1,6 @@
 #include "EditorLayer.h"
 #include "imgui/imgui.h"
+#include <imgui/imgui_internal.h>
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -29,7 +30,15 @@ namespace Flame {
 		"DDWWWWWWWWWWWWWW"
 	};
 
+
 	extern const std::filesystem::path g_AssetPath;
+
+	static bool bShowViewport = true;
+	static bool bShowContentBrowser = true;
+	static bool bShowSceneHierachy = true;
+	static bool bShowProperties = true;
+	static bool bShowStats = true;
+	static bool bShowSettings = true;
 
 	EditorLayer::EditorLayer()
 		:Layer("EditorLayer"), m_CameraController(1280.f / 720.f, true)
@@ -223,6 +232,9 @@ namespace Flame {
 
 		//m_ParticleSystem.OnUpdate(ts);
 		//m_ParticleSystem.OnRender(m_CameraController.GetCamera()); //目前粒子系统的鼠标位置有问题
+
+		OnOverlayRender();
+
 		m_Framebuffer->Unbind(); 
 
 	}
@@ -230,7 +242,7 @@ namespace Flame {
 	void EditorLayer::OnImGuiRender()
 	{
 		FLAME_PROFILE_FUNCTION();
-
+		// ----DockSpace Begin----
 		static bool docspaceOpen = true;//?
 		static bool opt_fullscreen = true;
 		static bool opt_padding = false;
@@ -283,6 +295,7 @@ namespace Flame {
 
 		style.WindowMinSize.x = minWinSizeX;
 
+		// ----MenuBar Begin----
 		if (ImGui::BeginMenuBar())
 		{
 			if (ImGui::BeginMenu("Options"))
@@ -303,127 +316,188 @@ namespace Flame {
 
 				ImGui::EndMenu();
 			}
+				
+			if (ImGui::BeginMenu("Window"))
+			{
+				ImGui::MenuItem("Viewport", NULL, &bShowViewport);
+				ImGui::MenuItem("Content Browser", NULL, &bShowContentBrowser);
+				ImGui::MenuItem("Scene Hierachy", NULL, &bShowSceneHierachy);
+				ImGui::MenuItem("Properties", NULL, &bShowProperties);
+				ImGui::MenuItem("Stats", NULL, &bShowStats);
+				ImGui::MenuItem("Settings", NULL, &bShowSettings);
+
+				if (ImGui::MenuItem("Load Default Layout"))
+					LoadDefaultEditorConfig();
+
+				ImGui::EndMenu();
+			}
 			ImGui::EndMenuBar();
 		}
+		// ----MenuBar End----
 
-		m_SceneHierarchyPanel.OnImGuiRender();
-		m_ContentBrowserPanel.OnImGuiRender();
-
-		ImGui::Begin("Stats");
-
-		std::string name = "None";
-		if (m_HoveredEntity)
-			name = m_HoveredEntity.GetComponent<TagComponent>().Tag;
-		ImGui::Text("Hovered Entity: %s", name.c_str());
-
-		auto stats = Renderer2D::GetStats();
-		ImGui::Text("Renderer2D Stats:");
-		ImGui::Text("Draw Calls: %d", stats.DrawCalls);
-		ImGui::Text("Quads: %d", stats.QuadCount);
-		ImGui::Text("Vertices: %d", stats.GetTotalVertexCount());
-		ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
-
-		ImGui::End();
-
-		//设置窗口的padding为0是图片控件充满窗口
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
-		ImGui::Begin("Viewport");
-
-		auto viewportOffset = ImGui::GetCursorPos(); // Includes tab bar (获得viewport有无bar后显示区域的坐标）：无bar（0，0），有bar(0.24) //注意于与ImGui::GetMousePos()的区别
-
-		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();// viewport显示区域大小，不包括tab bar
-		m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y }; // 没有这句viewport会是黑的 -> 说明图片大小必须和viewport大小相同才不会是黑的
-
-		m_ViewportFocused = ImGui::IsWindowFocused();
-		m_ViewportHovered = ImGui::IsWindowHovered();
-		//Application::Get().GetImGuiLayer()->BlockEvents(!m_ViewportFocused || !m_ViewportHovered);
-		Application::Get().GetImGuiLayer()->BlockEvents(!m_ViewportFocused && !m_ViewportHovered);
-
-		// This solution will render the 'old' sized framebuffer onto the 'new' sized ImGuiPanel and store the 'new' size in m_ViewportSize.
-		// The next frame will first resize the framebuffer as m_ViewportSize differs from m_Framebuffer.Width / Height before updating and rendering.
-		// This results in never rendering an empty(black) framebuffer.
-
-		uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID(0); // 按索引显示哪一个colorbuffer
-		ImGui::Image((void*)textureID, ImVec2{ m_ViewportSize.x, m_ViewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
-
-		auto windowSize = ImGui::GetWindowSize(); // 整个viewport大小，包括tab bar
-		ImVec2 minBound = ImGui::GetWindowPos(); // 整个viewport相对于屏幕左上角的位置
-		//FLAME_CORE_WARN("{0}, {1}", viewportPanelSize.x, viewportPanelSize.y);
-		//FLAME_CORE_WARN("{0}, {1}", windowSize.x, windowSize.y);
-		//FLAME_CORE_WARN("{0}, {1}", minBound.x, minBound.y);
-		minBound.x += viewportOffset.x;
-		minBound.y += viewportOffset.y;// 绘制区域在屏幕上的坐标
-
-		ImVec2 maxBound = { minBound.x + m_ViewportSize.x, minBound.y + m_ViewportSize.y };
-		m_ViewportBounds[0] = { minBound.x, minBound.y };
-		m_ViewportBounds[1] = { maxBound.x, maxBound.y };
-
-		if (ImGui::BeginDragDropTarget())
+		// ----Windows Begin----
+		if (bShowContentBrowser)
 		{
-			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
-			{
-				const wchar_t* path = (const wchar_t*)payload->Data;
-				OpenScene(std::filesystem::path(g_AssetPath) / path);
-			}
-			ImGui::EndDragDropTarget();
+			m_ContentBrowserPanel.OnImGuiRender(&bShowContentBrowser);
+		}
+		if (bShowSceneHierachy || bShowProperties)
+		{
+			m_SceneHierarchyPanel.OnImGuiRender(&bShowSceneHierachy, &bShowProperties);
 		}
 
-		// Gizmos
-		Entity selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();
-		if (selectedEntity && m_GizmoType != -1)
+		if (bShowStats)
 		{
-			ImGuizmo::SetOrthographic(false);
-			ImGuizmo::SetDrawlist();
+			ImGui::Begin("Stats", &bShowStats);
 
-			float windowWidth = (float)ImGui::GetWindowWidth();
-			float windowHeight = (float)ImGui::GetWindowHeight();
-			ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
+			std::string name = "None";
+			if (m_HoveredEntity)
+				name = m_HoveredEntity.GetComponent<TagComponent>().Tag;
+			ImGui::Text("Hovered Entity: %s", name.c_str());
 
-			// Runtime camera from entity
-			/*auto cameraEntity = m_ActiveScene->GetPrimaryCameraEntity();
-			const auto& camera = cameraEntity.GetComponent<CameraComponent>().Camera;
-			const glm::mat4& cameraProjection = camera.GetProjection();
-			glm::mat4 cameraView = glm::inverse(cameraEntity.GetComponent<TransformComponent>().GetTransform());*/
+			auto stats = Renderer2D::GetStats();
+			ImGui::Text("Renderer2D Stats:");
+			ImGui::Text("Draw Calls: %d", stats.DrawCalls);
+			ImGui::Text("Quads: %d", stats.QuadCount);
+			ImGui::Text("Vertices: %d", stats.GetTotalVertexCount());
+			ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
 
-			// Editor camera
-			const glm::mat4& cameraProjection = m_EditorCamera.GetProjection();
-			glm::mat4 cameraView = m_EditorCamera.GetViewMatrix();
-
-			// Entity transform
-			auto& tc = selectedEntity.GetComponent<TransformComponent>();
-			glm::mat4 transform = tc.GetTransform();
-
-			// Snapping
-			bool snap = Input::IsKeyPressed(FLAME_KEY_LEFT_CONTROL);
-			float snapValue = 0.5f; // Snap to 0.5m for translation/scale
-			// Snap to 45 degrees for rotation
-			if (m_GizmoType == ImGuizmo::OPERATION::ROTATE)
-				snapValue = 45.0f;
-
-			float snapValues[3] = { snapValue, snapValue, snapValue };
-
-			ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection),
-				(ImGuizmo::OPERATION)m_GizmoType, ImGuizmo::LOCAL, glm::value_ptr(transform),
-				nullptr, snap ? snapValues : nullptr);
-
-			if (ImGuizmo::IsUsing())
-			{
-				glm::vec3 translation, rotation, scale;
-				Math::DecomposeTransform(transform, translation, rotation, scale);
-
-				glm::vec3 deltaRotation = rotation - tc.Rotation;
-				tc.Translation = translation;
-				tc.Rotation += deltaRotation;
-				tc.Scale = scale;
-			}
+			ImGui::End();
 		}
 
-		ImGui::End();
-		ImGui::PopStyleVar();
+		if (bShowSettings)
+		{
+			ImGui::Begin("Settings");
+			ImGui::Checkbox("Show physics colliders", &m_ShowPhysicsColliders);
+			ImGui::End();
+		}
 
+		if (bShowViewport)
+		{
+			//设置窗口的padding为0是图片控件充满窗口
+			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
+			ImGui::Begin("Viewport");
+
+			auto viewportOffset = ImGui::GetCursorPos(); // Includes tab bar (获得viewport有无bar后显示区域的坐标）：无bar（0，0），有bar(0.24) //注意于与ImGui::GetMousePos()的区别
+
+			ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();// viewport显示区域大小，不包括tab bar
+			m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y }; // 没有这句viewport会是黑的 -> 说明图片大小必须和viewport大小相同才不会是黑的
+
+			m_ViewportFocused = ImGui::IsWindowFocused();
+			m_ViewportHovered = ImGui::IsWindowHovered();
+			//Application::Get().GetImGuiLayer()->BlockEvents(!m_ViewportFocused || !m_ViewportHovered);
+			Application::Get().GetImGuiLayer()->BlockEvents(!m_ViewportFocused && !m_ViewportHovered);
+
+			// This solution will render the 'old' sized framebuffer onto the 'new' sized ImGuiPanel and store the 'new' size in m_ViewportSize.
+			// The next frame will first resize the framebuffer as m_ViewportSize differs from m_Framebuffer.Width / Height before updating and rendering.
+			// This results in never rendering an empty(black) framebuffer.
+
+			uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID(0); // 按索引显示哪一个colorbuffer
+			ImGui::Image((void*)textureID, ImVec2{ m_ViewportSize.x, m_ViewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+
+			auto windowSize = ImGui::GetWindowSize(); // 整个viewport大小，包括tab bar
+			ImVec2 minBound = ImGui::GetWindowPos(); // 整个viewport相对于屏幕左上角的位置
+			//FLAME_CORE_WARN("{0}, {1}", viewportPanelSize.x, viewportPanelSize.y);
+			//FLAME_CORE_WARN("{0}, {1}", windowSize.x, windowSize.y);
+			//FLAME_CORE_WARN("{0}, {1}", minBound.x, minBound.y);
+			minBound.x += viewportOffset.x;
+			minBound.y += viewportOffset.y;// 绘制区域在屏幕上的坐标
+
+			ImVec2 maxBound = { minBound.x + m_ViewportSize.x, minBound.y + m_ViewportSize.y };
+			m_ViewportBounds[0] = { minBound.x, minBound.y };
+			m_ViewportBounds[1] = { maxBound.x, maxBound.y };
+
+			if (ImGui::BeginDragDropTarget())
+			{
+				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+				{
+					const wchar_t* path = (const wchar_t*)payload->Data;
+					OpenScene(std::filesystem::path(g_AssetPath) / path);
+				}
+				ImGui::EndDragDropTarget();
+			}
+
+			// Gizmos
+			Entity selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();
+			if (selectedEntity && m_GizmoType != -1)
+			{
+				ImGuizmo::SetOrthographic(false);
+				ImGuizmo::SetDrawlist();
+
+				float windowWidth = (float)ImGui::GetWindowWidth();
+				float windowHeight = (float)ImGui::GetWindowHeight();
+				ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
+
+				// Runtime camera from entity
+				/*auto cameraEntity = m_ActiveScene->GetPrimaryCameraEntity();
+				const auto& camera = cameraEntity.GetComponent<CameraComponent>().Camera;
+				const glm::mat4& cameraProjection = camera.GetProjection();
+				glm::mat4 cameraView = glm::inverse(cameraEntity.GetComponent<TransformComponent>().GetTransform());*/
+
+				// Editor camera
+				const glm::mat4& cameraProjection = m_EditorCamera.GetProjection();
+				glm::mat4 cameraView = m_EditorCamera.GetViewMatrix();
+
+				// Entity transform
+				auto& tc = selectedEntity.GetComponent<TransformComponent>();
+				glm::mat4 transform = tc.GetTransform();
+
+				// Snapping
+				bool snap = Input::IsKeyPressed(FLAME_KEY_LEFT_CONTROL);
+				float snapValue = 0.5f; // Snap to 0.5m for translation/scale
+				// Snap to 45 degrees for rotation
+				if (m_GizmoType == ImGuizmo::OPERATION::ROTATE)
+					snapValue = 45.0f;
+
+				float snapValues[3] = { snapValue, snapValue, snapValue };
+
+				ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection),
+					(ImGuizmo::OPERATION)m_GizmoType, ImGuizmo::LOCAL, glm::value_ptr(transform),
+					nullptr, snap ? snapValues : nullptr);
+
+				if (ImGuizmo::IsUsing())
+				{
+					glm::vec3 translation, rotation, scale;
+					Math::DecomposeTransform(transform, translation, rotation, scale);
+
+					glm::vec3 deltaRotation = rotation - tc.Rotation;
+					tc.Translation = translation;
+					tc.Rotation += deltaRotation;
+					tc.Scale = scale;
+				}
+			}
+
+			ImGui::End();
+			ImGui::PopStyleVar();
+		}
+		// ----Windows End----
 		UI_Toolbar();
 
 		ImGui::End();
+		// ----DockSpace End----
+	}
+
+	void EditorLayer::LoadDefaultEditorConfig()
+	{
+		const std::filesystem::path CurrentEditorConfigPath{ "imgui.ini" };
+		const std::filesystem::path DefaultEditorConfigPath{ "assets/config/imgui.ini" };
+		FLAME_CORE_ASSERT(std::filesystem::exists(DefaultEditorConfigPath), "No imgui.ini");
+		if (std::filesystem::exists(CurrentEditorConfigPath))
+			std::filesystem::remove(CurrentEditorConfigPath);
+		std::filesystem::copy(DefaultEditorConfigPath, std::filesystem::current_path());
+
+		bShowViewport = true;
+		bShowContentBrowser = true;
+		bShowSceneHierachy = true;
+		bShowProperties = true;
+		bShowStats = true;
+		bShowSettings = true;
+
+		// seems imgui docking branch has some bugs with load ini file?
+
+		//auto& io = ImGui::GetIO();
+		//io.IniFilename = DefaultEditorConfigPath.string().c_str();
+		//ImGui::LoadIniSettingsFromDisk(DefaultEditorConfigPath.string().c_str());
+		//ImGui::DockContextRebuildNodes(ImGui::GetCurrentContext());
 	}
 
 	void EditorLayer::UI_Toolbar()
@@ -524,6 +598,61 @@ namespace Flame {
 				m_GizmoType = ImGuizmo::OPERATION::SCALE;
 				break;
 		}		
+	}
+
+	void EditorLayer::OnOverlayRender()
+	{
+		if (m_SceneState == SceneState::Play)
+		{
+			Entity camera = m_ActiveScene->GetPrimaryCameraEntity();
+			Renderer2D::BeginScene(camera.GetComponent<CameraComponent>().Camera, camera.GetComponent<TransformComponent>().GetTransform());
+		}
+		else
+		{
+			Renderer2D::BeginScene(m_EditorCamera);
+		}
+
+		if (m_ShowPhysicsColliders)
+		{
+			{
+				auto view = m_ActiveScene->GetAllEntitiesWith<TransformComponent, BoxCollider2DComponent>();
+				for (auto entity : view)
+				{
+					auto [tc, bc2d] = view.get<TransformComponent, BoxCollider2DComponent>(entity);
+
+					glm::vec3 translation = tc.Translation + glm::vec3(bc2d.Offset, 0.001f);
+					glm::vec3 scale = tc.Scale * glm::vec3(bc2d.Size * 2.0f, 1.0f);
+
+					glm::mat4 transform = glm::translate(glm::mat4(1.0f), translation)
+						* glm::rotate(glm::mat4(1.0f), tc.Rotation.z, glm::vec3(0.0f, 0.0f, 1.0f))
+						* glm::scale(glm::mat4(1.0f), scale);
+
+					//glm::mat4 transform = glm::translate(tc.GetTransform(), glm::vec3(0, 0, 0.01f));
+
+					Renderer2D::DrawRect(transform, glm::vec4(0, 1, 0, 1));
+				}
+			}
+
+			{
+				auto view = m_ActiveScene->GetAllEntitiesWith<TransformComponent, CircleCollider2DComponent>();
+				for (auto entity : view)
+				{
+					auto [tc, cc2d] = view.get<TransformComponent, CircleCollider2DComponent>(entity);
+
+					glm::vec3 translation = tc.Translation + glm::vec3(cc2d.Offset, 0.001f);
+					glm::vec3 scale = tc.Scale * glm::vec3(cc2d.Radius * 2.0f);
+
+					glm::mat4 transform = glm::translate(glm::mat4(1.0f), translation)
+						* glm::scale(glm::mat4(1.0f), scale);
+
+					//glm::mat4 transform = glm::translate(tc.GetTransform(), glm::vec3(0, 0, 0.01f));
+
+					Renderer2D::DrawCircle(transform, glm::vec4(0, 1, 0, 1), 0.05f);
+				}
+			}
+
+			Renderer2D::EndScene();
+		}
 	}
 
 	bool EditorLayer::OnMouseButtonPressed(MouseButtonPressedEvent& e)

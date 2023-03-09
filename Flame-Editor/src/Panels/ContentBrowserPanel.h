@@ -11,7 +11,7 @@ namespace Flame {
 	public:
 		ContentBrowserPanel();
 
-		void OnImGuiRender();
+		void OnImGuiRender(bool* pOpen);
 	private:
 		std::filesystem::path m_CurrentDirectory;
 

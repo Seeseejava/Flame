@@ -151,6 +151,7 @@
     <ClInclude Include="src\Flame\Core\Log.h" />
     <ClInclude Include="src\Flame\Core\MouseButtonCodes.h" />
     <ClInclude Include="src\Flame\Core\Timestep.h" />
+    <ClInclude Include="src\Flame\Core\UUID.h" />
     <ClInclude Include="src\Flame\Core\Window.h" />
     <ClInclude Include="src\Flame\Debug\Instrumentor.h" />
     <ClInclude Include="src\Flame\Events\ApplicationEvent.h" />
@@ -190,7 +191,6 @@
     <ClInclude Include="src\Platform\OpenGL\imgui_impl_opengl3_loader.h" />
     <ClInclude Include="src\Platform\WindowsWindow\WindowsWindow.h" />
     <ClInclude Include="src\flamepch.h" />
-    <ClInclude Include="src\Flame\Core\UUID.h" />
     <ClInclude Include="vendor\ImGuizmo\ImGuizmo.h" />
     <ClInclude Include="vendor\glm\glm\common.hpp" />
     <ClInclude Include="vendor\glm\glm\detail\_features.hpp" />
@@ -614,6 +614,7 @@
     <ClCompile Include="src\Flame\Core\Layer.cpp" />
     <ClCompile Include="src\Flame\Core\LayerStack.cpp" />
     <ClCompile Include="src\Flame\Core\Log.cpp" />
+    <ClCompile Include="src\Flame\Core\UUID.cpp" />
     <ClCompile Include="src\Flame\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\Flame\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\Flame\Math\Math.cpp" />
@@ -647,7 +648,6 @@
     <ClCompile Include="src\flamepch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="src\Flame\Core\UUID.cpp" />
     <ClCompile Include="vendor\ImGuizmo\ImGuizmo.cpp">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>

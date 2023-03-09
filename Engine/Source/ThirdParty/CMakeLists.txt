@@ -1,0 +1,194 @@
+set(ThirdPartyFolder "ThirdParty")
+
+
+include(${CMAKE_SOURCE_DIR}/cmake/Tools.cmake)
+
+if(NOT TARGET Glad)
+    include(Glad.cmake)
+    set_target_properties(Glad PROPERTIES FOLDER ${ThirdPartyFolder}/Glad)
+    NoWarning(Glad)
+endif()
+
+# GLFW with the same name of project GLFW, so named "glfw"
+if(NOT TARGET glfw)
+    option(GLFW_BUILD_EXAMPLES "" OFF)
+    option(GLFW_BUILD_TESTS "" OFF)
+    option(GLFW_BUILD_DOCS "" OFF)
+    option(GLFW_INSTALL "" OFF)
+    add_subdirectory(glfw)
+    set_target_properties(glfw PROPERTIES FOLDER ${ThirdPartyFolder}/GLFW)
+    NoWarning(glfw)
+endif()
+
+if(NOT TARGET imgui)
+    include(imgui.cmake)
+    set_target_properties(imgui PROPERTIES FOLDER ${ThirdPartyFolder}/imgui)
+    NoWarning(imgui)
+endif()
+
+if(NOT TARGET yaml-cpp)
+    include(yaml-cpp.cmake)
+    set_target_properties(yaml-cpp PROPERTIES FOLDER ${ThirdPartyFolder}/yaml-cpp)
+    NoWarning(yaml-cpp)
+endif()
+
+if(NOT TARGET spdlog)
+    option(SPDLOG_BUILD_EXAMPLE "" OFF)
+    option(SPDLOG_INSTALL "" OFF)
+    add_subdirectory(spdlog)
+    set_target_properties(spdlog PROPERTIES FOLDER ${ThirdPartyFolder}/spdlog)
+    NoWarning(spdlog)
+endif()
+
+if(NOT TARGET glm)
+    option(BUILD_STATIC_LIBS "" ON)
+    option(BUILD_TESTING "" OFF)
+    option(GLM_TEST_ENABLE "" OFF)
+    set(CMAKE_FOLDER ${ThirdPartyFolder}/glm)
+    add_subdirectory(glm)
+    NoWarningInterface(glm)
+endif()
+
+if(NOT TARGET entt)
+    add_library(entt INTERFACE)
+    target_include_directories(entt INTERFACE "${ThirdPartyDir}/entt/include")
+    set_target_properties(entt PROPERTIES FOLDER ${ThirdPartyFolder}/entt)
+    NoWarningInterface(entt)
+endif()
+
+if(NOT TARGET Box2D)
+    include(Box2D.cmake)
+    set_target_properties(Box2D PROPERTIES FOLDER ${ThirdPartyFolder}/Box2D)
+    NoWarning(Box2D)
+endif()
+
+if(NOT TARGET stb)
+    include(stb.cmake)
+    set_target_properties(stb PROPERTIES FOLDER ${ThirdPartyFolder}/stb)
+    NoWarning(stb)
+endif()
+
+if(NOT TARGET ImGuizmo)
+    include(ImGuizmo.cmake)
+    set_target_properties(ImGuizmo PROPERTIES FOLDER ${ThirdPartyFolder}/ImGuizmo)
+    NoWarning(ImGuizmo)
+endif()
+
+if(NOT TARGET assimp)
+    OPTION( BUILD_SHARED_LIBS
+      "Build package with shared libraries."
+      OFF
+    )
+    OPTION( ASSIMP_BUILD_FRAMEWORK
+      "Build package as Mac OS X Framework bundle."
+      OFF
+    )
+    OPTION( ASSIMP_DOUBLE_PRECISION
+      "Set to ON to enable double precision processing"
+      OFF
+    )
+    OPTION( ASSIMP_OPT_BUILD_PACKAGES
+      "Set to ON to generate CPack configuration files and packaging targets"
+      OFF
+    )
+    OPTION( ASSIMP_ANDROID_JNIIOSYSTEM
+      "Android JNI IOSystem support is active"
+      OFF
+    )
+    OPTION( ASSIMP_NO_EXPORT
+      "Disable Assimp's export functionality."
+      OFF
+    )
+    OPTION( ASSIMP_BUILD_ZLIB
+      "Build your own zlib"
+      OFF
+    )
+    OPTION( ASSIMP_BUILD_ASSIMP_TOOLS
+      "If the supplementary tools for Assimp are built in addition to the library."
+      OFF
+    )
+    OPTION ( ASSIMP_BUILD_SAMPLES
+      "If the official samples are built as well (needs Glut)."
+      OFF
+    )
+    OPTION ( ASSIMP_BUILD_TESTS
+      "If the test suite for Assimp is built in addition to the library."
+      OFF
+    )
+    OPTION ( ASSIMP_COVERALLS
+      "Enable this to measure test coverage."
+      OFF
+    )
+    OPTION( ASSIMP_INSTALL
+      "Disable this if you want to use assimp as a submodule."
+      OFF
+    )
+    OPTION ( ASSIMP_ERROR_MAX
+      "Enable all warnings."
+      OFF
+    )
+    OPTION ( ASSIMP_ASAN
+      "Enable AddressSanitizer."
+      OFF
+    )
+    OPTION ( ASSIMP_UBSAN
+      "Enable Undefined Behavior sanitizer."
+      OFF
+    )
+    OPTION ( ASSIMP_BUILD_DOCS
+      "Build documentation using Doxygen."
+      OFF
+    )
+    OPTION( ASSIMP_INJECT_DEBUG_POSTFIX
+      "Inject debug postfix in .a/.so/.dll lib names"
+      OFF
+    )
+
+    OPTION ( ASSIMP_IGNORE_GIT_HASH
+       "Don't call git to get the hash."
+       OFF
+    )
+    set(CMAKE_FOLDER ${ThirdPartyFolder}/assimp)
+    add_subdirectory(assimp)
+    NoWarning(assimp)
+endif()
+
+if(NOT TARGET bullet3)
+    OPTION(BUILD_CPU_DEMOS "Build original Bullet CPU examples" OFF)
+    OPTION(BUILD_BULLET2_DEMOS "Set when you want to build the Bullet 2 demos" OFF)
+    OPTION(BUILD_UNIT_TESTS "Build Unit Tests"	OFF)
+    OPTION(BUILD_EXTRAS "Set when you want to build the extras" OFF)
+    set(CMAKE_FOLDER ${ThirdPartyFolder}/bullet3)
+    add_subdirectory(bullet3)
+endif()
+
+if(NOT TARGET pybind11)
+    if(DEFINED ENV{PYTHONHOME} AND DEFINED ENV{PYTHONPATH})
+        set(WITH_PYTHON ON PARENT_SCOPE)
+    else()
+        set(WITH_PYTHON OFF PARENT_SCOPE)
+    endif()
+    add_definitions(-DPYBIND11_FINDPYTHON=ON)
+    find_package(Python COMPONENTS Interpreter Development)
+    set(CMAKE_FOLDER ${ThirdPartyFolder}/pybind11)
+    add_subdirectory(pybind11)
+endif()
+
+if(NOT TARGET magic_enum)
+    set(CMAKE_FOLDER ${ThirdPartyFolder}/magic_enum)
+    include(magic_enum.cmake)
+endif()
+
+if(NOT TARGET FMOD_CORE)
+    set(CMAKE_FOLDER ${ThirdPartyFolder}/FMOD)
+    include(FMOD.cmake)
+endif()
+
+if(NOT TARGET headers)
+    add_library(headers INTERFACE)
+    target_include_directories(headers INTERFACE "${ThirdPartyDir}/entt/include")
+    target_include_directories(headers INTERFACE "${ThirdPartyDir}/assimp/include")
+    target_include_directories(headers INTERFACE "${ThirdPartyDir}/bullet3/src")
+    target_include_directories(headers INTERFACE "${ThirdPartyDir}/pybind11/include")
+    NoWarningInterface(headers)
+endif()

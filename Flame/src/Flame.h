@@ -12,7 +12,6 @@
 #include "Flame/Core/KeyCodes.h"
 #include "Flame/Core/MouseButtonCodes.h"
 #include "Flame/Core/Layer.h"
-#include "Flame/Renderer/OrthographicCameraController.h"
 
 #include "Flame/ImGui/ImGuiLayer.h"
 
@@ -21,6 +20,7 @@
 #include "Flame/Scene/Entity.h"
 
 // ---Renderer------------------------
+#include "Flame/Renderer/OrthographicCameraController.h"
 #include "Flame/Renderer/Renderer.h"
 #include "Flame/Renderer/Renderer2D.h"
 #include "Flame/Renderer/RenderCommand.h"
