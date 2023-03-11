@@ -260,6 +260,12 @@ vec3 fresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness)
 // Lambert diffuse
 vec3 LambertDiffuse(vec3 Ks, vec3 albedo, float metallic)
 {
+    / for energy conservation, the diffuse and specular light can't
+    // be above 1.0 (unless the surface emits light); to preserve this
+    // relationship the diffuse component (kD) should equal 1.0 - kS.
+    // multiply kD by the inverse metalness such that only non-metals 
+    // have diffuse lighting, or a linear blend if partly metal (pure metals
+    // have no diffuse light).
     vec3 Kd = (vec3(1.0f, 1.0f, 1.0f) - Ks) * (1 - metallic);
     return (Kd * albedo / PI);
 }
@@ -286,6 +292,8 @@ vec3 CookTorrance(vec3 n, vec3 l, vec3 v, float roughness, float metalness, vec3
 void main()
 {		
     // material properties
+    //反射率(albedo)纹理在美术人员创建的时候就已经在sRGB空间了，因此我们需要在光照计算之前先把他们转换到线性空间。
+    //一般来说，环境光遮蔽贴图(ambient occlusion maps)也需要我们转换到线性空间。不过金属性(Metallic)和粗糙度(Roughness)贴图大多数时间都会保证在线性空间中。
     vec3 albedo = pow(texture(albedoMap, Input.TexCoord).rgb, vec3(2.2));
     float metallic = texture(metallicMap, Input.TexCoord).r;
     float roughness = texture(roughnessMap, Input.TexCoord).r;

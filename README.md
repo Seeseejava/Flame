@@ -13,38 +13,30 @@
 <img alt="platforms" src="https://img.shields.io/badge/Platforms-Windows-blue?style=flat-square"/>
 <img alt="license" src="https://img.shields.io/github/license/jmorton06/Lumos?style=flat-square"/>
 <br/>
-
 </p>
-
-#
 
 ## Screenshots
 ![image](https://github.com/Seeseejava/Flame/blob/main/image/Flame%20Engine.png)
+#
 
 ## Prerequisites
-
 To build Flame Engine, you must first install the following tools.
 
 ### Windows 10/11
 - Visual Studio 2022
 - CMake 3.15 (or more recent)
 #
-## Building 🔨
 
+## Building 🔨
 ```
 git clone https://github.com/jmorton06/Lumos.git
 ```
-
-
 ### Windows 
 ```
 Run Scripts/CmakeProjects.bat to generate a visual studio project.
 ```
-
-
 #
 ## Features
-
 * Support for Windows now.
 * Support for OpenGL.
 * Audio using FMOD.
@@ -52,7 +44,6 @@ Run Scripts/CmakeProjects.bat to generate a visual studio project.
 * Debug gui using ImGui
 * 3D collision detection - bullet3.
 * 2D collision detection - Box2D.
-
 #
 ## Dependencies
  * [imgui](https://github.com/ocornut/imgui) : Dear ImGui: Bloat-free Immediate Mode Graphical User interface for C++ with minimal dependencies.

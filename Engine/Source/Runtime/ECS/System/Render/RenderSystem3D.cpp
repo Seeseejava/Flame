@@ -261,7 +261,9 @@ namespace Flame
 
 		RenderCommand::SetViewport(0, 0, Renderer3D::lightFBO->GetSpecification().Width, Renderer3D::lightFBO->GetSpecification().Height);
 		RenderCommand::Clear();
-		RenderCommand::CullFrontOrBack(true); // peter panning
+		// 首先正面剔除没有消除peter panning，实际上它消除的是shadow acne，
+		// 但更准确的说，他只是在改变了可能产生shadow acne的位置，即从物体的表面改变到物体的内部的反面处
+		RenderCommand::CullFrontOrBack(true);
 		auto view = m_Scene->m_Registry.view<TransformComponent, MeshComponent>();
 		for (auto e : view)
 		{

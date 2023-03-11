@@ -47,8 +47,10 @@ layout (std140, binding = 1) uniform LightSpaceMatrices
 
 void main()
 {          
+    // CSM深度图在生成的时候需要一个几何着色器来变换层数，和将点转换到对应的包围盒空间下
 	for (int i = 0; i < 3; ++i)
-	{
+	{ 
+        // invocations表示迭代次数，gl_Layer表示GL_TEXTURE_2D_ARRAY的层数，gl_InvocationID表示当前在第几次迭代
 		gl_Position = lightSpaceMatrices[gl_InvocationID] * gl_in[i].gl_Position;
 		gl_Layer = gl_InvocationID;
 		EmitVertex();
