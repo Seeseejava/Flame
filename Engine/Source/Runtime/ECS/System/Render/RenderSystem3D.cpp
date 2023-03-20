@@ -167,16 +167,6 @@ namespace Flame
 
 		Ref<Shader> defaultShader = Library<Shader>::GetInstance().GetDefaultShader();
 
-		defaultShader->SetFloat("exposure", 1.0f);
-
-		// directional light reset
-		defaultShader->SetInt("cascadeCount", -2);
-		//for (size_t i = 0; i < 4; ++i)
-		//{
-		//	defaultShader->SetFloat("cascadePlaneDistances[" + std::to_string(i) + "]", 1);
-		//}
-		defaultShader->SetFloat3("lightDir", glm::vec3(0.0f));
-
 
 		// Point Light
 		{
@@ -189,7 +179,6 @@ namespace Flame
 				glm::vec3 lightPos = transform.GetTranslation();
 				float intensity = light.Intensity;
 				glm::vec3 lightColor = light.LightColor;
-
 
 				defaultShader->Bind();
 				defaultShader->SetFloat3("lightPositions[" + std::to_string(i) + "]", lightPos);
@@ -213,9 +202,7 @@ namespace Flame
 		{
 			auto view = m_Scene->m_Registry.view<TransformComponent, DirectionalLightComponent>();
 
-
 			defaultShader->Bind();
-			defaultShader->SetInt("shadowMap", 8);
 
 			for (auto e : view)
 			{
@@ -223,30 +210,10 @@ namespace Flame
 				auto& transform = entity.GetComponent<TransformComponent>();
 				auto& directionalLight = entity.GetComponent<DirectionalLightComponent>();
 
-				float cameraNearPlane = camera.GetNearPlane();
-				float cameraFarPlane = camera.GetFarPlane();
-				std::vector<float> shadowCascadeLevels{ cameraFarPlane / 50.0f, cameraFarPlane / 25.0f, cameraFarPlane / 10.0f, cameraFarPlane / 2.0f };
-
 				glm::vec3 lightDir = glm::normalize(glm::eulerAngles(glm::quat(transform.Rotation)));
 
-				const auto lightMatrices = Utils::getLightSpaceMatrices(cameraNearPlane, cameraFarPlane, camera.GetFOV(),
-					camera.GetAspect(), lightDir, camera.GetViewMatrix(), shadowCascadeLevels);
-				Ref<UniformBuffer> lightMatricesUBO = Library<UniformBuffer>::GetInstance().Get("LightMatricesUniform");
-				for (size_t i = 0; i < lightMatrices.size(); i++)
-				{
-					lightMatricesUBO->SetData(&lightMatrices[i], sizeof(glm::mat4x4), i * sizeof(glm::mat4x4));
-				}
-
-				defaultShader->SetMat4("view", camera.GetViewMatrix());
 				defaultShader->SetFloat3("lightDir", lightDir);
-				defaultShader->SetFloat("farPlane", cameraFarPlane);
-				defaultShader->SetInt("cascadeCount", shadowCascadeLevels.size());
 				defaultShader->SetFloat("dirLightIntensity", directionalLight.Intensity);
-				for (size_t i = 0; i < shadowCascadeLevels.size(); ++i)
-				{
-					defaultShader->SetFloat("cascadePlaneDistances[" + std::to_string(i) + "]", shadowCascadeLevels[i]);
-				}
-				Renderer3D::lightFBO->BindDepthTex3D(8);
 
 				break; // now we only support one directional light
 			}
@@ -255,33 +222,10 @@ namespace Flame
 		uint32_t mainFramebuffer = RenderCommand::GetDrawFrameBuffer();
 
 		// Light Depth pass
-		Renderer3D::lightFBO->Bind();
 
-		RenderCommand::SetViewport(0, 0, Renderer3D::lightFBO->GetSpecification().Width, Renderer3D::lightFBO->GetSpecification().Height);
-		RenderCommand::Clear();
 
-		//首先正面剔除没有消除peter panning，实际上它消除的是shadow acne，但更准确的说，他只是在改变了可能产生shadow acne的位置，
-		//即从物体的表面改变到物体的内部的反面处。如果你把摄像机推进到立方体内部，就会看到和立方体底面接触的地面上产生了shadow acne
-		RenderCommand::CullFrontOrBack(true);
+
 		auto view = m_Scene->m_Registry.view<TransformComponent, MeshComponent>();
-		for (auto e : view)
-		{
-			Entity entity = { e, m_Scene };
-
-			auto& transform = entity.GetComponent<TransformComponent>();
-			auto& mesh = entity.GetComponent<MeshComponent>();
-
-			Ref<Shader> csmShader = Library<Shader>::GetInstance().Get("CSM_Depth");
-			csmShader->Bind();
-			if (mesh.m_Mesh->bPlayAnim)
-				csmShader->SetBool("u_Animated", true);
-			else
-				csmShader->SetBool("u_Animated", false);
-
-			mesh.m_Mesh->Draw(transform.GetTransform(), camera.GetPosition(), csmShader, (int)e);  // ?
-		}
-
-		RenderCommand::CullFrontOrBack(false);
 
 		// Render pass
 		RenderCommand::BindFrameBuffer(mainFramebuffer);

@@ -1,0 +1,55 @@
+Scene: Untitled
+Entities:
+  - Entity: 13303573364374447968
+    TagComponent:
+      Tag: Directional Light
+    TransformComponent:
+      Translation: [9.8731966, 15.2370062, -13.763876]
+      Rotation: [-0.425860375, 0.151843652, 0.164060846]
+      Scale: [0.99999994, 0.999999225, 0.999999642]
+    DirectionalLightComponent:
+      dirIntensity: 0
+  - Entity: 6989434822828470160
+    TagComponent:
+      Tag: Point Light
+    TransformComponent:
+      Translation: [0, 17.2072258, 0]
+      Rotation: [0, 0.116937056, -0.347320497]
+      Scale: [1, 1, 1]
+    PointLightComponent:
+      Intensity: 647.5
+      Color: [1, 1, 1]
+  - Entity: 9289526547988857296
+    TagComponent:
+      Tag: sphere
+    TransformComponent:
+      Translation: [0, 4.26491928, 0]
+      Rotation: [0, 0, 0]
+      Scale: [2, 2, 2]
+    MeshComponent:
+      Path: Asset\Model\Sphere.obj
+      bUseAlbedoMap: true
+      col: [1, 1, 1, 1]
+      bUseNormalMap: true
+      bUseMetallicMap: true
+      metallic: 0.100000001
+      bUseRoughnessMap: true
+      roughness: 0.899999976
+      bUseAoMap: true
+  - Entity: 17479181147033028783
+    TagComponent:
+      Tag: floor
+    TransformComponent:
+      Translation: [0, -6.5999999, 0]
+      Rotation: [0, 0, 0]
+      Scale: [30, 1, 30]
+    MeshComponent:
+      Path: Asset\Model\Box.obj
+      bUseAlbedoMap: true
+      col: [1, 1, 1, 1]
+      bUseNormalMap: true
+      bUseMetallicMap: false
+      metallic: 0.100000001
+      bUseRoughnessMap: false
+      roughness: 0.899999976
+      bUseAoMap: false
