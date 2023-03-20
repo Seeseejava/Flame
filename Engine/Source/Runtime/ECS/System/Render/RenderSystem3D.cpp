@@ -166,10 +166,8 @@ namespace Flame
 		Renderer3D::BeginScene(camera);
 
 		Ref<Shader> defaultShader = Library<Shader>::GetInstance().GetDefaultShader();
-		if (ModeManager::bHdrUse)
-			defaultShader->SetFloat("exposure", EnvironmentSystem::environmentSettings.exposure);
-		else
-			defaultShader->SetFloat("exposure", 1.0f);
+
+		defaultShader->SetFloat("exposure", 1.0f);
 
 		// directional light reset
 		defaultShader->SetInt("cascadeCount", -2);
@@ -261,16 +259,17 @@ namespace Flame
 
 		RenderCommand::SetViewport(0, 0, Renderer3D::lightFBO->GetSpecification().Width, Renderer3D::lightFBO->GetSpecification().Height);
 		RenderCommand::Clear();
-		// 首先正面剔除没有消除peter panning，实际上它消除的是shadow acne，
-		// 但更准确的说，他只是在改变了可能产生shadow acne的位置，即从物体的表面改变到物体的内部的反面处
+
+		//首先正面剔除没有消除peter panning，实际上它消除的是shadow acne，但更准确的说，他只是在改变了可能产生shadow acne的位置，
+		//即从物体的表面改变到物体的内部的反面处。如果你把摄像机推进到立方体内部，就会看到和立方体底面接触的地面上产生了shadow acne
 		RenderCommand::CullFrontOrBack(true);
 		auto view = m_Scene->m_Registry.view<TransformComponent, MeshComponent>();
 		for (auto e : view)
 		{
 			Entity entity = { e, m_Scene };
 
-			auto &transform = entity.GetComponent<TransformComponent>();
-			auto &mesh = entity.GetComponent<MeshComponent>();
+			auto& transform = entity.GetComponent<TransformComponent>();
+			auto& mesh = entity.GetComponent<MeshComponent>();
 
 			Ref<Shader> csmShader = Library<Shader>::GetInstance().Get("CSM_Depth");
 			csmShader->Bind();
@@ -279,7 +278,7 @@ namespace Flame
 			else
 				csmShader->SetBool("u_Animated", false);
 
-			mesh.m_Mesh->Draw(transform.GetTransform(), camera.GetPosition(), csmShader, (int)e);
+			mesh.m_Mesh->Draw(transform.GetTransform(), camera.GetPosition(), csmShader, (int)e);  // ?
 		}
 
 		RenderCommand::CullFrontOrBack(false);

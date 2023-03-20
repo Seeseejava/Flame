@@ -18,8 +18,7 @@ namespace Flame
 	enum class SceneMode
 	{
 		None = 0,
-		EnvironmentHdr = 1,
-		SkyBox = 2,
+		SkyBox = 1,
 	};
 
 	enum class PhysicsDebugDrawModeFlag

@@ -35,7 +35,7 @@ namespace Flame
 			return;
 		}
 
-		const char* modes[] = { "None", "Environment Hdr", "Sky Box" };
+		const char* modes[] = { "None", "Sky Box" };
 		ImGui::Text("Mode");
 		ImGui::SameLine();
 		if (ImGui::Combo("##Mode", (int*)(&ModeManager::m_SceneMode), modes, IM_ARRAYSIZE(modes)))
@@ -83,45 +83,6 @@ namespace Flame
 				SkyBoxTreeNode("Bottom -Y", m_Bottom, 3);
 				SkyBoxTreeNode("Front +Z", m_Front, 4);
 				SkyBoxTreeNode("Back -Z", m_Back, 5);
-
-				ImGui::TreePop();
-			}
-		}
-		else if (ModeManager::m_SceneMode == SceneMode::EnvironmentHdr)
-		{
-			if (ImGuiWrapper::TreeNodeExStyle1((void*)"Environment Hdr", "Environment Hdr"))
-			{
-				ImGui::Image((ImTextureID)Library<Texture2D>::GetInstance().Get("DefaultHdr")->GetRendererID(), ImVec2(64, 64), ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
-				if (ImGui::BeginDragDropTarget())
-				{
-					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
-					{
-						auto path = (const wchar_t*)payload->Data;
-						std::string relativePath = (std::filesystem::path("Asset") / path).string();
-						std::filesystem::path texturePath = ConfigManager::GetInstance().GetAssetsFolder() / path;
-						relativePath = std::regex_replace(relativePath, std::regex("\\\\"), "/");
-						Library<Texture2D>::GetInstance().Set("DefaultHdr", IconManager::GetInstance().LoadOrFindTexture(relativePath));
-					}
-					ImGui::EndDragDropTarget();
-				}
-
-				ImGui::SameLine();
-				ImGui::Checkbox("Use", &ModeManager::bHdrUse);
-
-				ImGui::Columns(2, nullptr, false);
-				ImGui::SetColumnWidth(0, 100.0f);
-				ImGui::Text("SkyBox Lod");
-				ImGui::NextColumn();
-				ImGui::SliderFloat("##SkyBox Lod", &EnvironmentSystem::environmentSettings.SkyBoxLod, 0.0f, 10.0f);
-				ImGui::EndColumns();
-
-				ImGui::Columns(2, nullptr, false);
-				ImGui::SetColumnWidth(0, 100.0f);
-				ImGui::Text("Exposure");
-				ImGui::NextColumn();
-				ImGui::SliderFloat("##Exposure", &EnvironmentSystem::environmentSettings.exposure, 0.0f, 10.0f);
-				ImGui::EndColumns();
-
 
 				ImGui::TreePop();
 			}
