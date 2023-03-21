@@ -19,6 +19,7 @@ namespace Flame
 
 	void OpenGLUniformBuffer::SetData(const void* data, uint32_t size, uint32_t offset)
 	{
+		// 缓存从offset字节处开始需要使用地址为data 大小为size的数据块进行更新 如果offset和data综合超出缓存对象绑定的数据范围则会返回一个错误
 		glNamedBufferSubData(m_RendererID, offset, size, data); // = glBufferSubData
 	}
 }

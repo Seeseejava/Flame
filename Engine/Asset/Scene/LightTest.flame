@@ -5,20 +5,10 @@ Entities:
       Tag: Directional Light
     TransformComponent:
       Translation: [9.8731966, 15.2370062, -13.763876]
-      Rotation: [-0.425860375, 0.151843652, 0.164060846]
+      Rotation: [-0.0698131695, 0.151843652, 0.164060846]
       Scale: [0.99999994, 0.999999225, 0.999999642]
     DirectionalLightComponent:
-      dirIntensity: 0
-  - Entity: 6989434822828470160
-    TagComponent:
-      Tag: Point Light
-    TransformComponent:
-      Translation: [0, 17.2072258, 0]
-      Rotation: [0, 0.116937056, -0.347320497]
-      Scale: [1, 1, 1]
-    PointLightComponent:
-      Intensity: 647.5
-      Color: [1, 1, 1]
+      dirIntensity: 0.219999999
   - Entity: 9289526547988857296
     TagComponent:
       Tag: sphere

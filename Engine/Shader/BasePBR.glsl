@@ -101,12 +101,63 @@ uniform vec3 lightDir;
 uniform float dirLightIntensity;
 layout (std140, binding = 1) uniform LightSpaceMatrices
 {
-    mat4 lightSpaceMatrices[16];
+    mat4 LightSpaceMatrix;
 };
 
+// Shadow 
+//uniform mat4 view;
+uniform float farPlane;
+uniform sampler2D shadowMap;
+
+
+// End Shadow
 
 const float F0_NON_METAL = 0.04f;
 const float PI = 3.14159265359;
+
+// --------------------------Shadow Function-----------------------------------
+
+float ShadowCalculation(vec3 fragPosWorldSpace)
+{
+    vec4 fragPosLightSpace = LightSpaceMatrix * vec4(fragPosWorldSpace, 1.0);
+    // perform perspective divide
+    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+    // transform to [0,1] range
+    projCoords = projCoords * 0.5 + 0.5;
+
+    // get depth of current fragment from light's perspective
+    float currentDepth = projCoords.z;
+
+    // keep the shadow at 0.0 when outside the far_plane region of the light's frustum.
+    if (currentDepth > 1.0)
+    {
+        return 0.0;
+    }
+    // calculate bias (based on depth map resolution and slope)
+    vec3 normal = normalize(Input.Normal);
+    float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
+    const float biasModifier = 0.5f;
+
+    bias *= 1 / (farPlane * biasModifier);
+
+
+    // PCF
+    float shadow = 0.0;
+    vec2 texelSize = 1.0 / vec2(textureSize(shadowMap, 0));
+    for(int x = -1; x <= 1; ++x)
+    {
+        for(int y = -1; y <= 1; ++y)
+        {
+            float pcfDepth = texture(shadowMap, vec2(projCoords.xy + vec2(x, y) * texelSize)).r;
+            shadow += (currentDepth - bias) > pcfDepth ? 1.0 : 0.0;        
+        }    
+    }
+    shadow /= 9.0;
+        
+    return shadow;
+}
+
+// --------------------------End Shadow Function-------------------------------
 
 // --------------------------PBR Function--------------------------------------
 
@@ -291,8 +342,11 @@ void main()
 
     vec3 ambient = (kD * diffuse + specular) * ao;
 
+    // calculate shadow
+    float shadow = ShadowCalculation(Input.WorldPos);  
+    vec3 color = ambient + (1.0 - shadow) * Lo;
+
     // gamma correct
-    vec3 color = ambient + Lo;
     color = pow(color, vec3(1.0/2.2)); 
 
     FragColor = vec4(color , 1.0);

@@ -37,7 +37,7 @@ namespace Flame
 			return frustumCorners;
 		}
 
-		static glm::mat4 getLightSpaceMatrix(const float nearPlane, const float farPlane, float cameraFOV, float aspect, const glm::vec3& lightDir, const glm::mat4& view)
+		static	glm::mat4 getLightSpaceMatrix(const float nearPlane, const float farPlane, float cameraFOV, float aspect, const glm::vec3& lightDir, const glm::mat4& view)
 		{
 			const auto proj = glm::perspective(
 				glm::radians(cameraFOV), aspect, nearPlane,
@@ -49,7 +49,7 @@ namespace Flame
 			{
 				center += glm::vec3(v);
 			}
-			center /= corners.size();
+			center /= corners.size();  // 视锥体中心
 
 			const auto lightView = glm::lookAt(center + lightDir, center, glm::vec3(0.0f, 1.0f, 0.0f));
 
@@ -92,27 +92,6 @@ namespace Flame
 			const glm::mat4 lightProjection = glm::ortho(minX, maxX, minY, maxY, minZ, maxZ);
 
 			return lightProjection * lightView;
-		}
-
-		static std::vector<glm::mat4> getLightSpaceMatrices(float cameraNearPlane, float cameraFarPlane, float cameraFOV, float aspect, const glm::vec3& lightDir, const glm::mat4& projview, const std::vector<float>& shadowCascadeLevels)
-		{
-			std::vector<glm::mat4> ret;
-			for (size_t i = 0; i < shadowCascadeLevels.size() + 1; ++i)
-			{
-				if (i == 0)
-				{
-					ret.push_back(getLightSpaceMatrix(cameraNearPlane, shadowCascadeLevels[i], cameraFOV, aspect, lightDir, projview));
-				}
-				else if (i < shadowCascadeLevels.size())
-				{
-					ret.push_back(getLightSpaceMatrix(shadowCascadeLevels[i - 1], shadowCascadeLevels[i], cameraFOV, aspect, lightDir, projview));
-				}
-				else
-				{
-					ret.push_back(getLightSpaceMatrix(shadowCascadeLevels[i - 1], cameraFarPlane, cameraFOV, aspect, lightDir, projview));
-				}
-			}
-			return ret;
 		}
 	}
 
@@ -165,6 +144,7 @@ namespace Flame
 	{
 		Renderer3D::BeginScene(camera);
 
+		// shader configuration
 		Ref<Shader> defaultShader = Library<Shader>::GetInstance().GetDefaultShader();
 
 
@@ -188,13 +168,11 @@ namespace Flame
 			}
 			if (i == 0)
 			{
-
 				for (size_t i = 0; i < 4; i++)
 				{
 					defaultShader->Bind();
-
+					defaultShader->SetFloat3("lightColors[" + std::to_string(i) + "]", glm::vec3{ -1.0f });
 				}
-				
 			}
 		}
 
@@ -203,6 +181,7 @@ namespace Flame
 			auto view = m_Scene->m_Registry.view<TransformComponent, DirectionalLightComponent>();
 
 			defaultShader->Bind();
+			defaultShader->SetInt("shadowMap", 8);
 
 			for (auto e : view)
 			{
@@ -211,9 +190,17 @@ namespace Flame
 				auto& directionalLight = entity.GetComponent<DirectionalLightComponent>();
 
 				glm::vec3 lightDir = glm::normalize(glm::eulerAngles(glm::quat(transform.Rotation)));
+				float cameraNearPlane = camera.GetNearPlane();
+				float cameraFarPlane = camera.GetFarPlane();
 
 				defaultShader->SetFloat3("lightDir", lightDir);
 				defaultShader->SetFloat("dirLightIntensity", directionalLight.Intensity);
+				defaultShader->SetFloat("farPlane", cameraFarPlane);
+
+				const auto lightMatrix = Utils::getLightSpaceMatrix(cameraNearPlane, cameraFarPlane, camera.GetFOV(),
+					camera.GetAspect(), lightDir, camera.GetViewMatrix());
+
+				Ref<UniformBuffer> lightMatricesUBO = Library<UniformBuffer>::GetInstance().Get("LightMatrixUniform");
 
 				break; // now we only support one directional light
 			}
@@ -223,9 +210,32 @@ namespace Flame
 
 		// Light Depth pass
 
+		Renderer3D::lightFBO->Bind();
+		Renderer3D::lightFBO->BindDepthTex2D(8);
 
+		RenderCommand::SetViewport(0, 0, Renderer3D::lightFBO->GetSpecification().Width, Renderer3D::lightFBO->GetSpecification().Height);
+		RenderCommand::Clear();
 
+		RenderCommand::CullFrontOrBack(true);
 		auto view = m_Scene->m_Registry.view<TransformComponent, MeshComponent>();
+		for (auto e : view)
+		{
+			Entity entity = { e, m_Scene };
+			auto& transform = entity.GetComponent<TransformComponent>();
+			auto& mesh = entity.GetComponent<MeshComponent>();
+
+			Ref<Shader> smShader = Library<Shader>::GetInstance().Get("SM_Depth");
+			smShader->Bind();
+			if (mesh.m_Mesh->bPlayAnim)
+				smShader->SetBool("u_Animated", true);
+			else
+				smShader->SetBool("u_Animated", false);
+
+			mesh.m_Mesh->Draw(transform.GetTransform(), camera.GetPosition(), smShader, (int)e); 
+		}
+
+		RenderCommand::CullFrontOrBack(false);
+		//Renderer3D::lightFBO->Unbind();
 
 		// Render pass
 		RenderCommand::BindFrameBuffer(mainFramebuffer);

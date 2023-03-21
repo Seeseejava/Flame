@@ -24,6 +24,7 @@ namespace Flame
         Add("NormalOutline", Shader::CreateNative(AssetManager::GetFullPath("Shader/NormalOutline.glsl")));
         Add("NormalOutline_anim", Shader::CreateNative(AssetManager::GetFullPath("Shader/NormalOutline_anim.glsl")));
 
+        Add("SM_Depth", Shader::CreateNative(AssetManager::GetFullPath("Shader/Shadow/SM_Depth.glsl")));
         Add("CSM_Depth", Shader::CreateNative(AssetManager::GetFullPath("Shader/Shadow/CSM_Depth.glsl")));
         Add("Debug_Depth", Shader::CreateNative(AssetManager::GetFullPath("Shader/Shadow/Debug_Depth.glsl")));
     }

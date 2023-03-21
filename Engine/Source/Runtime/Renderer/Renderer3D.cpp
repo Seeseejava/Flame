@@ -34,7 +34,7 @@ namespace Flame
 	void Renderer3D::Init()
 	{
 		FramebufferSpecification fbSpec;
-		fbSpec.Attachments = { FramebufferTextureFormat::DEPTH32F_TEX3D };
+		fbSpec.Attachments = { FramebufferTextureFormat::DEPTH32F_TEX2D };
 		// light depth texture uses high resolution
 		fbSpec.Width = 4096;
 		fbSpec.Height = 4096;

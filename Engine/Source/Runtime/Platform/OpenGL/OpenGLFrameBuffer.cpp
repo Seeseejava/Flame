@@ -76,16 +76,35 @@ namespace Flame {
 			{
 				glBindTexture(GL_TEXTURE_2D, id);
 				glTexStorage2D(GL_TEXTURE_2D, 1, format, width, height);
+				//glTexStorage2D无法更改（分配的内存量恒定），并且由于速度更快，
+				//glTexImage2D可以导致为纹理分配的内存量发生变化，但速度较慢。
 
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-				glBindTexture(GL_TEXTURE_2D, id);
+				//glBindTexture(GL_TEXTURE_2D, 0);
 			}
 
-			glFramebufferTexture2D(GL_FRAMEBUFFER, attachmentType, TextureTarget(multisampled), id, 0);
+			// attach depth texture as FBO's depth buffer
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, TextureTarget(multisampled), id, 0);
+		}
+
+		static void AttachDepthTexture2D(uint32_t& id, GLenum format, uint32_t width, uint32_t height)
+		{
+			glGenTextures(1, &id);
+
+			glBindTexture(GL_TEXTURE_2D, id);
+
+			glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+			glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, id, 0);
 		}
 
 		static void AttachDepthTexture3D(uint32_t& id, GLenum format, uint32_t width, uint32_t height, int depth = 5)
@@ -107,7 +126,6 @@ namespace Flame {
 
 			glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, id, 0);
 		}
-
 
 		static void AttachDepthRenderBuffer(uint32_t& id, int samples, GLenum format, GLenum attachmentType, uint32_t width, uint32_t height)
 		{
@@ -135,6 +153,7 @@ namespace Flame {
 			switch (format)
 			{
 				case Flame::FramebufferTextureFormat::DEPTH32F_TEX3D:
+				case Flame::FramebufferTextureFormat::DEPTH32F_TEX2D:
 				case Flame::FramebufferTextureFormat::DEPTH24STENCIL8:  return true;
 			}
 
@@ -230,8 +249,15 @@ namespace Flame {
 		{
 			switch (m_DepthAttachmentSpecification.TextureFormat)
 			{
+
 				case FramebufferTextureFormat::DEPTH24STENCIL8:
+					// 当我们不需要从这些缓冲中采样的时候，通常都会选择渲染缓冲对象，因为它会更优化一点。
+					// Utils::AttachDepthTexture(m_DepthAttachment, m_Specification.Samples, GL_DEPTH24_STENCIL8, GL_DEPTH_STENCIL_ATTACHMENT, m_Specification.Width, m_Specification.Height); //bugs
 					Utils::AttachDepthRenderBuffer(m_DepthAttachment, m_Specification.Samples, GL_DEPTH24_STENCIL8, GL_DEPTH_STENCIL_ATTACHMENT, m_Specification.Width, m_Specification.Height);
+					break;
+				case FramebufferTextureFormat::DEPTH32F_TEX2D:
+					Utils::AttachDepthTexture2D(m_DepthAttachment, GL_DEPTH_COMPONENT32F, m_Specification.Width, m_Specification.Height);
+					//Utils::AttachDepthRenderBuffer(m_DepthAttachment, m_Specification.Samples, GL_DEPTH24_STENCIL8, GL_DEPTH_STENCIL_ATTACHMENT, m_Specification.Width, m_Specification.Height);
 					break;
 				case FramebufferTextureFormat::DEPTH32F_TEX3D:
 					Utils::AttachDepthTexture3D(m_DepthAttachment, GL_DEPTH_COMPONENT32F, m_Specification.Width, m_Specification.Height); // CSM
@@ -251,6 +277,7 @@ namespace Flame {
 		{
 			// Only depth-pass
 			glDrawBuffer(GL_NONE);
+			glReadBuffer(GL_NONE);
 		}
 
 		FLAME_CORE_ASSERT(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE, "Framebuffer is incomplete!");
@@ -377,15 +404,15 @@ namespace Flame {
 		return CreateRef<OpenGLTexture3D>(m_DepthAttachment, m_Specification.Width, m_Specification.Height);
 	}
 
-	void OpenGLFramebuffer::BindDepthTex3D(uint32_t slot)
+	void OpenGLFramebuffer::BindDepthTex2D(uint32_t slot)
 	{
 		glActiveTexture(GL_TEXTURE0 + slot);
-		glBindTexture(GL_TEXTURE_2D_ARRAY, m_DepthAttachment);
+		glBindTexture(GL_TEXTURE_2D, m_DepthAttachment);
 	}
 
-	void OpenGLFramebuffer::UnBindDepthTex3D(uint32_t slot)
+	void OpenGLFramebuffer::UnBindDepthTex2D(uint32_t slot)
 	{
 		glActiveTexture(GL_TEXTURE0 + slot);
-		glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
+		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 }
