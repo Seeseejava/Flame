@@ -36,8 +36,8 @@ namespace Flame
 		FramebufferSpecification fbSpec;
 		fbSpec.Attachments = { FramebufferTextureFormat::DEPTH32F_TEX2D };
 		// light depth texture uses high resolution
-		fbSpec.Width = 4096;
-		fbSpec.Height = 4096;
+		fbSpec.Width = 20480;
+		fbSpec.Height = 20480;
 		lightFBO = Framebuffer::Create(fbSpec);
 	}
 

@@ -202,6 +202,8 @@ namespace Flame
 
 				Ref<UniformBuffer> lightMatricesUBO = Library<UniformBuffer>::GetInstance().Get("LightMatrixUniform");
 
+				lightMatricesUBO->SetData(&lightMatrix, sizeof(glm::mat4));
+
 				break; // now we only support one directional light
 			}
 		}
@@ -216,7 +218,7 @@ namespace Flame
 		RenderCommand::SetViewport(0, 0, Renderer3D::lightFBO->GetSpecification().Width, Renderer3D::lightFBO->GetSpecification().Height);
 		RenderCommand::Clear();
 
-		RenderCommand::CullFrontOrBack(true);
+		RenderCommand::CullFrontOrBack(true); // fix peter panning
 		auto view = m_Scene->m_Registry.view<TransformComponent, MeshComponent>();
 		for (auto e : view)
 		{
@@ -231,11 +233,9 @@ namespace Flame
 			else
 				smShader->SetBool("u_Animated", false);
 
-			mesh.m_Mesh->Draw(transform.GetTransform(), camera.GetPosition(), smShader, (int)e); 
+			mesh.m_Mesh->Draw(transform.GetTransform(), camera.GetPosition(), smShader, (int)e);
 		}
-
 		RenderCommand::CullFrontOrBack(false);
-		//Renderer3D::lightFBO->Unbind();
 
 		// Render pass
 		RenderCommand::BindFrameBuffer(mainFramebuffer);

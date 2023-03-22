@@ -1,31 +1,5 @@
 Scene: Untitled
 Entities:
-  - Entity: 13303573364374447968
-    TagComponent:
-      Tag: Directional Light
-    TransformComponent:
-      Translation: [9.8731966, 15.2370062, -13.763876]
-      Rotation: [-0.0698131695, 0.151843652, 0.164060846]
-      Scale: [0.99999994, 0.999999225, 0.999999642]
-    DirectionalLightComponent:
-      dirIntensity: 0.219999999
-  - Entity: 9289526547988857296
-    TagComponent:
-      Tag: sphere
-    TransformComponent:
-      Translation: [0, 4.26491928, 0]
-      Rotation: [0, 0, 0]
-      Scale: [2, 2, 2]
-    MeshComponent:
-      Path: Asset\Model\Sphere.obj
-      bUseAlbedoMap: true
-      col: [1, 1, 1, 1]
-      bUseNormalMap: true
-      bUseMetallicMap: true
-      metallic: 0.100000001
-      bUseRoughnessMap: true
-      roughness: 0.899999976
-      bUseAoMap: true
   - Entity: 17479181147033028783
     TagComponent:
       Tag: floor
@@ -43,3 +17,29 @@ Entities:
       bUseRoughnessMap: false
       roughness: 0.899999976
       bUseAoMap: false
+  - Entity: 9289526547988857296
+    TagComponent:
+      Tag: sphere
+    TransformComponent:
+      Translation: [0, -1.63999999, 0]
+      Rotation: [0, 0, 0]
+      Scale: [2, 2, 2]
+    MeshComponent:
+      Path: Asset\Model\Sphere.obj
+      bUseAlbedoMap: true
+      col: [1, 1, 1, 1]
+      bUseNormalMap: true
+      bUseMetallicMap: true
+      metallic: 0.100000001
+      bUseRoughnessMap: true
+      roughness: 0.899999976
+      bUseAoMap: true
+  - Entity: 13303573364374447968
+    TagComponent:
+      Tag: Directional Light
+    TransformComponent:
+      Translation: [9.8731966, 15.2370062, -13.763876]
+      Rotation: [-0.0698131695, 0.151843652, 0.164060846]
+      Scale: [0.99999994, 0.999999225, 0.999999642]
+    DirectionalLightComponent:
+      dirIntensity: 0.219999999
